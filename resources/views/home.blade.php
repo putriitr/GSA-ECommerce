@@ -8,13 +8,13 @@
             <div class="col-md-12 col-lg-7">
                 <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
                 <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
-                <div class="position-relative mx-auto">
+                {{-- <div class="position-relative mx-auto">
                     <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number"
                         placeholder="Search">
                     <button type="submit"
                         class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100"
                         style="top: 0; right: 25%;">Submit Now</button>
-                </div>
+                </div> --}}
             </div>
             <div class="col-md-12 col-lg-5">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
@@ -119,22 +119,22 @@
                         </li>
                         <li class="nav-item">
                             <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
-                                <span class="text-dark" style="width: 130px;">Vegetables</span>
+                                <span class="text-dark" style="width: 130px;">Keamanan Kerja</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
-                                <span class="text-dark" style="width: 130px;">Fruits</span>
+                                <span class="text-dark" style="width: 130px;">Alat Ukur</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
-                                <span class="text-dark" style="width: 130px;">Bread</span>
+                                <span class="text-dark" style="width: 130px;">Elektronik</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
-                                <span class="text-dark" style="width: 130px;">Meat</span>
+                                <span class="text-dark" style="width: 130px;">Transportasi</span>
                             </a>
                         </li>
                     </ul>
