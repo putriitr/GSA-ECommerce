@@ -1,7 +1,7 @@
 @extends('layouts.member.master')
 
 @section('content')
-<div class="hero-wrap hero-bread" style="background-image: url('storage/img/bg_1.jpg');">
+<div class="hero-wrap hero-bread" style="background-image: url('storage/img/bg.jpg');">
     <div class="container">
       <div class="row no-gutters slider-text align-items-center justify-content-center">
         <div class="col-md-9 ftco-animate text-center">
@@ -71,7 +71,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-2.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -99,7 +99,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-3.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -127,7 +127,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-4.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -157,7 +157,7 @@
 
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-5.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <span class="status">30%</span>
                           <div class="overlay"></div>
                       </a>
@@ -186,7 +186,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-6.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -214,7 +214,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-7.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -242,7 +242,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-8.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -271,7 +271,7 @@
 
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-9.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <span class="status">30%</span>
                           <div class="overlay"></div>
                       </a>
@@ -300,7 +300,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-10.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -328,7 +328,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-11.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
@@ -356,7 +356,7 @@
               </div>
               <div class="col-md-6 col-lg-3 ftco-animate">
                   <div class="product">
-                      <a href="#" class="img-prod"><img class="img-fluid" src="images/product-12.jpg" alt="Colorlib Template">
+                      <a href="#" class="img-prod"><img class="img-fluid" src="{{ asset('storage/img/cutting-1.jpg') }}" alt="Colorlib Template">
                           <div class="overlay"></div>
                       </a>
                       <div class="text py-3 pb-4 px-3 text-center">
