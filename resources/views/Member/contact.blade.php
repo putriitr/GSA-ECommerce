@@ -1,79 +1,99 @@
 @extends('layouts.member.master')
 
 @section('content')
-    <div class="hero-wrap hero-bread" style="background-image: url('storage/img/bg.jpg');">
-        <div class="container">
-            <div class="row no-gutters slider-text align-items-center justify-content-center">
-                <div class="col-md-9 ftco-animate text-center">
-                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Contact us</span>
-                    </p>
-                    <h1 class="mb-0 bread">Contact us</h1>
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="keywords"
+                            aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Modal Search End -->
 
-    <section class="ftco-section contact-section bg-light">
-        <div class="container">
-            <div class="row d-flex mb-5 contact-info">
-                <div class="w-100"></div>
-                <div class="col-md-6 d-flex">
-                    <div class="info bg-white p-4">
-                        <p><span>Address :</span> Bizpark Jababeka, Jl. Niaga Industri Selatan 2 Blok QQ2 No.6, Kel.
-                            Pasirsari, Kec. Cikarang Selatan, Kab. Bekasi, Prov. Jawa Barat, 17532</p>
+
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5"
+        style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/contact.jpg') }}') no-repeat center center; background-size: cover;">
+        <div style="background: rgba(0, 0, 0, 0.5); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+        </div>
+        <h1 class="text-center text-white display-6" style="position: relative; z-index: 2;">Kontak</h1>
+        <ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">Beranda</a></li>
+            <li class="breadcrumb-item active text-white">Kontak</li>
+        </ol>
+    </div>
+    <!-- Single Page Header End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-fluid contact py-5">
+        <div class="container py-5">
+            <div class="p-5 bg-light rounded">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="text-center mx-auto" style="max-width: 700px;">
+                            <h1 class="text-primary">Hubungi Kami</h1>
+                            <p class="mb-4">Kami ingin mendengar dari Anda! Jika Anda memiliki pertanyaan atau memerlukan
+                                bantuan, jangan ragu untuk menghubungi kami. Lengkapi formulir di bawah ini, dan tim kami
+                                akan berusaha memberikan jawaban secepatnya.</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3 d-flex">
-                    <div class="info bg-white p-4">
-                        <p><span>Phone :</span> <a href="tel://6281390069009">+62 813-9006-9009</a></p>
-                    </div>
-                </div>
-                <div class="col-md-3 d-flex">
-                    <div class="info bg-white p-4">
-                        <p><span>Email :</span> <a href="mailto:info@gsacommerce.com">info@gsacommerce.com</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="row block-9">
-                <div class="col-md-6 order-md-last d-flex">
-                    <form action="#" class="bg-white p-5 contact-form">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Name">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Your Email">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Subject">
-                        </div>
-                        <div class="form-group">
-                            <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-6 d-flex">
-                    <div class="position-relative mx-auto"
-                        style="max-width: 800px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <div class="row g-4">
+                    <div class="col-lg-12">
+                        <div class="h-100 rounded">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.116244913464!2d107.15477407091404!3d-6.311447977376551!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699b19d041878f%3A0x85e95a0154a93e4c!2sJl.%20Industri%20Sel.%20Blok%20Hh%20No.2%2C%20Pasirsari%2C%20Cikarang%20Sel.%2C%20Kabupaten%20Bekasi%2C%20Jawa%20Barat%2017530!5e1!3m2!1sid!2sid!4v1727256551300!5m2!1sid!2sid"
-                                width="500px" height="400px" style="border:0;" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.250022598491!2d107.33012501479207!3d-6.193152895507679!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e699f4b7e9b1d97%3A0x22447d33e0321d6d!2sBizpark%20Jababeka%2C%20Jl.%20Niaga%20Industri%20Selatan%202%20Blok%20QQ2%20No.6%2C%20Kel.%20Pasirsari%2C%20Kec.%20Cikarang%20Selatan%2C%20Kab.%20Bekasi%2C%20Prov.%20Jawa%20Barat%2C%2017532!5e0!3m2!1sen!2sid!4v1697025241443!5m2!1sen!2sid"
+                                width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy">
+                            </iframe>
 
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <form action="" class="">
+                            <input type="text" class="w-100 form-control border-0 py-3 mb-4" placeholder="Nama Lengkap">
+                            <input type="email" class="w-100 form-control border-0 py-3 mb-4" placeholder="Email Anda">
+                            <input type="phone" class="w-100 form-control border-0 py-3 mb-4" placeholder="Nomor Telepon">
+                            <textarea class="w-100 form-control border-0 mb-4" rows="5" cols="10" placeholder="Pesan Anda"></textarea>
+                            <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary "
+                                type="submit">Kirim Pesan</button>
+                        </form>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="d-flex p-4 rounded mb-4 bg-white">
+                            <i class="fas fa-map-marker-alt fa-2x text-primary me-4"></i>
+                            <div>
+                                <h4>Alamat</h4>
+                                <p class="mb-2">Bizpark Jababeka, Jl. Niaga Industri Selatan 2 Blok QQ2 No.6, Kel. Pasirsari, Kec. Cikarang Selatan, Kab. Bekasi, Prov. Jawa Barat, 17532</p>
+                            </div>
+                        </div>
+                        <div class="d-flex p-4 rounded mb-4 bg-white">
+                            <i class="fas fa-envelope fa-2x text-primary me-4"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p class="mb-2">info@gsacommerce.com</p>
+                            </div>
+                        </div>
+                        <div class="d-flex p-4 rounded bg-white">
+                            <i class="fa fa-phone-alt fa-2x text-primary me-4"></i>
+                            <div>
+                                <h4>Telepon</h4>
+                                <p class="mb-2">+62 813-9006-9009</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    <!-- Contact End -->
 @endsection
-
-<script>
-    document.getElementById('loadMap').addEventListener('click', function(e) {
-        e.preventDefault(); // Mencegah link melakukan aksi default
-        document.getElementById('map').innerHTML =
-            '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1980.7410879227498!2d107.13115335835156!3d-6.302469100000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69932f9a02a44f%3A0x8db08426c8f47964!2sBizpark%20Jababeka%2C%20Jl.%20Niaga%20Industri%20Selatan%202%20Blok%20QQ2%20No.6%2C%20Pasirsari%2C%20Cikarang%20Sel.%2C%20Bekasi%2C%20Jawa%20Barat%2017532!5e0!3m2!1sid!2sid!4v1695704817955!5m2!1sid!2sid" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
-    });
-</script>

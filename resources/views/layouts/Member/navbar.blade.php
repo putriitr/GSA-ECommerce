@@ -1,73 +1,60 @@
-<body class="goto-here">
-    <div class="py-1 bg-primary">
-        <div class="container">
-            <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-                <div class="col-lg-12 d-block">
-                    <div class="row d-flex">
-                        <div class="col-md pr-4 d-flex topper align-items-center">
-                            <div class="icon mr-2 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-map-pin text-white"></i>
-                            </div>
-                            <span class="text">Office Location</span>
-                        </div>
-                        <div class="col-md pr-4 d-flex topper align-items-center">
-                            <div class="icon mr-2 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-phone-alt text-white"></i>
-                            </div>
-                            <span class="text">+62 813-9006-9009</span>
-                        </div>
-                        <div class="col-md pr-4 d-flex topper align-items-center">
-                            <div class="icon mr-2 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-envelope text-white"></i>
-                            </div>
-                            <span class="text">info@gsacommerce.com</span>
-                        </div>
-                        <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-                            <span class="text">3-5 Business days delivery &amp; Free Returns</span>
-                        </div>
+        <!-- Navbar start -->
+        <div class="container-fluid fixed-top">
+            <div class="container topbar bg-primary d-none d-lg-block">
+                <div class="d-flex justify-content-between">
+                    <div class="top-info ps-2">
+                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">Bekasi, Jawa Barat</a></small>
+                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="mailto:info@gsacommerce.com" class="text-white">info@gsacommerce.com</a></small>
+                        <small class="me-3"><i class="fas fa-phone me-2 text-secondary"></i><a href="https://wa.me/6281390069009" class="text-white">+62 813-9006-9009</a></small>
+                    </div>
+                    <div class="top-link pe-2">
+                        <a href="#" class="text-white"><small class="text-white mx-2">Innovation for Construction</small>|</a>
+                        <a href="#" class="text-white"><small class="text-white mx-2">Indonesia</small></a>
                     </div>
                 </div>
-
             </div>
-        </div>
-    </div>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
-            {{-- <a class="navbar-brand" href="index.html">Vegefoods</a> --}}
-            <a href="#" class="navbar-brand"><img src="{{ asset('storage/img/logo-gsa2.png') }}" class="img-fluid"
-                    alt="" style="height: 80px; width: 100%;"></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
-            </button>
-
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="{{ url('/') }}" class="nav-link">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">Shop</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" href="{{ url('/shop') }}">Shop</a>
-                            <a class="dropdown-item" href="{{ url('/wishlist') }}">Wishlist</a>
-                            {{-- <a class="dropdown-item" href="product-single.html">Single Product</a> --}}
-                            <a class="dropdown-item" href="{{ url('/cart') }}">Cart</a>
-                            <a class="dropdown-item" href="{{ url('/checkout') }}">Checkout</a>
+            <div class="container px-0">
+                <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                    <a href="index.html" class="navbar-brand">
+                        <img src="{{ asset('storage/img/logo-gsa2.png')}}" alt="Fruitables Logo" style="height: 100px;">
+                    </a>
+                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars text-primary"></span>
+                    </button>
+                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                        <div class="navbar-nav mx-auto">
+                            <a href="{{ route('home')}}" class="nav-item nav-link">Home</a>
+                            <a href="{{ route('shop')}}" class="nav-item nav-link active">Shop</a>
+                            {{-- <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Shop</a>
+                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                                    <a href="cart.html" class="dropdown-item">Shop</a>
+                                    <a href="chackout.html" class="dropdown-item">Cart</a>
+                                    <a href="testimonial.html" class="dropdown-item">Checkout</a>
+                                    {{-- <a href="404.html" class="dropdown-item">404 Page</a>
+                                </div>
+                            </div> --}}
+                            <a href="{{ route('contact')}}" class="nav-item nav-link">Contact</a>
                         </div>
-                    </li>
-                    <li class="nav-item"><a href="{{ url('/about') }}" class="nav-link">About</a></li>
-                    {{-- <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li> --}}
-                    <li class="nav-item"><a href="{{ url('/contact') }}" class="nav-link">Contact</a></li>
-                    <li class="nav-item cta cta-colored">
-                        <a href="cart.html" class="nav-link">
-                            <i class="fas fa-shopping-cart text-black"></i>
-                            [3]
-                        </a>
-                    </li>
+                        <div class="d-flex m-3 me-0">
+                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
+                            <a href="{{ route('wishlist')}}" class="position-relative me-4 my-auto">
+                                <i class="fa fa-heart fa-2x"></i>
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 22px; height: 20px; min-width: 20px;">5</span>
+                            </a>
+                            <a href="{{ route('cart')}}" class="position-relative me-4 my-auto">
+                                <i class="fa fa-shopping-cart fa-2x"></i>
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 25px; height: 20px; min-width: 20px;">3</span>
+                            </a>
+                            <a href="#" class="btn btn-primary rounded-pill d-flex align-items-center text-white">
+                                <i class="fas fa-user me-2"></i>
+                                LOGIN
+                            </a>
 
-
-                </ul>
+                        </div>
+                    </div>
+                </nav>
             </div>
         </div>
-    </nav>
-    <!-- END nav -->
+        <!-- Navbar End -->

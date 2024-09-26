@@ -1,366 +1,521 @@
 @extends('layouts.member.master')
 
 @section('content')
-    <!-- Slider Start -->
-    <section id="home-section" class="hero">
-        <div class="home-slider owl-carousel">
-            <div class="slider-item" style="background-image: url(storage/img/bg_1.jpg);">
-                <div class="overlay"></div>
-                <div class="container">
-                    <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-                        <div class="col-md-12 ftco-animate text-center">
-                            <h1 class="mb-2">We serve Fresh Vegestables &amp; Fruits</h1>
-                            <h2 class="subheading mb-4">We deliver organic vegetables &amp; fruits</h2>
-                            <p><a href="#" class="btn btn-primary">View Details</a></p>
-                        </div>
-                    </div>
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            <div class="slider-item" style="background-image: url(storage/img/bg_2.jpg);">
-                <div class="overlay"></div>
-                <div class="container">
-                    <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-                        <div class="col-sm-12 ftco-animate text-center">
-                            <h1 class="mb-2">100% Fresh &amp; Organic Foods</h1>
-                            <h2 class="subheading mb-4">We deliver organic vegetables &amp; fruits</h2>
-                            <p><a href="#" class="btn btn-primary">View Details</a></p>
-                        </div>
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="keywords"
+                            aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Slider End -->
+    </div>
+    <!-- Modal Search End -->
 
-    <!-- Services Start -->
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row no-gutters ftco-services">
-                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
-                    <div class="media block-6 services mb-md-0 mb-4">
-                        <div class="icon bg-color-1 active d-flex justify-content-center align-items-center mb-2">
-                            <span class="flaticon-shipped"></span>
-                        </div>
-                        <div class="media-body">
-                            <h3 class="heading">Free Shipping</h3>
-                            <span>On order over $100</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
-                    <div class="media block-6 services mb-md-0 mb-4">
-                        <div class="icon bg-color-2 d-flex justify-content-center align-items-center mb-2">
-                            <span class="flaticon-diet"></span>
-                        </div>
-                        <div class="media-body">
-                            <h3 class="heading">Always Fresh</h3>
-                            <span>Product well packaged</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
-                    <div class="media block-6 services mb-md-0 mb-4">
-                        <div class="icon bg-color-3 d-flex justify-content-center align-items-center mb-2">
-                            <span class="flaticon-award"></span>
-                        </div>
-                        <div class="media-body">
-                            <h3 class="heading">Superior Quality</h3>
-                            <span>Quality Products</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 text-center d-flex align-self-stretch ftco-animate">
-                    <div class="media block-6 services mb-md-0 mb-4">
-                        <div class="icon bg-color-4 d-flex justify-content-center align-items-center mb-2">
-                            <span class="flaticon-customer-service"></span>
-                        </div>
-                        <div class="media-body">
-                            <h3 class="heading">Support</h3>
-                            <span>24/7 Support</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Services End -->
 
-    <!-- Category Start -->
-    <section class="ftco-section ftco-category ftco-no-pt">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <div class="col-md-6 order-md-last align-items-stretch d-flex">
-                            <div class="category-wrap-2 ftco-animate img align-self-stretch d-flex"
-                                style="background-image: url(storage/img/category.jpg);">
-                                <div class="text text-center">
-                                    <h2>OUR PRODUCTS</h2>
-                                    <p>Protect the health of every home</p>
-                                    <p><a href="#" class="btn btn-primary">Shop now</a></p>
-                                </div>
+    <!-- Hero Start -->
+    <div class="container-fluid py-5 mb-5 hero-header"
+        style="background-image: url('{{ asset('storage/img/bg-1.jpg') }}'); background-size: cover; background-position: center; position: relative;">
+        <div class="overlay"
+            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.7); z-index: 1;">
+        </div>
+        <div class="container py-5" style="position: relative; z-index: 2;">
+            <div class="row g-5 align-items-center">
+                <div class="col-md-12 col-lg-7">
+                    <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
+                    <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
+                </div>
+                <div class="col-md-12 col-lg-5">
+                    <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                            <div class="carousel-item active rounded">
+                                <img src="{{ asset('storage/img/mechanics.jpg') }}"
+                                    class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
+                                <a href="#" class="btn px-4 py-2 text-white rounded">Mechanics</a>
+                            </div>
+                            <div class="carousel-item rounded">
+                                <img src="{{ asset('storage/img/machine.jpg') }}" class="img-fluid w-100 h-100 rounded"
+                                    alt="Second slide">
+                                <a href="#" class="btn px-4 py-2 text-white rounded">Machine</a>
+                            </div>
+                            <div class="carousel-item rounded">
+                                <img src="{{ asset('storage/img/storage.jpg') }}" class="img-fluid w-100 h-100 rounded"
+                                    alt="Second slide">
+                                <a href="#" class="btn px-4 py-2 text-white rounded">Storage</a>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="category-wrap ftco-animate img mb-4 d-flex align-items-end"
-                                style="background-image: url(storage/img/machine.jpg);">
-                                <div class="text px-3 py-1">
-                                    <h2 class="mb-0"><a href="#">Machine</a></h2>
-                                </div>
-                            </div>
-                            <div class="category-wrap ftco-animate img d-flex align-items-end"
-                                style="background-image: url(storage/img/storage.jpg);">
-                                <div class="text px-3 py-1">
-                                    <h2 class="mb-0"><a href="#">Storage</a></h2>
-                                </div>
-                            </div>
-                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselId"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero End -->
 
-                <div class="col-md-4">
-                    <div class="category-wrap ftco-animate img mb-4 d-flex align-items-end"
-                        style="background-image: url(storage/img/mechanics.jpg);">
-                        <div class="text px-3 py-1">
-                            <h2 class="mb-0"><a href="#">Mechanics</a></h2>
-                        </div>
-                    </div>
-                    <div class="category-wrap ftco-animate img d-flex align-items-end"
-                        style="background-image: url(storage/img/safety.jpg);">
-                        <div class="text px-3 py-1">
-                            <h2 class="mb-0"><a href="#">Others</a></h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Category End -->
 
-    <!-- Featured Products Start -->
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center mb-3 pb-3">
-                <div class="col-md-12 heading-section text-center ftco-animate">
-                    <span class="subheading">Featured Products</span>
-                    <h2 class="mb-4">Our Products</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <!-- Product 1 -->
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod"><img class="img-fluid"
-                                src="{{ asset('storage/img/product-1.jpg') }}" alt="Product 1">
-                            <span class="status">30%</span>
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Bell Pepper</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span class="mr-2 price-dc">$120.00</span><span
-                                            class="price-sale">$80.00</span></p>
-                                </div>
-                            </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#"
-                                        class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#"
-                                        class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product 2 -->
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod"><img class="img-fluid"
-                                src="{{ asset('storage/img/product-2.jpg') }}" alt="Product 2">
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Strawberry</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span>$120.00</span></p>
-                                </div>
-                            </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#"
-                                        class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#"
-                                        class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product 3 -->
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod"><img class="img-fluid"
-                                src="{{ asset('storage/img/product-3.jpg') }}" alt="Product 3">
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Green Beans</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span>$120.00</span></p>
-                                </div>
-                            </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#"
-                                        class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#"
-                                        class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product 4 -->
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod"><img class="img-fluid"
-                                src="{{ asset('storage/img/product-4.jpg') }}" alt="Product 4">
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Purple Cabbage</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span>$120.00</span></p>
-                                </div>
-                            </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#"
-                                        class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#"
-                                        class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Featured Products End -->
 
-    <section class="ftco-section img" style="background-image: url(storage/img/bg_3.jpg);">
-        <div class="container">
-            <div class="row justify-content-end">
-                <div class="col-md-6 heading-section ftco-animate deal-of-the-day ftco-animate">
-                    <span class="subheading">Best Price For You</span>
-                    <h2 class="mb-4">Deal of the day</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-                    <h3><a href="#">Spinach</a></h3>
-                    <span class="price">$10 <a href="#">now $5 only</a></span>
-                    <div id="timer" class="d-flex mt-5">
-                        <div class="time" id="days"></div>
-                        <div class="time pl-3" id="hours"></div>
-                        <div class="time pl-3" id="minutes"></div>
-                        <div class="time pl-3" id="seconds"></div>
+    <!-- Featurs Section Start -->
+    <div class="container-fluid featurs py-5">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fas fa-car-side fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>Free Shipping</h5>
+                            <p class="mb-0">Free on order over $300</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fas fa-user-shield fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>Security Payment</h5>
+                            <p class="mb-0">100% security payment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fas fa-exchange-alt fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>30 Day Return</h5>
+                            <p class="mb-0">30 day money guarantee</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="featurs-item text-center rounded bg-light p-4">
+                        <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                            <i class="fa fa-phone-alt fa-3x text-white"></i>
+                        </div>
+                        <div class="featurs-content text-center">
+                            <h5>24/7 Support</h5>
+                            <p class="mb-0">Support every time fast</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    <!-- Featurs Section End -->
 
-    <!-- Testimony Section Start -->
-    <section class="ftco-section testimony-section">
-        <div class="container">
-            <div class="row justify-content-center mb-5 pb-3">
-                <div class="col-md-7 heading-section ftco-animate text-center">
-                    <span class="subheading">Testimony</span>
-                    <h2 class="mb-4">Our satisfied customer says</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live
-                        the blind texts. Separated they live in</p>
+    <!-- Vesitable Shop Start-->
+    <div class="container-fluid vesitable py-5">
+        <div class="container py-5">
+            <h1 class="mb-0">Produk Kebanggaan Kami</h1>
+            <div class="owl-carousel vegetable-carousel justify-content-center">
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/cutting/product-1.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Cutting</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Parsely</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/cutting/product-2.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Cutting</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Parsely</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/cutting/product-3.jpg') }}"
+                            class="img-fluid w-100 rounded-top bg-light" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Cutting</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Banana</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/cutting/product-4.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Cutting</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Bell Papper</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/fastening/product-1.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Fastening</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Potatoes</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/fastening/product-2.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Fastening</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Parsely</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/fastening/product-3.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Fastening</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Potatoes</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-primary rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="{{ asset('storage/img/product/fastening/product-4.jpg') }}"
+                            class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
+                        style="top: 10px; right: 10px;">Fastening</div>
+                    <div class="p-4 rounded-bottom">
+                        <h4>Parsely</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                        <div class="d-flex justify-content-between flex-lg-wrap">
+                            <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
+                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                    class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row ftco-animate">
-                <div class="col-md-12">
-                    <div class="carousel-testimony owl-carousel">
-                        <div class="item">
-                            <div class="testimony-wrap p-4 pb-5">
-                                <div class="user-img mb-5" style="background-image: url(storage/img/person_1.jpg)">
-                                    <span class="quote d-flex align-items-center justify-content-center">
-                                        <i class="icon-quote-left"></i>
-                                    </span>
+        </div>
+    </div>
+    <!-- Vesitable Shop End -->
+
+
+    <!-- Banner Section Start-->
+    <div class="container-fluid banner bg-secondary my-5">
+        <div class="container py-5">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <div class="py-4">
+                        <h1 class="display-3 text-white">Fresh Exotic Fruits</h1>
+                        <p class="fw-normal display-3 text-dark mb-4">in Our Store</p>
+                        <p class="mb-4 text-dark">The generated Lorem Ipsum is therefore always free from repetition
+                            injected humour, or non-characteristic words etc.</p>
+                        <a href="#"
+                            class="banner-btn btn border-2 border-white rounded-pill text-dark py-3 px-5">BUY</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <img src="img/baner-1.png" class="img-fluid w-100 rounded" alt="">
+                        <div class="d-flex align-items-center justify-content-center bg-white rounded-circle position-absolute"
+                            style="width: 140px; height: 140px; top: 0; left: 0;">
+                            <h1 style="font-size: 100px;">1</h1>
+                            <div class="d-flex flex-column">
+                                <span class="h2 mb-0">50$</span>
+                                <span class="h4 text-muted mb-0">kg</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Banner Section End -->
+
+
+    <!-- Bestsaler Product Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="text-center mx-auto mb-5" style="max-width: 700px;">
+                <h1 class="display-4">Bestseller Products</h1>
+                <p>Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks
+                    reasonable.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6 col-xl-4">
+                    <div class="p-4 rounded bg-light">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <img src="{{ asset('storage/img/product/cutting/product-1.jpg') }}"
+                                    class="img-fluid rounded-circle w-100" alt="">
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="h5">Organic Tomato</a>
+                                <div class="d-flex my-3">
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star"></i>
                                 </div>
-                                <div class="text text-center">
-                                    <p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
-                                        countries Vokalia and Consonantia, there live the blind texts.</p>
-                                    <p class="name">Garreth Smith</p>
-                                    <span class="position">Marketing Manager</span>
+                                <h4 class="mb-3">3.12 $</h4>
+                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                        class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xl-4">
+                    <div class="p-4 rounded bg-light">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <img src="{{ asset('storage/img/product/cutting/product-1.jpg') }}"
+                                    class="img-fluid rounded-circle w-100" alt="">
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="h5">Organic Tomato</a>
+                                <div class="d-flex my-3">
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h4 class="mb-3">3.12 $</h4>
+                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                        class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xl-4">
+                    <div class="p-4 rounded bg-light">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <img src="{{ asset('storage/img/product/cutting/product-1.jpg') }}"
+                                    class="img-fluid rounded-circle w-100" alt="">
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="h5">Organic Tomato</a>
+                                <div class="d-flex my-3">
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h4 class="mb-3">3.12 $</h4>
+                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
+                                        class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bestsaler Product End -->
+
+
+    <!-- Fact Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="bg-light p-5 rounded">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="counter bg-white rounded p-5">
+                            <i class="fa fa-users text-secondary"></i>
+                            <h4>satisfied customers</h4>
+                            <h1>1963</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="counter bg-white rounded p-5">
+                            <i class="fa fa-users text-secondary"></i>
+                            <h4>quality of service</h4>
+                            <h1>99%</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="counter bg-white rounded p-5">
+                            <i class="fa fa-users text-secondary"></i>
+                            <h4>quality certificates</h4>
+                            <h1>33</h1>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="counter bg-white rounded p-5">
+                            <i class="fa fa-users text-secondary"></i>
+                            <h4>Available Products</h4>
+                            <h1>789</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fact Start -->
+
+
+    <!-- Tastimonial Start -->
+    <div class="container-fluid testimonial py-5">
+        <div class="container py-5">
+            <div class="testimonial-header text-center">
+                <h4 class="text-primary">Our Testimonial</h4>
+                <h1 class="display-5 mb-5 text-dark">Our Client Saying!</h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel">
+                <div class="testimonial-item img-border-radius bg-light rounded p-4">
+                    <div class="position-relative">
+                        <i class="fa fa-quote-right fa-2x text-secondary position-absolute"
+                            style="bottom: 30px; right: 0;"></i>
+                        <div class="mb-4 pb-4 border-bottom border-secondary">
+                            <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the
+                                industry's standard dummy text ever since the 1500s,
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center flex-nowrap">
+                            <div class="bg-secondary rounded">
+                                <img src="img/testimonial-1.jpg" class="img-fluid rounded"
+                                    style="width: 100px; height: 100px;" alt="">
+                            </div>
+                            <div class="ms-4 d-block">
+                                <h4 class="text-dark">Client Name</h4>
+                                <p class="m-0 pb-3">Profession</p>
+                                <div class="d-flex pe-5">
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="testimony-wrap p-4 pb-5">
-                                <div class="user-img mb-5" style="background-image: url(storage/img/person_2.jpg)">
-                                    <span class="quote d-flex align-items-center justify-content-center">
-                                        <i class="icon-quote-left"></i>
-                                    </span>
-                                </div>
-                                <div class="text text-center">
-                                    <p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
-                                        countries Vokalia and Consonantia, there live the blind texts.</p>
-                                    <p class="name">Garreth Smith</p>
-                                    <span class="position">Marketing Manager</span>
+                    </div>
+                </div>
+                <div class="testimonial-item img-border-radius bg-light rounded p-4">
+                    <div class="position-relative">
+                        <i class="fa fa-quote-right fa-2x text-secondary position-absolute"
+                            style="bottom: 30px; right: 0;"></i>
+                        <div class="mb-4 pb-4 border-bottom border-secondary">
+                            <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the
+                                industry's standard dummy text ever since the 1500s,
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center flex-nowrap">
+                            <div class="bg-secondary rounded">
+                                <img src="img/testimonial-1.jpg" class="img-fluid rounded"
+                                    style="width: 100px; height: 100px;" alt="">
+                            </div>
+                            <div class="ms-4 d-block">
+                                <h4 class="text-dark">Client Name</h4>
+                                <p class="m-0 pb-3">Profession</p>
+                                <div class="d-flex pe-5">
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="testimony-wrap p-4 pb-5">
-                                <div class="user-img mb-5" style="background-image: url(storage/img/person_3.jpg)">
-                                    <span class="quote d-flex align-items-center justify-content-center">
-                                        <i class="icon-quote-left"></i>
-                                    </span>
-                                </div>
-                                <div class="text text-center">
-                                    <p class="mb-5 pl-4 line">Far far away, behind the word mountains, far from the
-                                        countries Vokalia and Consonantia, there live the blind texts.</p>
-                                    <p class="name">Garreth Smith</p>
-                                    <span class="position">Marketing Manager</span>
+                    </div>
+                </div>
+                <div class="testimonial-item img-border-radius bg-light rounded p-4">
+                    <div class="position-relative">
+                        <i class="fa fa-quote-right fa-2x text-secondary position-absolute"
+                            style="bottom: 30px; right: 0;"></i>
+                        <div class="mb-4 pb-4 border-bottom border-secondary">
+                            <p class="mb-0">Lorem Ipsum is simply dummy text of the printing Ipsum has been the
+                                industry's standard dummy text ever since the 1500s,
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center flex-nowrap">
+                            <div class="bg-secondary rounded">
+                                <img src="img/testimonial-1.jpg" class="img-fluid rounded"
+                                    style="width: 100px; height: 100px;" alt="">
+                            </div>
+                            <div class="ms-4 d-block">
+                                <h4 class="text-dark">Client Name</h4>
+                                <p class="m-0 pb-3">Profession</p>
+                                <div class="d-flex pe-5">
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
+                                    <i class="fas fa-star text-primary"></i>
                                 </div>
                             </div>
                         </div>
@@ -368,6 +523,6 @@
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Testimony Section End -->
+    </div>
+    <!-- Tastimonial End -->
 @endsection
