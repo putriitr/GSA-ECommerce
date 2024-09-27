@@ -21,17 +21,19 @@
     </div>
     <!-- Modal Search End -->
 
-
     <!-- Single Page Header start -->
-    <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6">Wishlist</h1>
-        <ol class="breadcrumb justify-content-center mb-0">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+    <div class="container-fluid page-header py-5"
+        style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/page-header.jpg') }}') no-repeat center center; background-size: cover;">
+        <div style="background: rgba(0, 0, 0, 0.5); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+        </div>
+        <h1 class="text-center text-white display-6" style="position: relative; z-index: 2;">Wishlist</h1>
+        <ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">Beranda</a></li>
             <li class="breadcrumb-item active text-white">Wishlist</li>
         </ol>
     </div>
     <!-- Single Page Header End -->
+
     <div class="container-fluid py-5">
         <div class="container py-5">
 
@@ -46,173 +48,83 @@
                                             <th>&nbsp;</th>
                                             <th>Product List</th>
                                             <th>&nbsp;</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
+                                            <th class="price">Price</th>
+                                            <th>&nbsp;</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr class="text-left">
-                                            <td class="product-remove"><a href="#"><span
-                                                        class="ion-ios-close"></span></a></td>
-
+                                            <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
                                             <td class="image-prod">
-                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image"
-                                                    style="width: 100px; height: 80px; object-fit: cover;">
+                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image" style="width: 100px; height: 80px; object-fit: cover;">
                                             </td>
-
                                             <td class="product-name">
                                                 <h3>Bell Pepper</h3>
                                                 <p>Far far away, behind the word mountains, far from the countries</p>
                                             </td>
-
-                                            <td class="price">$4.90</td>
-
-                                            <td class="quantity">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" name="quantity"
-                                                        class="quantity form-control input-number" value="1"
-                                                        min="1" max="100">
-                                                </div>
+                                            <td class="price">Rp 66.000</td> <!-- Kolom harga -->
+                                            <td>&nbsp;</td> <!-- Kolom kosong sebelum aksi -->
+                                            <td>
+                                                <button class="btn btn-md rounded-circle bg-light border mt-4">
+                                                    <i class="fa fa-times text-danger"></i> <!-- Tombol hapus hanya di sini -->
+                                                </button>
                                             </td>
-
-                                            <td class="total">$4.90</td>
-                                        </tr><!-- END TR-->
+                                        </tr><!-- END TR -->
 
                                         <tr class="text-left">
-                                            <td class="product-remove"><a href="#"><span
-                                                        class="ion-ios-close"></span></a></td>
-
+                                            <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
                                             <td class="image-prod">
-                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image"
-                                                    style="width: 100px; height: 80px; object-fit: cover;">
+                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image" style="width: 100px; height: 80px; object-fit: cover;">
                                             </td>
-
                                             <td class="product-name">
                                                 <h3>Bell Pepper</h3>
                                                 <p>Far far away, behind the word mountains, far from the countries</p>
                                             </td>
-
-                                            <td class="price">$15.70</td>
-
-                                            <td class="quantity">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" name="quantity"
-                                                        class="quantity form-control input-number" value="1"
-                                                        min="1" max="100">
-                                                </div>
+                                            <td class="price">Rp 66.000</td> <!-- Kolom harga -->
+                                            <td>&nbsp;</td> <!-- Kolom kosong sebelum aksi -->
+                                            <td>
+                                                <button class="btn btn-md rounded-circle bg-light border mt-4">
+                                                    <i class="fa fa-times text-danger"></i> <!-- Tombol hapus hanya di sini -->
+                                                </button>
                                             </td>
-
-                                            <td class="total">$15.70</td>
-                                        </tr><!-- END TR-->
+                                        </tr><!-- END TR -->
 
                                         <tr class="text-left">
-                                            <td class="product-remove"><a href="#"><span
-                                                        class="ion-ios-close"></span></a></td>
-
+                                            <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
                                             <td class="image-prod">
-                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image"
-                                                    style="width: 100px; height: 80px; object-fit: cover;">
+                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image" style="width: 100px; height: 80px; object-fit: cover;">
                                             </td>
-
                                             <td class="product-name">
                                                 <h3>Bell Pepper</h3>
                                                 <p>Far far away, behind the word mountains, far from the countries</p>
                                             </td>
-
-                                            <td class="price">$15.70</td>
-
-                                            <td class="quantity">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" name="quantity"
-                                                        class="quantity form-control input-number" value="1"
-                                                        min="1" max="100">
-                                                </div>
+                                            <td class="price">Rp 66.000</td> <!-- Kolom harga -->
+                                            <td>&nbsp;</td> <!-- Kolom kosong sebelum aksi -->
+                                            <td>
+                                                <button class="btn btn-md rounded-circle bg-light border mt-4">
+                                                    <i class="fa fa-times text-danger"></i> <!-- Tombol hapus hanya di sini -->
+                                                </button>
                                             </td>
-
-                                            <td class="total">$15.70</td>
-                                        </tr><!-- END TR-->
+                                        </tr><!-- END TR -->
 
                                         <tr class="text-left">
-                                            <td class="product-remove"><a href="#"><span
-                                                        class="ion-ios-close"></span></a></td>
-
+                                            <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
                                             <td class="image-prod">
-                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image"
-                                                    style="width: 100px; height: 80px; object-fit: cover;">
+                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image" style="width: 100px; height: 80px; object-fit: cover;">
                                             </td>
-
                                             <td class="product-name">
                                                 <h3>Bell Pepper</h3>
                                                 <p>Far far away, behind the word mountains, far from the countries</p>
                                             </td>
-
-                                            <td class="price">$15.70</td>
-
-                                            <td class="quantity">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" name="quantity"
-                                                        class="quantity form-control input-number" value="1"
-                                                        min="1" max="100">
-                                                </div>
+                                            <td class="price">Rp 66.000</td> <!-- Kolom harga -->
+                                            <td>&nbsp;</td> <!-- Kolom kosong sebelum aksi -->
+                                            <td>
+                                                <button class="btn btn-md rounded-circle bg-light border mt-4">
+                                                    <i class="fa fa-times text-danger"></i> <!-- Tombol hapus hanya di sini -->
+                                                </button>
                                             </td>
-
-                                            <td class="total">$15.70</td>
-                                        </tr><!-- END TR-->
-
-                                        <tr class="text-left">
-                                            <td class="product-remove"><a href="#"><span
-                                                        class="ion-ios-close"></span></a></td>
-
-                                            <td class="image-prod">
-                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image"
-                                                    style="width: 100px; height: 80px; object-fit: cover;">
-                                            </td>
-
-                                            <td class="product-name">
-                                                <h3>Bell Pepper</h3>
-                                                <p>Far far away, behind the word mountains, far from the countries</p>
-                                            </td>
-
-                                            <td class="price">$15.70</td>
-
-                                            <td class="quantity">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" name="quantity"
-                                                        class="quantity form-control input-number" value="1"
-                                                        min="1" max="100">
-                                                </div>
-                                            </td>
-
-                                            <td class="total">$15.70</td>
-                                        </tr><!-- END TR-->
-
-                                        <tr class="text-left">
-                                            <td class="product-remove"><a href="#"><span
-                                                        class="ion-ios-close"></span></a></td>
-
-                                            <td class="image-prod">
-                                                <img src="{{ asset('storage/img/machine.jpg') }}" alt="Machine Image"
-                                                    style="width: 100px; height: 80px; object-fit: cover;">
-                                            </td>
-
-                                            <td class="product-name">
-                                                <h3>Bell Pepper</h3>
-                                                <p>Far far away, behind the word mountains, far from the countries</p>
-                                            </td>
-
-                                            <td class="price">$15.70</td>
-
-                                            <td class="quantity">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" name="quantity"
-                                                        class="quantity form-control input-number" value="1"
-                                                        min="1" max="100">
-                                                </div>
-                                            </td>
-
-                                            <td class="total">$15.70</td>
-                                        </tr><!-- END TR-->
+                                        </tr><!-- END TR -->
                                     </tbody>
                                 </table>
                             </div>

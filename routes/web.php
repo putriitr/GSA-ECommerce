@@ -45,4 +45,6 @@ Route::get('/contact', function () {
     return view('member.contact');
 })->name('contact');
 
-
+Route::get('/checkout', function () {
+    return view('member.checkout');
+})->name('checkout');
