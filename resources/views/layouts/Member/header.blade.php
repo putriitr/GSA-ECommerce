@@ -3,10 +3,11 @@
 
     <head>
         <meta charset="utf-8">
-        <title>GS</title>
+        <title>GSacommerce</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="" name="keywords">
         <meta content="" name="description">
+        <link rel="shortcut icon" type="image/png" href="{{ asset('storage/img/logo-gsa2.png')}}" />
 
         <!-- Google Web Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

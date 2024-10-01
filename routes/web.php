@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Slider\SliderController;
+use App\Http\Controllers\Admin\Parameter\ParameterController;
+use App\Http\Controllers\Member\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +51,14 @@ Route::get('/contact', function () {
 Route::get('/checkout', function () {
     return view('member.checkout');
 })->name('checkout');
+
+Route::get('/admin-login', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+Route::prefix('admin')->group(function () {
+    Route::resource('sliders', SliderController::class);
+    Route::resource('parameters', ParameterController::class);
+});
+
+Route::get('/member', [MemberController::class, 'index'])->name('member.index');

@@ -23,54 +23,34 @@
 
 
     <!-- Hero Start -->
-    <div class="container-fluid py-5 mb-5 hero-header"
-        style="background-image: url('{{ asset('storage/img/bg-1.jpg') }}'); background-size: cover; background-position: center; position: relative;">
-        <div class="overlay"
-            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.7); z-index: 1;">
-        </div>
-        <div class="container py-5" style="position: relative; z-index: 2;">
-            <div class="row g-5 align-items-center">
-                <div class="col-md-12 col-lg-7">
-                    <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
-                    <h1 class="mb-5 display-3 text-primary">Organic Veggies & Fruits Foods</h1>
-                </div>
-                <div class="col-md-12 col-lg-5">
-                    <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
-                        <div class="carousel-inner" role="listbox">
-                            <div class="carousel-item active rounded">
-                                <img src="{{ asset('storage/img/mechanics.jpg') }}"
-                                    class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
-                                <a href="#" class="btn px-4 py-2 text-white rounded">Mechanics</a>
-                            </div>
-                            <div class="carousel-item rounded">
-                                <img src="{{ asset('storage/img/machine.jpg') }}" class="img-fluid w-100 h-100 rounded"
-                                    alt="Second slide">
-                                <a href="#" class="btn px-4 py-2 text-white rounded">Machine</a>
-                            </div>
-                            <div class="carousel-item rounded">
-                                <img src="{{ asset('storage/img/storage.jpg') }}" class="img-fluid w-100 h-100 rounded"
-                                    alt="Second slide">
-                                <a href="#" class="btn px-4 py-2 text-white rounded">Storage</a>
+    <div class="container-fluid py-5 mb-5 hero-header" style="position: relative;">
+        <div id="slider" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+           s     @foreach($sliders as $slider)
+                <div class="carousel-item @if($loop->first) active @endif" style="background-image: url('{{ asset('storage/' . $slider->image) }}'); background-size: cover; background-position: center;">
+                    <div class="overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.5); z-index: 1;"></div>
+                    <div class="container py-5" style="position: relative; z-index: 2;">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-md-12 col-lg-12 text-center">
+                                <h4 class="mb-3 text-secondary">{{ $slider->title }}</h4>
+                                <h1 class="mb-5 display-3 text-primary">{{ $slider->description }}</h1>
                             </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselId"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
                     </div>
                 </div>
+                @endforeach
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#slider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#slider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
     <!-- Hero End -->
-
-
 
     <!-- Featurs Section Start -->
     <div class="container-fluid featurs py-5">
@@ -135,8 +115,8 @@
                         <img src="{{ asset('storage/img/product/cutting/product-1.jpg') }}"
                             class="img-fluid w-100 rounded-top" alt="">
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute"
-                        style="top: 10px; right: 10px;">Cutting</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">
+                        Cutting</div>
                     <div class="p-4 rounded-bottom">
                         <h4>Parsely</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
