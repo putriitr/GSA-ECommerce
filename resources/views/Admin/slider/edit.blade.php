@@ -9,7 +9,7 @@
         <div class="mb-3">
             <label for="image" class="form-label">Image</label>
             <input type="file" class="form-control" name="image">
-            <img src="{{ asset('storage/' . $slider->image) }}" width="100" alt="" class="my-2">
+            <img src="{{ asset( $slider->image) }}" width="10" alt="" class="my-2">
             @error('image')
             <div class="text-danger">{{ $message }}</div>
             @enderror

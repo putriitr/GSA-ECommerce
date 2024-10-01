@@ -14,7 +14,6 @@ class SliderController extends Controller
         return view('admin.slider.index', compact('sliders'));
     }
 
-
     public function create()
     {
         return view('admin.slider.create');
@@ -28,7 +27,17 @@ class SliderController extends Controller
             'description' => 'required|string',
         ]);
 
-        $imagePath = $request->file('image')->store('sliders', 'public');
+        // $imagePath = $request->file('image')->store('sliders', 'public');
+        $image = $request->file('image');
+
+        // Buat nama unik untuk file gambar
+       // $imageName = $image->getFilename();
+        $imageName=$_FILES['image']['name'];
+        $image->move(public_path('storage/img/slider/'), $imageName);
+        $imagePath = 'storage/img/slider/' . $imageName;
+        //dd($imagePath);
+        //$imgname=$request->file('image')->getFilename();
+        //$request->file('image')->move('public/storage/img/product',$imgname);
 
         Slider::create([
             'image' => $imagePath,
@@ -59,14 +68,27 @@ class SliderController extends Controller
             'description' => 'required|string',
         ]);
 
+         // $imagePath = $request->file('image')->store('sliders', 'public');
+         $image = $request->file('image');
+
+         // Buat nama unik untuk file gambar
+         //$imageName = $image->getFilename();;
+         $imageName=$_FILES['image']['name'];
+         $imagePath = 'storage/img/slider/' . $imageName;
+        // dd($imagePath);
+
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
-            if ($slider->image) {
-                \Storage::disk('public')->delete($slider->image);
+            if ($slider->image==$imagePath ) {
+                //\Storage::disk('public')->delete($slider->image);
+            }else{
+                $image->move(public_path('storage/img/slider/'), $imageName);
             }
-            $imagePath = $request->file('image')->store('sliders', 'public');
+
+            //$imagePath = $request->file('image')->store('sliders', 'public');
             $slider->image = $imagePath;
         }
+
 
         $slider->title = $request->title;
         $slider->description = $request->description;

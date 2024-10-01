@@ -21,7 +21,7 @@
         <tbody>
             @foreach ($sliders as $slider)
             <tr>
-                <td><img src="{{ asset('storage/' . $slider->image) }}" alt="{{ $slider->title }}" style="max-width: 100px;"></td>
+                <td><img src="{{ asset( $slider->image) }}" alt="{{ $slider->title }}" style="max-width: 100px;"></td>
                 <td>{{ $slider->title }}</td>
                 <td>{{ $slider->description }}</td>
                 <td>

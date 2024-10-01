@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Slider extends Model
+class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image', 'title', 'description'];
+    protected $fillable = ['name', 'image', 'category', 'description'];
 }

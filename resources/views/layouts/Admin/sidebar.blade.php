@@ -78,14 +78,14 @@
                         <li class="nav-small-cap">
                             <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-6"
                                 class="fs-6"></iconify-icon>
-                            <span class="hide-menu">AUTH</span>
+                            <span class="hide-menu">PRODUCT</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
+                            <a class="sidebar-link" href="{{ route('products.index')}}" aria-expanded="false">
                                 <span>
                                     <iconify-icon icon="solar:login-3-bold-duotone" class="fs-6"></iconify-icon>
                                 </span>
-                                <span class="hide-menu">Login</span>
+                                <span class="hide-menu">All Product</span>
                             </a>
                         </li>
                         <li class="sidebar-item">

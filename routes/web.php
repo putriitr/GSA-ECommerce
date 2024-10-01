@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\Slider\SliderController;
 use App\Http\Controllers\Admin\Parameter\ParameterController;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Controllers\Admin\Product\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +18,7 @@ use App\Http\Controllers\Member\MemberController;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/shop', function () {
     return view('member.shop');
@@ -59,6 +59,7 @@ Route::get('/admin-login', function () {
 Route::prefix('admin')->group(function () {
     Route::resource('sliders', SliderController::class);
     Route::resource('parameters', ParameterController::class);
+    Route::resource('products', ProductController::class);
 });
 
 Route::get('/member', [MemberController::class, 'index'])->name('member.index');
