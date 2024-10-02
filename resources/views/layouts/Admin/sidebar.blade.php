@@ -1,140 +1,311 @@
-<body style="margin-top: 80px;">
-    <!--  Body Wrapper -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-        data-sidebar-position="fixed" data-header-position="fixed">
-        <!-- Sidebar Start -->
-        <aside class="left-sidebar">
-            <!-- Sidebar scroll-->
-            <div>
-                <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
-                        <img src="{{ asset('storage/img/logo-gsa2.png') }}" alt="" width="120" />
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+                <div class="app-brand demo">
+                    <a href="index.html" class="app-brand-link d-flex justify-content-center align-items-center" style="height: 100%;">
+                        <img src="{{ asset('storage/img/logo-gsa2.png')}}" alt="Sneat Logo" class="app-brand-text demo menu-text fw-bolder ms-2" width="180px">
                     </a>
-                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-                        <i class="ti ti-x fs-8"></i>
-                    </div>
+                    <a href="javascript:void(0);"
+                        class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                    </a>
                 </div>
-                <!-- Sidebar navigation-->
-                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-                    <ul id="sidebarnav">
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-6"></i>
-                            <span class="hide-menu">Home</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('dashboard')}}" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:home-smile-bold-duotone" class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Dashboard</span>
-                            </a>
-                        </li>
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-6"></i>
-                            <span class="hide-menu">UI COMPONENTS</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('sliders.index')}}" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:layers-minimalistic-bold-duotone" class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Sliders</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:danger-circle-bold-duotone" class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Alerts</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:bookmark-square-minimalistic-bold-duotone"
-                                        class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Card</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:file-text-bold-duotone" class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Forms</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:text-field-focus-bold-duotone"
-                                        class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Typography</span>
-                            </a>
-                        </li>
-                        <li class="nav-small-cap">
-                            <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-6"
-                                class="fs-6"></iconify-icon>
-                            <span class="hide-menu">PRODUCT</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('products.index')}}" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:login-3-bold-duotone" class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">All Product</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:user-plus-rounded-bold-duotone"
-                                        class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Register</span>
-                            </a>
-                        </li>
-                        <li class="nav-small-cap">
-                            <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"
-                                class="fs-6"></iconify-icon>
-                            <span class="hide-menu">MASTER DATA</span>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('parameters.index')}}" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:sticker-smile-circle-2-bold-duotone"
-                                        class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Parameter</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
-                                <span>
-                                    <iconify-icon icon="solar:planet-3-bold-duotone" class="fs-6"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Sample Page</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="unlimited-access hide-menu bg-primary-subtle position-relative mb-7 mt-7 rounded-3">
-                        <div class="d-flex">
-                            <div class="unlimited-access-title me-3">
-                                <h6 class="fw-semibold fs-4 mb-6 text-dark w-75">Upgrade to pro</h6>
-                                <a href="#" target="_blank" class="btn btn-primary fs-2 fw-semibold lh-sm">Buy
-                                    Pro</a>
-                            </div>
-                            <div class="unlimited-access-img">
-                                <img src="../assets/images/backgrounds/rocket.png" alt="" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                <!-- End Sidebar navigation -->
-            </div>
-            <!-- End Sidebar scroll-->
-        </aside>
-        <!--  Sidebar End -->
+
+                <div class="menu-inner-shadow"></div>
+
+                <ul class="menu-inner py-1">
+                    <!-- Dashboard -->
+                    <li class="menu-item">
+                        <a href="{{ route('dashboard')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Dashboard</div>
+                        </a>
+                    </li>
+
+                    <!-- Parameter -->
+                    <li class="menu-item">
+                        <a href="{{ route('parameters.index')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Parameter</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Pages</span>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div data-i18n="Account Settings">Products</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="{{ route('products.index')}}" class="menu-link">
+                                    <div data-i18n="Basic">Manage Product</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="{{ route('categories.index')}}" class="menu-link">
+                                    <div data-i18n="Notifications">Categories</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                            <div data-i18n="Authentications">Authentications</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="auth-login-basic.html" class="menu-link" target="_blank">
+                                    <div data-i18n="Basic">Login</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="auth-register-basic.html" class="menu-link" target="_blank">
+                                    <div data-i18n="Basic">Register</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
+                                    <div data-i18n="Basic">Forgot Password</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-cube-alt"></i>
+                            <div data-i18n="Misc">Misc</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="pages-misc-error.html" class="menu-link">
+                                    <div data-i18n="Error">Error</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="pages-misc-under-maintenance.html" class="menu-link">
+                                    <div data-i18n="Under Maintenance">Under Maintenance</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Components -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
+                    <!-- Cards -->
+                    <li class="menu-item">
+                        <a href="{{ route('sliders.index')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-collection"></i>
+                            <div data-i18n="Basic">Slider</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('services.index')}}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-collection"></i>
+                            <div data-i18n="Basic">Service</div>
+                        </a>
+                    </li>
+                    <!-- User interface -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-box"></i>
+                            <div data-i18n="User interface">User interface</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="ui-accordion.html" class="menu-link">
+                                    <div data-i18n="Accordion">Accordion</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-alerts.html" class="menu-link">
+                                    <div data-i18n="Alerts">Alerts</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-badges.html" class="menu-link">
+                                    <div data-i18n="Badges">Badges</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-buttons.html" class="menu-link">
+                                    <div data-i18n="Buttons">Buttons</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-carousel.html" class="menu-link">
+                                    <div data-i18n="Carousel">Carousel</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-collapse.html" class="menu-link">
+                                    <div data-i18n="Collapse">Collapse</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-dropdowns.html" class="menu-link">
+                                    <div data-i18n="Dropdowns">Dropdowns</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-footer.html" class="menu-link">
+                                    <div data-i18n="Footer">Footer</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-list-groups.html" class="menu-link">
+                                    <div data-i18n="List Groups">List groups</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-modals.html" class="menu-link">
+                                    <div data-i18n="Modals">Modals</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-navbar.html" class="menu-link">
+                                    <div data-i18n="Navbar">Navbar</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-offcanvas.html" class="menu-link">
+                                    <div data-i18n="Offcanvas">Offcanvas</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-pagination-breadcrumbs.html" class="menu-link">
+                                    <div data-i18n="Pagination &amp; Breadcrumbs">Pagination &amp; Breadcrumbs</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-progress.html" class="menu-link">
+                                    <div data-i18n="Progress">Progress</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-spinners.html" class="menu-link">
+                                    <div data-i18n="Spinners">Spinners</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-tabs-pills.html" class="menu-link">
+                                    <div data-i18n="Tabs &amp; Pills">Tabs &amp; Pills</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-toasts.html" class="menu-link">
+                                    <div data-i18n="Toasts">Toasts</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-tooltips-popovers.html" class="menu-link">
+                                    <div data-i18n="Tooltips & Popovers">Tooltips &amp; popovers</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="ui-typography.html" class="menu-link">
+                                    <div data-i18n="Typography">Typography</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Extended components -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-copy"></i>
+                            <div data-i18n="Extended UI">Extended UI</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
+                                    <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="extended-ui-text-divider.html" class="menu-link">
+                                    <div data-i18n="Text Divider">Text Divider</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-item">
+                        <a href="icons-boxicons.html" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-crown"></i>
+                            <div data-i18n="Boxicons">Boxicons</div>
+                        </a>
+                    </li>
+
+                    <!-- Forms & Tables -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp;
+                            Tables</span></li>
+                    <!-- Forms -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-detail"></i>
+                            <div data-i18n="Form Elements">Form Elements</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="forms-basic-inputs.html" class="menu-link">
+                                    <div data-i18n="Basic Inputs">Basic Inputs</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="forms-input-groups.html" class="menu-link">
+                                    <div data-i18n="Input groups">Input groups</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-detail"></i>
+                            <div data-i18n="Form Layouts">Form Layouts</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="form-layouts-vertical.html" class="menu-link">
+                                    <div data-i18n="Vertical Form">Vertical Form</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="form-layouts-horizontal.html" class="menu-link">
+                                    <div data-i18n="Horizontal Form">Horizontal Form</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Tables -->
+                    <li class="menu-item">
+                        <a href="tables-basic.html" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div data-i18n="Tables">Tables</div>
+                        </a>
+                    </li>
+                    <!-- Misc -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
+                    <li class="menu-item">
+                        <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                            target="_blank" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-support"></i>
+                            <div data-i18n="Support">Support</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                            target="_blank" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-file"></i>
+                            <div data-i18n="Documentation">Documentation</div>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+            <!-- / Menu -->

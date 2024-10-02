@@ -2,7 +2,10 @@
 
 @section('content')
     <h1>Products</h1>
-    <a href="{{ route('products.create') }}" class="btn btn-primary">Add Product</a>
+
+    <div class="mb-3">
+        <a href="{{ route('products.create') }}" class="btn btn-primary">Add Product</a>
+    </div>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -22,7 +25,7 @@
             @foreach($products as $product)
                 <tr>
                     <td>{{ $product->name }}</td>
-                    <td><img src="{{asset($product->image) }}" alt="{{ $product->name }}" width="10"></td>
+                    <td><img src="{{asset($product->image) }}" alt="{{ $product->name }}" width="100"></td>
                     <td>{{ $product->category }}</td>
                     <td>{{ $product->description }}</td>
                     <td>

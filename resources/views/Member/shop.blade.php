@@ -69,117 +69,15 @@
                             <div class="row g-4">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
-                                        <h4>Categories</h4>
                                         <ul class="list-unstyled fruite-categorie">
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-cut me-2"></i>Cutting Tools</a>
-                                                    <span>(4)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-tools me-2"></i>Fastening Tools</a>
-                                                    <span>(16)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-cogs me-2"></i>Mechanics Tools</a>
-                                                    <span>(26)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-tools me-2"></i>Holding Tools</a>
-                                                    <span>(16)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-box-open me-2"></i>Tool Storage &
-                                                        Assortment</a>
-                                                    <span>(14)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-bolt pe-2"></i>Universal Drill & Bit
-                                                        Sets</a>
-                                                    <span>(1)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-screwdriver me-2"></i>Stringing
-                                                        Tools</a>
-                                                    <span>(7)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-water me-2"></i>Plumbing Tools</a>
-                                                    <span>(6)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-tools me-2"></i>Machines</a>
-                                                    <span>(2)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-ruler-combined me-2"></i>Measuring
-                                                        Tools</a>
-                                                    <span>(3)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-shield-alt me-2"></i>Safety
-                                                        Equipment</a>
-                                                    <span>(5)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-plug me-2"></i>VDE Tools</a>
-                                                    <span>(4)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-hammer me-2"></i>Constructing
-                                                        Tools</a>
-                                                    <span>(0)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-table me-2"></i>Working Table</a>
-                                                    <span>(1)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-clipboard-check me-2"></i>Finishing
-                                                        Tools</a>
-                                                    <span>(0)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-cut me-2"></i>Sawing Tools</a>
-                                                    <span>(2)</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="d-flex justify-content-between fruite-name">
-                                                    <a href="#"><i class="fas fa-ellipsis-h me-2"></i>Others</a>
-                                                    <span>(8)</span>
-                                                </div>
-                                            </li>
+                                            @foreach($categories as $category)
+                                                <li>
+                                                    <div class="d-flex justify-content-between fruite-name">
+                                                        <a href="#"><i class="fas {{ $category->icon }} me-2"></i>{{ $category->name }}</a>
+                                                        <span>({{ $category->products_count }})</span> <!-- Jika ada relasi untuk menghitung produk -->
+                                                    </div>
+                                                </li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </div>

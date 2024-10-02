@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\Slider\SliderController;
 use App\Http\Controllers\Admin\Parameter\ParameterController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\Service\ServiceController;
+use App\Http\Controllers\Admin\Category\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +62,8 @@ Route::prefix('admin')->group(function () {
     Route::resource('sliders', SliderController::class);
     Route::resource('parameters', ParameterController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('services', ServiceController::class);
+    Route::resource('categories', CategoryController::class);
 });
 
 Route::get('/member', [MemberController::class, 'index'])->name('member.index');

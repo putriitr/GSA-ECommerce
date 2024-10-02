@@ -1,15 +1,61 @@
-<div class="py-6 px-6 text-center" style="position: fixed; left: 0; right: 0; bottom: 0; background-color: white;">
-    <p class="mb-0 fs-4">Design and Developed by <a href="" target="_blank" class="pe-1 text-primary text-decoration-underline">GSacommerce</a></p>
-</div>
+    <!-- Footer -->
+    <footer class="content-footer footer bg-footer-theme">
+        <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+            <div class="mb-2 mb-md-0">
+                ©
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                <a href="" target="_blank" class="footer-link fw-bolder">, GSacommerce</a>
+            </div>
+            {{-- <div>
+                <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
+                <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
 
-<script src="{{ asset('assets/lib/admin/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/lib/admin/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/lib/admin/apexcharts/dist/apexcharts.min.js') }}"></script>
-<script src="{{ asset('assets/lib/admin/simplebar/dist/simplebar.js') }}"></script>
-<script src="{{ asset('assets/js/admin/sidebarmenu.js') }}"></script>
-<script src="{{ asset('assets/js/admin/app.min.js') }}"></script>
-<script src="{{ asset('assets/js/admin/dashboard.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
-</body>
+                <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                    target="_blank" class="footer-link me-4">Documentation</a>
 
-</html>
+                <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank"
+                    class="footer-link me-4">Support</a>
+            </div> --}}
+        </div>
+    </footer>
+    <!-- / Footer -->
+
+    <div class="content-backdrop fade"></div>
+    </div>
+    <!-- Content wrapper -->
+    </div>
+    <!-- / Layout page -->
+    </div>
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{{ asset('assets/admin/assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('assets/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+
+    <script src="{{ asset('assets/admin/assets/vendor/js/menu.js') }}"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="{{ asset('assets/admin/assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+
+    <!-- Main JS -->
+    <script src="{{ asset('assets/admin/assets/js/main.js') }}"></script>
+
+    <!-- Page JS -->
+    <script src="{{ asset('assets/admin/assets/js/dashboards-analytics.js') }}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    </body>
+
+    </html>

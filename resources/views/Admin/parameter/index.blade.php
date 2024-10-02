@@ -3,7 +3,11 @@
 @section('content')
 <div class="container">
     <h1 class="mt-4">Parameters</h1>
-    <a href="{{ route('parameters.create') }}" class="btn btn-primary mb-3">Add/Update Parameter</a>
+
+    <div class="mb-3">
+            <a href="{{ route('parameters.create') }}" class="btn btn-primary mb-3">Add/Update Parameter</a>
+    </div>
+
 
     @php
         $parameter = \App\Models\Parameter::first();

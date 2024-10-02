@@ -3,7 +3,9 @@
 @section('content')
 <div class="container">
     <h1>Sliders</h1>
-    <a href="{{ route('sliders.create') }}" class="btn btn-primary mb-3">Add New Slider</a>
+    <div class="mb-3">
+        <a href="{{ route('sliders.create') }}" class="btn btn-primary mb-3">Add New Slider</a>
+    </div>
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
