@@ -18,7 +18,14 @@ class HomeController extends Controller
         $products = Product::all();
         $services = Service::all();
 
+        return view('home', compact('sliders', 'parameters', 'products', 'services'));
+    }
 
-        return view('home', compact('sliders', 'parameters', 'products', 'services', 'categories'));
+    public function shop()
+    {
+        $products = Product::with('category')->get(); 
+        $categories = Category::all();
+
+        return view('member.shop', compact('products', 'categories'));
     }
 }

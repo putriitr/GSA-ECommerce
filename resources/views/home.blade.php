@@ -97,7 +97,7 @@
                             {{ $product->category }}</div>
                         <div class="p-4 rounded-bottom">
                             <h4>{{ $product->name }}</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                            <p>{{ $product->description }}</p>
                             <div class="d-flex justify-content-center">
                                 <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i
                                         class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>

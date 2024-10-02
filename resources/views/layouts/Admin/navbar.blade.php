@@ -1,7 +1,6 @@
 <!-- Layout container -->
 <div class="layout-page">
     <!-- Navbar -->
-
     <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
         id="layout-navbar">
         <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -42,7 +41,7 @@
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar avatar-online">
-                                            <img src="{{ asset('storage/img/user.png')}}" alt
+                                            <img src="{{ asset('storage/img/user.png') }}" alt
                                                 class="w-px-40 h-auto rounded-circle" />
                                         </div>
                                     </div>
@@ -93,5 +92,4 @@
             </ul>
         </div>
     </nav>
-
     <!-- / Navbar -->

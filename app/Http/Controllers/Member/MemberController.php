@@ -15,4 +15,3 @@ class MemberController extends Controller
         return view('member.index', compact('sliders'));
     }
 }
-w

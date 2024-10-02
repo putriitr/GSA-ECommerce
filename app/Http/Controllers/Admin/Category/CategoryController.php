@@ -10,8 +10,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-        return view('admin.categories.index', compact('categories'));
+        $categories = Category::withCount('products')->get(); // Mengambil kategori dengan hitung produk
+        return view('admin.categories.index', compact('categories')); // Mengirimkan data ke view
     }
 
     public function create()
@@ -23,7 +23,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'icon' => 'required|string', 
+            'icon' => 'required|string',
         ]);
 
         Category::create($request->all());

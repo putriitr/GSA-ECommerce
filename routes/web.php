@@ -21,10 +21,7 @@ use App\Http\Controllers\Admin\Category\CategoryController;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/shop', function () {
-    return view('member.shop');
-})->name('shop');
+Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 
 Route::get('/product-detail', function () {
     return view('member.product-detail');
@@ -49,10 +46,6 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('member.contact');
 })->name('contact');
-
-Route::get('/checkout', function () {
-    return view('member.checkout');
-})->name('checkout');
 
 Route::get('/admin-login', function () {
     return view('dashboard');
