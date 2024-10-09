@@ -1,4 +1,4 @@
-@extends('layouts.member.master')
+@extends('layouts.customer.master')
 
 @section('content')
 <div class="hero-wrap hero-bread" style="background-image: url('storage/img/bg.jpg');">

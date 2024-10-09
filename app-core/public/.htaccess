@@ -6,6 +6,8 @@
     RewriteEngine On
 
     # Handle Authorization Header
+    Header set Access-Control-Allow-Origin "*"
+
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 

@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 class RegisterController extends Controller
 {
@@ -28,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -49,8 +51,9 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255', 'unique:t_users'], // Name must be unique
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:t_users'],
+            'phone' => ['required', 'string', 'max:15', 'unique:t_users'], 
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -63,10 +66,26 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $slug = $this->generateUniqueSlug($data['name']);
+
         return User::create([
-            'name' => $data['name'],
+            'name' => $data['name'],  
+            'slug' => $slug,          
             'email' => $data['email'],
+            'phone' => $data['phone'], 
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    protected function generateUniqueSlug($name)
+    {
+        // Generate initial slug
+        $slug = Str::slug($name);
+
+        // Check if the slug already exists in the t_users table
+        $count = User::where('slug', 'LIKE', "{$slug}%")->count();
+
+        // If the slug exists, append a unique identifier
+        return $count ? "{$slug}-" . ($count + 1) : $slug;
     }
 }

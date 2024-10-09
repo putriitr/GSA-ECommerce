@@ -9,13 +9,11 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'icon',
-    ];
+    protected $table = 't_p_category';
 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
+
+    protected $fillable = ['nama', 'slug'];
+
+
+    
 }

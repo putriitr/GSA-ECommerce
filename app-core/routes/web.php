@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
+
+Route::middleware(['preventDirectLoginAccess'])->group(function () {
+    Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+});
+
    
 //Normal Users Routes List
 Route::middleware(['auth', 'user-access:user'])->group(function () {
@@ -27,11 +32,5 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
-    Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
-});
-   
-//Admin Routes List
-Route::middleware(['auth', 'user-access:manager'])->group(function () {
-   
-    Route::get('/manager/home', [HomeController::class, 'managerHome'])->name('manager.home');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 });

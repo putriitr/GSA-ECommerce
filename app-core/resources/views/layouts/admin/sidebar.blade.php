@@ -26,14 +26,6 @@
                         </a>
                     </li>
 
-                    <!-- Parameter -->
-                    <li class="menu-item">
-                        <a href="{{ route('parameters.index')}}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Parameter</div>
-                        </a>
-                    </li>
-
                     <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">Pages</span>
                     </li>
@@ -44,12 +36,12 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="{{ route('products.index')}}" class="menu-link">
+                                <a href="" class="menu-link">
                                     <div data-i18n="Basic">Manage Product</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="{{ route('categories.index')}}" class="menu-link">
+                                <a href="" class="menu-link">
                                     <div data-i18n="Notifications">Categories</div>
                                 </a>
                             </li>
@@ -100,13 +92,13 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
                     <!-- Cards -->
                     <li class="menu-item">
-                        <a href="{{ route('sliders.index')}}" class="menu-link">
+                        <a href="" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Basic">Slider</div>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="{{ route('services.index')}}" class="menu-link">
+                        <a href="" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Basic">Service</div>
                         </a>

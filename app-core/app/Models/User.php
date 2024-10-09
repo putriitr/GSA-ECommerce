@@ -19,11 +19,18 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    protected $table = 't_users';
+
     protected $fillable = [
         'name',
+        'full_name',     
         'email',
+        'phone',          
+        'profile_photo',  
         'password',
-        'type'
+        'type',     
+        'slug',      
     ];
 
     /**
@@ -48,7 +55,7 @@ class User extends Authenticatable
     protected function type(): Attribute
     {
         return new Attribute(
-            get: fn ($value) =>  ["user", "admin", "manager"][$value],
+            get: fn ($value) =>  ["customer", "admin"][$value],
         );
     }
 }

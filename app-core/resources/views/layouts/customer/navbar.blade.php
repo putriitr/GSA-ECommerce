@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid px-5">
+    <div class="container px-5">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
             <a href="index.html" class="navbar-brand brand-logo" style="padding-right: 10px;">
                 <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" alt="Logo Ecommerce" style="height: 40px;">
@@ -38,13 +38,13 @@
                                 Semua Produk
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Produk 1</a></li>
-                                <li><a class="dropdown-item" href="#">Produk 2</a></li>
-                                <li><a class="dropdown-item" href="#">Produk 3</a></li>
+                                <li><a class="dropdown-item" href="#">Kategori 1</a></li>
+                                <li><a class="dropdown-item" href="#">Kategori 1</a></li>
+                                <li><a class="dropdown-item" href="#">Kategori 1</a></li>
                             </ul>
                         </div>
                         <!-- Search Input -->
-                        <input type="text" class="form-control border-0 rounded-pill px-4 py-2" placeholder="Cari Barang Impian Kamu Disini" style="flex-grow: 1; min-width: 900px;">
+                        <input type="text" class="form-control border-0 rounded-pill px-4 py-2" placeholder="Cari Barang Impian Kamu Disini">
                         <!-- Search Button -->
                         <button class="btn  mx-2" type="submit" style="width: 40px; height: 40px;">
                             <i class="fas fa-search text-dark"></i>
@@ -53,22 +53,68 @@
                 </div>
     
                 <div class="d-flex m-3 me-0">
+                    @if(Auth::check())
+                        <!-- Jika user sudah login, tampilkan ikon Cart dan Wishlist -->
+                        <a href="#" class="position-relative me-4 my-auto mx-2">
+                            <i class="fa fa-shopping-bag fa-2x"></i>
+                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                                3
+                            </span>
+                        </a>
+                
+                        <!-- Wishlist Icon -->
+                        <a href="#" class="position-relative me-4 my-auto mx-2">
+                            <i class="fas fa-heart fa-2x text-primary"></i>
+                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                                5
+                            </span>
+                        </a>
+                
+                        <!-- Separator -->
+                        <span class="mx-2">|</span>
+                
+                        <!-- Tampilkan nama pengguna -->
+                        <div class="dropdown">
+                            <a href="#" class="d-flex align-items-center my-auto dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user fa-2x me-2"></i>
+                                <span class="d-none d-md-inline">Halo, {{ Auth::user()->name }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+                                <!-- Option for viewing profile or other options can be added here -->
+                                <li><a class="dropdown-item" href="#">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <!-- Logout Option -->
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    @else
                     <a href="#" class="position-relative me-4 my-auto mx-2">
                         <i class="fa fa-shopping-bag fa-2x"></i>
-                        <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                        <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                            3
+                        </span>
                     </a>
-                    <!-- Wishlist Icon -->
-                    <a href="#" class="position-relative me-4 my-auto mx-2">
-                        <i class="fas fa-heart fa-2x text-primary"></i>
-                        <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">5</span>
-                    </a>
+                    
                     <span class="mx-2">|</span>
-    
-                    <a href="#" class="d-flex align-items-center my-auto">
-                        <i class="fas fa-user fa-2x me-2"></i>
-                        <span class="d-none d-md-inline">Halo, Iqbal</span>
-                    </a>
+
+                        <!-- Jika user belum login, tampilkan tombol Masuk dan Daftar -->
+                        <a href="#" class="btn btn-primary mx-2 btn-open-modal">Masuk</a>
+                        @include('auth.modal.login')
+
+                        <a href="{{ route('register') }}" class="btn btn-secondary mx-2">Daftar</a>
+                    @endif
                 </div>
+                
             </div>
         </nav>
 
@@ -102,7 +148,7 @@
 
 
 <!-- Bot Navbar Start -->
-<nav class="navbar navbar-light bg-light border-top navbar-expand d-md-none d-lg-none d-xl-none fixed-bottom bottom-bar">
+<nav class="navbar navbar-light bg-light border-top navbar-expand  d-xl-none fixed-bottom bottom-bar d-xxl-none">
     <ul class="navbar-nav nav-justified w-100">
         <li class="nav-item">
             <a href="#" class="nav-link">
@@ -145,3 +191,4 @@
     </ul>
 </nav>
 <!-- Bot Navbar End -->
+

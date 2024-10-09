@@ -7,6 +7,8 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="" name="keywords">
         <meta content="" name="description">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <link rel="shortcut icon" type="image/png" href="{{ asset('storage/img/logo-gsa2.png')}}" />
 
         <!-- Google Web Fonts -->

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -27,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -40,28 +41,22 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
+
     public function login(Request $request)
-    {   
-        $input = $request->all();
-       
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-       
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
-            if (auth()->user()->type == 'admin') {
-                return redirect()->route('admin.home');
-            }else if (auth()->user()->type == 'manager') {
-                return redirect()->route('manager.home');
-            }else{
-                return redirect()->route('home');
-            }
-        }else{
-            return redirect()->route('login')
-                ->with('error','Email-Address And Password Are Wrong.');
+    {
+        $credentials = $request->only('email', 'password');
+    
+        if (Auth::attempt($credentials)) {
+            // Login berhasil, kembalikan respons JSON
+            $user = Auth::user();
+            return response()->json([
+                'success' => true,
+                'user_type' => $user->type // Pastikan ada 'role' atau 'user_type' di user model
+            ]);
+        } else {
+            // Login gagal, kembalikan respons JSON dengan success false
+            return response()->json(['success' => false], 401);
         }
-            
     }
+    
 }

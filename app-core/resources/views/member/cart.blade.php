@@ -1,4 +1,4 @@
-@extends('layouts.member.master')
+@extends('layouts.customer.master')
 
 @section('content')
     <!-- Modal Search Start -->
