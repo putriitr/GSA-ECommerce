@@ -13,15 +13,19 @@ return new class extends Migration
     {
         Schema::create('t_product', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->integer('stok');
+            $table->string('name');
+            $table->integer('stock');
             $table->unsignedBigInteger('category_id');
             $table->string('slug');
-            $table->text('deskripsi')->nullable();
+            $table->text('description')->nullable();
+            $table->decimal('price', 15, 2);
+            $table->decimal('discount_price', 15, 2)->nullable();
+            $table->boolean('is_pre_order')->default(false); 
+            $table->boolean('is_negotiable')->default(false); 
+            $table->enum('status_published', ['Published', 'Unpublished'])->default('Unpublished'); 
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('t_p_category')->onDelete('cascade');
-
         });
     }
 

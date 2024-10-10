@@ -7,7 +7,7 @@
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="index.html" class="app-brand-link d-flex justify-content-center align-items-center" style="height: 100%;">
-                        <img src="{{ asset('storage/img/logo-gsa2.png')}}" alt="Sneat Logo" class="app-brand-text demo menu-text fw-bolder ms-2" width="180px">
+                        <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" alt="Sneat Logo" class="app-brand-text demo menu-text fw-bolder ms-2" width="180px">
                     </a>
                     <a href="javascript:void(0);"
                         class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -36,12 +36,12 @@
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="" class="menu-link">
+                                <a href="{{ route('product.index') }}" class="menu-link">
                                     <div data-i18n="Basic">Manage Product</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="" class="menu-link">
+                                <a href="{{ route('product.categories.index') }}" class="menu-link">
                                     <div data-i18n="Notifications">Categories</div>
                                 </a>
                             </li>

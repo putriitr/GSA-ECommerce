@@ -143,6 +143,29 @@ body {
     align-items: center;
 }
 
+/* Tambahkan CSS untuk menyesuaikan logo di mobile */
+@media (max-width: 768px) {
+    .navbar-brand {
+      display: flex;
+      justify-content: center;
+      margin-right: 0;
+    }
+  
+    .navbar-brand img {
+      height: 30px; /* Atur ukuran logo agar sesuai dengan layar kecil */
+    }
+  
+    .navbar-collapse {
+      justify-content: center;
+    }
+    
+    /* Jika ingin mengatur visibilitas elemen lain di mobile */
+    .navbar-nav {
+      display: none; /* Sembunyikan navigasi jika diperlukan */
+    }
+  }
+  
+
 .topbar .top-link {
     font-size: 15px;
     line-height: 0;
@@ -375,7 +398,7 @@ body {
     background-color: white; /* Background tombol menjadi putih */
     border-radius: 50%;
     border: 2px solid white;
-    top: 55%;
+    top: 60%;
     transform: translateY(-50%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow halus */
 

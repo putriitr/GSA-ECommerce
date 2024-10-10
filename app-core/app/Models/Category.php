@@ -12,7 +12,12 @@ class Category extends Model
     protected $table = 't_p_category';
 
 
-    protected $fillable = ['nama', 'slug'];
+    protected $fillable = ['name', 'slug'];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
 
     

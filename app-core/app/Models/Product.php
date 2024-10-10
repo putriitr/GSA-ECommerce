@@ -11,11 +11,27 @@ class Product extends Model
 
     protected $table = 't_product';
 
-    protected $fillable = ['nama', 'stok', 'category_id', 'slug', 'deskripsi'];
+    protected $fillable = ['name', 'stock', 'category_id', 'slug', 'description', 'price', 'discount_price','is_pre_order', 'is_negotiable','status_published'];
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id');
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(ProductVideos::class, 'product_id');
+    }
+
+
 }
