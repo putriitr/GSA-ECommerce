@@ -19,7 +19,18 @@
                                                 <img src="{{ asset($image->image) }}" class="d-block w-100 rounded" alt="{{ $product->name }}">
                                             </div>
                                         @endforeach
+                                
+                                        @if($product->videos->isNotEmpty())
+                                            <div class="carousel-item">
+                                                <video class="d-block w-100 rounded" controls>
+                                                    <source src="{{ asset($product->videos->first()->video) }}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </div>
+                                        @endif
                                     </div>
+                                
+                                    <!-- Carousel Controls -->
                                     <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel{{ $product->id }}" data-bs-slide="prev" style="background-color: white; border-radius: 50%; width: 40px; height: 40px;">
                                         <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(0);"></span>
                                         <span class="visually-hidden">Previous</span>
@@ -28,9 +39,8 @@
                                         <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(0);"></span>
                                         <span class="visually-hidden">Next</span>
                                     </button>
-                                    
-                                    
                                 </div>
+                                
                             @elseif($product->images->isNotEmpty())
                                 <!-- Single image if only one exists -->
                                 <a href="#">
@@ -48,7 +58,17 @@
                     <div class="col-lg-6">
                         <h4 class="fw-bold mb-3">{{ $product->name }}</h4>
                         <p class="mb-3">Category: {{ $product->category->name }}</p>
-                        <h5 class="fw-bold mb-3">{{ $product->price }}</h5>
+                        @if($product->discount_price)
+                                <h5 class="fw-bold mb-3">
+                                    <span class="text-decoration-line-through text-muted">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                    <span class="text-danger fw-bold" style="font-size: 12px;">
+                                        {{ round((($product->price - $product->discount_price) / $product->price) * 100) }}% off
+                                    </span> <br>
+                                    <span class="text-danger fw-bold mb-2">Rp{{ number_format($product->discount_price, 0, ',', '.') }}</span>
+                                </h5>
+                            @else
+                                <h5 class="fw-bold mb-3">Rp{{ number_format($product->price, 0, ',', '.') }}</h5>
+                            @endif
                         <div class="d-flex mb-4">
                             <i class="fa fa-star text-secondary"></i>
                             <i class="fa fa-star text-secondary"></i>
@@ -57,27 +77,111 @@
                             <i class="fa fa-star"></i>
                         </div>
                         <p class="mb-4">{{ $product->description }}</p>
-                        <div class="input-group quantity mb-5" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
-                                    <i class="fa fa-minus"></i>
-                                </button>
+                        <div class="d-flex align-items-center">
+                            <!-- Quantity Input Group -->
+                            <div class="input-group quantity me-3" style="width: 130px;">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control form-control-sm text-center border-0" id="quantity" value="1">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                        
+                            <!-- Add to Cart Button -->
+                            <a href="#" id="add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 text-primary">
+                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                            </a>
+                        </div>
+                        
+                        <!-- Success Message -->
+                            <!-- Notifikasi untuk Keranjang -->
+                        <div id="cart-message" class="cart-notification d-none" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(30, 30, 30, 0.9); color: white; padding: 20px 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); z-index: 1000; font-size: 18px;">
+                            <div class="notification-content" style="display: flex; align-items: center; width: 100%;">
+                                <span class="notification-icon" style="font-size: 30px; margin-right: 15px;">🎉</span>
+                                <span class="notification-text" style="flex-grow: 1; font-weight: bold;">Product added to cart successfully!</span>
+                                <button onclick="this.parentElement.parentElement.style.display='none'" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 22px; margin-left: 15px;">&times;</button>
                             </div>
                         </div>
-                        <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+
+                        
+                        
+                        
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                // Clone nodes to prevent multiple event listeners
+                                var minusBtn = document.querySelector('.btn-minus');
+                                var plusBtn = document.querySelector('.btn-plus');
+                        
+                                minusBtn.replaceWith(minusBtn.cloneNode(true)); // Clone the minus button
+                                plusBtn.replaceWith(plusBtn.cloneNode(true));   // Clone the plus button
+                        
+                                // Get the cloned buttons (now without any previous event listeners)
+                                var newMinusBtn = document.querySelector('.btn-minus');
+                                var newPlusBtn = document.querySelector('.btn-plus');
+                        
+                                // Attach event listeners to new cloned buttons
+                                newMinusBtn.addEventListener('click', function () {
+                                    var input = document.getElementById('quantity');
+                                    var quantity = parseInt(input.value);
+                                    if (quantity > 1) {
+                                        input.value = quantity - 1;
+                                    }
+                                });
+                        
+                                newPlusBtn.addEventListener('click', function () {
+                                    var input = document.getElementById('quantity');
+                                    var quantity = parseInt(input.value);
+                                    input.value = quantity + 1;
+                                });
+                        
+                                // Add to cart functionality with AJAX
+                                document.getElementById('add-to-cart').addEventListener('click', function (e) {
+                                    e.preventDefault();
+                        
+                                    var productId = {{ $product->id }}; // Replace with actual product ID from backend
+                                    var quantity = document.getElementById('quantity').value;
+                        
+                                    // Send AJAX request
+                                    fetch("{{ route('cart.add') }}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: JSON.stringify({
+                                            product_id: productId,
+                                            quantity: quantity
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            document.getElementById('cart-message').classList.remove('d-none');
+                                            setTimeout(() => {
+                                                document.getElementById('cart-message').classList.add('d-none');
+                                            }, 3000);
+                                        } else if (data.error) {
+                                            alert(data.error);
+                                        }
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                                });
+                            });
+                        </script>
+                        
                     </div>
                     <div class="col-lg-12">
                         <nav>
                             <div class="nav nav-tabs mb-3">
                                 <button class="nav-link active border-white border-bottom-0" type="button" role="tab"
                                     id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
-                                    aria-controls="nav-about" aria-selected="true">Description</button>
+                                    aria-controls="nav-about" aria-selected="true">Specification</button>
                                 <button class="nav-link border-white border-bottom-0" type="button" role="tab"
                                     id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
                                     aria-controls="nav-mission" aria-selected="false">Reviews</button>
@@ -85,7 +189,7 @@
                         </nav>
                         <div class="tab-content mb-5">
                             <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-                                <p>{{ $product->specification }}</p>
+                                <p>{!! $product->specification !!}</p>
                             </div>
                             <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                                 <div class="d-flex">

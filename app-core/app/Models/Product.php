@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $table = 't_product';
 
-    protected $fillable = ['name', 'stock', 'category_id', 'slug', 'description', 'price', 'discount_price','is_pre_order', 'is_negotiable','status_published'];
+    protected $fillable = ['name', 'stock', 'category_id', 'slug', 'description','specification', 'price', 'discount_price','is_pre_order', 'is_negotiable','status_published'];
 
     public function getRouteKeyName()
     {

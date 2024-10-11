@@ -33,6 +33,7 @@ class ProductController extends Controller
         'category_id' => 'required|exists:t_p_category,id',
         'stock' => 'required|numeric|min:0',
         'description' => 'required',
+        'specification' => 'required',
         'price' => 'required|numeric|min:0', // Harga produk wajib
         'is_discount' => 'boolean', // Indikator diskon
         'discount_price' => 'nullable|numeric|min:0|lt:price|required_if:is_discount,1', // Harga diskon hanya wajib jika is_discount true
@@ -52,6 +53,7 @@ class ProductController extends Controller
         'stock' => $request->stock,
         'category_id' => $request->category_id,
         'description' => $request->description,
+        'specification' => $request->specification,
         'price' => $request->price, 
         'discount_price' => $request->is_discount ? $request->discount_price : null,  
         'is_pre_order' => $request->is_pre_order ?? false,
@@ -108,6 +110,7 @@ class ProductController extends Controller
              'category_id' => 'required|exists:t_p_category,id',
              'stock' => 'required|numeric',
              'description' => 'required',
+             'specification' => 'required',
              'price' => 'required|numeric|min:0', // Harga produk wajib
              'is_discount' => 'boolean', // Indikator diskon
              'discount_price' => 'nullable|numeric|min:0|lt:price|required_if:is_discount,1', // Harga diskon hanya wajib jika is_discount true
@@ -131,6 +134,7 @@ class ProductController extends Controller
              'stock' => $request->stock,
              'category_id' => $request->category_id,
              'description' => $request->description,
+             'specification' => $request->specification,
              'price' => $request->price,
              'discount_price' => $request->is_discount ? $request->discount_price : null, // Update harga diskon jika is_discount aktif
              'is_pre_order' => $request->is_pre_order ?? false,

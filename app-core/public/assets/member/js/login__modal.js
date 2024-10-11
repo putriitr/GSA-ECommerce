@@ -26,6 +26,10 @@ document.querySelector(".btn-open-modal").onclick = function() {
   emailModal.style.display = "block";
 }
 
+document.querySelector(".btn-open-modal2").onclick = function() {
+    emailModal.style.display = "block";
+  }
+
 // Fungsi untuk membuka modal ketiga (metode lainnya)
 document.querySelector('.btn-other-methods').onclick = function() {
 emailModal.style.display = "none"; // Tutup modal email

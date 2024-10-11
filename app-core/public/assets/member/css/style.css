@@ -468,7 +468,7 @@ body {
 
 /*** Fruits Start ***/
 .fruite .tab-class .nav-item a.active {
-    background: var(--bs-secondary) !important;
+    background-color: #38a3a5 !important;
 }
 
 .fruite .tab-class .nav-item a.active span {

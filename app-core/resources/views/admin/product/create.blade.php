@@ -67,6 +67,28 @@
             </div>
         </div>
 
+<!-- Froala Editor CSS & JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.8/css/froala_editor.pkgd.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.8/js/froala_editor.pkgd.min.js"></script>
+
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="specification">Specification</label>
+    <div class="col-sm-10">
+        <textarea name="specification" class="form-control" id="specification" placeholder="Product specification">{{ old('specification') }}</textarea>
+        @error('specification') <div class="text-danger">{{ $message }}</div> @enderror
+    </div>
+</div>
+
+<!-- Inisialisasi Froala Editor -->
+<script>
+  new FroalaEditor('#specification', {
+    height: 300
+  });
+</script>
+
+        
+                
+
         <!-- Input untuk Harga Produk -->
         <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="price">Price</label>

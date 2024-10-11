@@ -19,7 +19,7 @@
     </div>
     <div class="container px-5">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
-            <a href="index.html" class="navbar-brand brand-logo" style="padding-right: 10px;">
+            <a href="{{ route('home') }}" class="navbar-brand brand-logo" style="padding-right: 10px;">
                 <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" alt="Logo Ecommerce" style="height: 40px;">
             </a>
             
@@ -55,11 +55,17 @@
                 <div class="d-flex m-3 me-0">
                     @if(Auth::check())
                         <!-- Jika user sudah login, tampilkan ikon Cart dan Wishlist -->
-                        <a href="#" class="position-relative me-4 my-auto mx-2">
+                        <a href="{{ route('cart.show') }}" class="position-relative me-4 my-auto mx-2">
                             <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
-                                3
-                            </span>
+                            @php
+                                // Get the count of items in the cart for the logged-in user
+                                $cartCount = Auth::check() ? \App\Models\Cart::where('user_id', Auth::id())->count() : 0;
+                            @endphp
+                            @if ($cartCount > 0)
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                                    {{ $cartCount }}
+                                </span>
+                            @endif
                         </a>
                 
                         <!-- Wishlist Icon -->
@@ -98,10 +104,10 @@
                         </div>
                         
                     @else
-                    <a href="#" class="position-relative me-4 my-auto mx-2">
+                    <a href="#" class="position-relative me-4 my-auto mx-2 btn-open-modal2">
                         <i class="fa fa-shopping-bag fa-2x"></i>
                         <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
-                            3
+                            !
                         </span>
                     </a>
                     
@@ -110,6 +116,7 @@
                         <!-- Jika user belum login, tampilkan tombol Masuk dan Daftar -->
                         <a href="#" class="btn btn-primary mx-2 btn-open-modal">Masuk</a>
                         @include('auth.modal.login')
+                        
 
                         <a href="{{ route('register') }}" class="btn btn-secondary mx-2">Daftar</a>
                     @endif

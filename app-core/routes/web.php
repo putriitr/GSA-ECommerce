@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MasterData\CategoryController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Customer\Cart\CartController;
 use App\Http\Controllers\Customer\Product\ProductMemberController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,13 @@ Auth::routes();
 
 Route::middleware(['preventDirectLoginAccess'])->group(function () {
     Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+
+
+    Route::get('/customer/cart', [CartController::class, 'index'])->name('cart.show');
+    Route::post('/customer/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::delete('/customer/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/customer/cart/update/{id}', [CartController::class, 'updateCartQuantity'])->name('cart.update');
+
 });
 
    

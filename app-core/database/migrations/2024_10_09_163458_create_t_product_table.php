@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('slug');
             $table->text('description')->nullable();
+            $table->text('specification')->nullable();
             $table->decimal('price', 15, 2);
             $table->decimal('discount_price', 15, 2)->nullable();
             $table->boolean('is_pre_order')->default(false); 

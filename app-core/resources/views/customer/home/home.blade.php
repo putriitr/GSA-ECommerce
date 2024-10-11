@@ -139,47 +139,52 @@
 
 <script>
     $(document).ready(function() {
-        $('.category-filter').on('click', function(e) {
-            e.preventDefault();
+    $('.category-filter').on('click', function(e) {
+        e.preventDefault();
 
-            // Remove active class from all category filters
-            $('.category-filter').removeClass('active');
+        // Remove active class from all category filters
+        $('.category-filter').removeClass('active');
 
-            // Add active class to the clicked category filter
-            $(this).addClass('active');
+        // Add active class to the clicked category filter
+        $(this).addClass('active');
 
-            var slug = $(this).data('slug');
+        var slug = $(this).data('slug');
 
-            $.ajax({
-                url: '{{ route("category.filter.ajax") }}',
-                type: 'POST',
-                data: {
-                    slug: slug,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(products) {
-                    var productHtml = '';
+        $.ajax({
+            url: '{{ route("category.filter.ajax") }}', // Pastikan rute ini sesuai dengan proyekmu
+            type: 'POST',
+            data: {
+                slug: slug,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(products) {
+                var productHtml = '';
+                    
+                if (products.length === 0) {
+                    productHtml = '<p>No products found.</p>';
+                } else {
+                    $.each(products, function(index, product) {
+                        var discountPercentage = '';
+                        if (product.discount_price) {
+                            discountPercentage = Math.round(((product.price - product.discount_price) / product.price) * 100) + '% off';
+                        }
                         
-                    if (products.length === 0) {
-                        productHtml = '<p>No products found.</p>';
-                    } else {
-                        $.each(products, function(index, product) {
-                            var discountPercentage = '';
-                            if (product.discount_price) {
-                                discountPercentage = Math.round(((product.price - product.discount_price) / product.price) * 100) + '% off';
-                            }
-                            
-                            productHtml += `
-                                <div class="col-md-6 col-lg-4 col-xl-3">
-                                    <div class="rounded position-relative fruite-item shadow" style="transition: transform 0.3s, box-shadow 0.3s; overflow: hidden;">
+                        productHtml += `
+                            <div class="col-md-6 col-lg-4 col-xl-3">
+                                <a href="${product.url}" class="text-decoration-none" style="color: inherit;">
+                                    <div class="rounded position-relative fruite-item shadow-sm" style="transition: transform 0.3s, box-shadow 0.3s; overflow: hidden; cursor: pointer;">
                                         <div class="fruite-img overflow-hidden">
-                                            <img src="{{ asset('assets/default/image/carousel_default.jpg') }}" class="img-fluid w-100 rounded-top" alt="${product.name}" style="transition: transform 0.3s; object-fit: cover;">
+                                            <img src="${product.image ? product.image : 'https://gsacommerce.com/assets/frontend/image/gsa-logo.svg'}" 
+                                                 class="img-fluid w-100 rounded-top" 
+                                                 alt="${product.name}" 
+                                                 style="transition: transform 0.3s; height: 250px; object-fit: cover;">
                                         </div>
+                    
                                         ${product.is_pre_order ? '<div class="text-white bg-primary px-2 py-1 rounded position-absolute" style="top: 10px; left: 10px; font-size: 12px;">Pre Order</div>' : ''}
+                    
                                         <div class="p-2">
-                                            <h4 class="text-dark text-start mb-1" style="
+                                            <p class="text-dark fw-bold text-start mb-1" style="
                                                 font-size: 16px; 
-                                                height: 40px; 
                                                 overflow: hidden; 
                                                 display: -webkit-box; 
                                                 -webkit-line-clamp: 2; 
@@ -188,18 +193,19 @@
                                                 font-weight: normal;
                                             ">
                                                 ${product.name}
-                                            </h4>
-                                            <p class="text-dark text-start fs-6 mb-2">
-                                                ${product.discount_price ? `
-                                                    <span class="text-decoration-line-through text-muted">Rp${parseInt(product.price).toLocaleString('id-ID')}</span>
-                                                    <span class="text-danger fw-bold" style="font-size: 12px;">
-                                                        ${discountPercentage}
-                                                    </span><br>
-                                                    <span class="text-danger fw-bold">Rp${parseInt(product.discount_price).toLocaleString('id-ID')}</span>
-                                                ` : `
-                                                    <span class="text-dark fs-5 fw-bold">Rp${parseInt(product.price).toLocaleString('id-ID')}</span>
-                                                `}
                                             </p>
+                    
+                                            ${product.discount_price ? `
+                                            <p class="text-dark text-start fs-6 mb-2">
+                                                <span class="text-decoration-line-through text-muted">Rp${parseInt(product.price).toLocaleString('id-ID')}</span>
+                                                <span class="text-danger fw-bold" style="font-size: 12px;">
+                                                    ${discountPercentage}
+                                                </span> <br>
+                                                <span class="text-danger fw-bold mb-2">Rp${parseInt(product.discount_price).toLocaleString('id-ID')}</span>
+                                            </p>` : `
+                                            <p class="text-dark text-start fs-6 mb-2">Rp${parseInt(product.price).toLocaleString('id-ID')}</p>`}
+                                            <p class="text-muted text-start fs-6 mb-2 small"><i class="fa fa-check-circle text-success me-1"></i>{{ __("Bekasi") }}</p>
+
                                             <div class="d-flex justify-content-start align-items-center">
                                                 <span class="text-muted small">
                                                     <i class="fa fa-star text-warning me-1"></i>
@@ -210,15 +216,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>`;
-                        });
-                    }
-
-                    $('#product-list .row').html(productHtml);
+                                </a>
+                            </div>`;
+                    });
                 }
-            });
+
+                // Update the product list
+                $('#product-list .row').html(productHtml);
+            }
         });
     });
+});
+
 </script>
 
 
