@@ -45,7 +45,7 @@
         <tbody>
           @foreach($products as $index => $product)
             <tr>
-              <td>{{ $index + 1 }}</td>
+              <td>{{ $products->firstItem() + $index }}</td>
               <td>
                 <div class="d-flex align-items-center">
                   @if($product->images->first())
@@ -53,7 +53,11 @@
                   @else
                     <span>No Image</span>
                   @endif
-                  <span>{{ $product->name }}</span>
+                  <span class="product-name">{{ $product->name }}</span>
+                  <span class="{{ $product->status_published == 'Published' ? 'text-success' : 'text-danger' }}">
+                    {{ $product->status_published }}
+                </span>
+                
                 </div>
               </td>
               
@@ -84,6 +88,9 @@
         </tbody>
       </table>
     </div>
+    <div class="d-flex justify-content-center mt-5 mb-2">
+      {{ $products->links('pagination::bootstrap-5') }}
+  </div>
   </div>
 </div>
 
@@ -107,6 +114,18 @@
     vertical-align: middle;
     font-weight: bold;
   }
+
+  .product-name {
+    display: block;
+    white-space: normal; /* Mengizinkan teks untuk melakukan break */
+    word-wrap: break-word; /* Memastikan kata-kata yang panjang bisa di-break */
+    max-width: 200px; /* Sesuaikan sesuai kebutuhan */
+    overflow: hidden; /* Jika terlalu panjang, akan dipotong */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Batasi teks ke 3 baris */
+    -webkit-box-orient: vertical;
+}
+
 </style>
 
 @endsection

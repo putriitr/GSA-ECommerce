@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MasterData\CategoryController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Customer\Product\ProductMemberController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/category/filter', [HomeController::class, 'filterByCategory'])->name('category.filter.ajax');
+Route::get('/product/{slug}', [ProductMemberController::class, 'show'])->name('customer.product.show');
+
 
 Auth::routes();
 
