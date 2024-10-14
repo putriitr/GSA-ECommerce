@@ -80,6 +80,7 @@
                 </table>
             </div>
 
+            <!-- Checkout Button in Blade Template -->
             <div class="row g-4 justify-content-end">
                 <div class="col-8"></div>
                 <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
@@ -95,10 +96,16 @@
                         <div class="text-end pe-4 mb-3">
                             <small class="text-muted">* Harga Total Sudah Termasuk PPN</small>
                         </div>
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+
+                        <!-- Form to handle checkout -->
+                        <form action="{{ route('customer.checkout') }}" method="POST">
+                            @csrf
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
             
             
             

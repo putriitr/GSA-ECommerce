@@ -58,4 +58,10 @@ class User extends Authenticatable
             get: fn ($value) =>  ["customer", "admin"][$value],
         );
     }
+
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
 }

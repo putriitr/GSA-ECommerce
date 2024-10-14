@@ -50,21 +50,21 @@
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                            <div data-i18n="Authentications">Authentications</div>
+                            <div data-i18n="Authentications">Transaction</div>
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="auth-login-basic.html" class="menu-link" target="_blank">
-                                    <div data-i18n="Basic">Login</div>
+                                <a href="{{ route('admin.orders.index') }}" class="menu-link">
+                                    <div data-i18n="Basic">Order</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="auth-register-basic.html" class="menu-link" target="_blank">
-                                    <div data-i18n="Basic">Register</div>
+                                <a href="{{ route('admin.payments.index') }}" class="menu-link" >
+                                    <div data-i18n="Basic">Payment Proof</div>
                                 </a>
                             </li>
                             <li class="menu-item">
-                                <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
+                                <a href="auth-forgot-password-basic.html" class="menu-link" >
                                     <div data-i18n="Basic">Forgot Password</div>
                                 </a>
                             </li>
@@ -286,14 +286,14 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
                     <li class="menu-item">
                         <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                            target="_blank" class="menu-link">
+                             class="menu-link">
                             <i class="menu-icon tf-icons bx bx-support"></i>
                             <div data-i18n="Support">Support</div>
                         </a>
                     </li>
                     <li class="menu-item">
                         <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                            target="_blank" class="menu-link">
+                             class="menu-link">
                             <i class="menu-icon tf-icons bx bx-file"></i>
                             <div data-i18n="Documentation">Documentation</div>
                         </a>
