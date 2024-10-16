@@ -23,6 +23,7 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+
     public function images()
     {
         return $this->hasMany(ProductImage::class, 'product_id');
@@ -32,6 +33,23 @@ class Product extends Model
     {
         return $this->hasMany(ProductVideos::class, 'product_id');
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'product_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'product_id', 'id')
+                    ->where('status', 'completed');
+    }
+
 
 
 }

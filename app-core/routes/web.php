@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Banner\BannerHomeController;
+use App\Http\Controllers\Admin\Banner\BannerMicroController;
 use App\Http\Controllers\Admin\MasterData\CategoryController;
 use App\Http\Controllers\Admin\MasterData\Shipping\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleController;
@@ -7,8 +9,10 @@ use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Customer\Cart\CartController;
 use App\Http\Controllers\Customer\Order\OrderController;
 use App\Http\Controllers\Customer\Product\ProductMemberController;
+use App\Http\Controllers\Customer\Review\ReviewCustomerController;
 use App\Http\Controllers\Customer\User\UserAddressController;
 use App\Http\Controllers\Customer\User\UserController;
+use App\Http\Controllers\Customer\Wishlist\WishlistController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +29,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 Route::post('/category/filter', [HomeController::class, 'filterByCategory'])->name('category.filter.ajax');
 Route::get('/product/{slug}', [ProductMemberController::class, 'show'])->name('customer.product.show');
-
 
 Auth::routes();
 
@@ -58,6 +62,18 @@ Route::middleware(['preventDirectLoginAccess'])->group(function () {
     Route::put('/orders/{order}/complete', [OrderController::class, 'completeOrder'])->name('customer.complete.order');
     Route::post('/orders/{order}/complaint', [OrderController::class, 'submitComplaint'])->name('customer.complaint.submit');
     Route::put('/orders/{order}/cancel', [OrderController::class, 'cancelOrder'])->name('customer.order.cancel');
+    Route::get('/customer/orders', [OrderController::class, 'index'])->name('customer.orders.index');
+    Route::get('/order/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('customer.order.invoice');
+
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+    Route::post('/wishlist/remove/{productId}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+    Route::post('/wishlist/move-to-cart/{productId}', [WishlistController::class, 'moveToCart'])->name('wishlist.moveToCart');
+
+
+    Route::post('/reviews', [ReviewCustomerController::class, 'storeReview'])->name('reviews.store');
+
 
 });
 
@@ -107,13 +123,31 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     // Admin routes for order management
+    Route::get('/admin/orders/{id}', [OrderHandleController::class, 'showOrders'])->name('admin.orders.show');
     Route::put('/admin/orders/{order}/approve', [OrderHandleController::class, 'approveOrder'])->name('admin.orders.approve');
     Route::put('/admin/orders/{order}/packing', [OrderHandleController::class, 'markAsPacking'])->name('admin.mark.packing');
     Route::put('/admin/orders/{order}/shipped', [OrderHandleController::class, 'markAsShipped'])->name('admin.orders.shipped');
     Route::put('/admin/payments/{payment}/verify', [OrderHandleController::class, 'verifyPayment'])->name('admin.payments.verify');
+    Route::post('admin/payments/{paymentId}/reject', [OrderHandleController::class, 'rejectPayment'])->name('admin.payments.reject');
+    Route::get('admin/payments/{id}', [OrderHandleController::class, 'showPayment'])->name('admin.payments.show');
 
-    // Admin routes for handling negotiations
-    Route::post('/orders/{orderId}/negotiation', [OrderHandleController::class, 'handleNegotiation'])->name('admin.orders.negotiation');
+
+    Route::get('admin/banner-home/banners', [BannerHomeController::class, 'index'])->name('admin.banner-home.banners.index');
+    Route::get('admin/banner-home/banners/create', [BannerHomeController::class, 'create'])->name('admin.banner-home.banners.create');
+    Route::post('admin/banner-home/banners', [BannerHomeController::class, 'store'])->name('admin.banner-home.banners.store');
+    Route::get('admin/banner-home/banners/{id}', [BannerHomeController::class, 'show'])->name('admin.banner-home.banners.show');
+    Route::get('admin/banner-home/banners/{id}/edit', [BannerHomeController::class, 'edit'])->name('admin.banner-home.banners.edit');
+    Route::put('admin/banner-home/banners/{id}', [BannerHomeController::class, 'update'])->name('admin.banner-home.banners.update');
+    Route::delete('admin/banner-home/banners/{id}', [BannerHomeController::class, 'destroy'])->name('admin.banner-home.banners.destroy');
+
+
+    Route::get('admin/banner-micro/banners', [BannerMicroController::class, 'index'])->name('admin.banner-micro.banners.index');
+    Route::get('admin/banner-micro/banners/create', [BannerMicroController::class, 'create'])->name('admin.banner-micro.banners.create');
+    Route::post('admin/banner-micro/banners', [BannerMicroController::class, 'store'])->name('admin.banner-micro.banners.store');
+    Route::get('admin/banner-micro/banners/{id}/edit', [BannerMicroController::class, 'edit'])->name('admin.banner-micro.banners.edit');
+    Route::put('admin/banner-micro/banners/{id}', [BannerMicroController::class, 'update'])->name('admin.banner-micro.banners.update');
+    Route::delete('admin/banner-micro/banners/{id}', [BannerMicroController::class, 'destroy'])->name('admin.banner-micro.banners.destroy');
+    Route::get('admin/banner-micro/banners/{id}', [BannerMicroController::class, 'show'])->name('admin.banner-micro.banners.show');
 
 
 });

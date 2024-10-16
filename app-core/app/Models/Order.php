@@ -18,7 +18,27 @@ class Order extends Model
         'status',
         'is_negotiated',
         'tracking_number',
-        'shipping_service_id', 
+        'shipping_service_id',
+        'approved_at',
+        'payment_verified_at',
+        'packing_at',
+        'shipped_at',
+        'completed_at',
+        'cancelled_at',
+        'cancelled_by_system_at',
+        'is_viewed',    
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'payment_verified_at' => 'datetime',
+        'packing_at' => 'datetime',
+        'shipped_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'cancelled_by_system_at' => 'datetime',
     ];
 
     public function user()
@@ -54,5 +74,10 @@ class Order extends Model
     public function shippingService()
     {
         return $this->belongsTo(ShippingService::class, 'shipping_service_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasManyThrough(Review::class, OrderItem::class, 'order_id', 'product_id', 'id', 'product_id');
     }
 }

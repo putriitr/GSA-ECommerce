@@ -14,25 +14,29 @@ return new class extends Migration
         Schema::create('t_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('t_users')->onDelete('cascade');
-            $table->foreignId('shipping_service_id')->nullable()->constrained('shipping_services')->onDelete('set null');
+            $table->foreignId('shipping_service_id')->nullable()->constrained('t_md_shipping_services')->onDelete('set null');
             $table->decimal('total', 15, 2);
             $table->enum('status', [
-                'pending',              // Initial state after checkout
-                'approved',             // Admin approved order
-                'payment_submitted',    // Customer submitted payment proof
-                'payment_verified',     // Admin verified the payment
-                'packing',              // Admin marks order as packing
-                'shipped',              // Admin ships the order
-                'delivered',            // When customer receives the package (optional)
-                'completed',            // Customer confirms order is received and completes it
-                'negotiation',          // Negotiation started
-                'negotiation_approved', // Negotiation approved
-                'negotiation_rejected', // Negotiation rejected
-                'negotiation_failed',   // Failed negotiation
+                'pending',              
+                'approved',             
+                'payment_verified',     
+                'packing',              
+                'shipped',              
+                'completed',            
                 'cancelled',
+                'cancelled_by_system',
             ])->default('pending');
             $table->boolean('is_negotiated')->default(false);
             $table->string('tracking_number')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('payment_verified_at')->nullable();
+            $table->timestamp('packing_at')->nullable();
+            $table->timestamp('shipped_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
+            $table->timestamp('cancelled_by_system_at')->nullable();
+            $table->boolean('is_viewed')->default(false);
+        
             $table->timestamps();
         });
     }

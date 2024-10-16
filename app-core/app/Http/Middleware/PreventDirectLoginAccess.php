@@ -22,7 +22,7 @@ class PreventDirectLoginAccess
         // Cek apakah referer valid (berasal dari domain yang sama)
         if (!$referer || !str_contains($referer, $request->getHost())) {
             // Jika referer tidak valid, redirect ke halaman / dengan query parameter ?login=true
-            return redirect('/?login=true');
+            return redirect('/')->with('info', 'Silahkan login untuk melanjutkan.');
         }
 
         // Jika referer valid, lanjutkan request ke /login

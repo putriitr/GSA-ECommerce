@@ -29,35 +29,123 @@ class OrderHandleController extends Controller
         return view('admin.payment.index', compact('payments'));
     }
 
+    public function showOrders($id)
+    {
+        $order = Order::with('user.addresses', 'items')->findOrFail($id);
+        
+        // Mark the order as viewed
+        if (!$order->is_viewed) {
+            $order->is_viewed = true; // Set is_viewed to true
+            $order->save(); // Save the change to the database
+        }
+    
+        $shipping = ShippingService::all(); // Fetch shipping services
+        return view('admin.order.show', compact('order', 'shipping'));
+    }
+
+    public function showPayment($paymentId)
+    {
+        // Fetch the payment by ID, along with the associated order and user
+        $payment = Payment::with('order.user')->findOrFail($paymentId);
+        
+        if (!$payment->is_viewed) {
+            $payment->is_viewed = true; // Set is_viewed to true
+            $payment->save(); // Save the change to the database
+        }
+
+        // Return the view with payment details
+        return view('admin.payment.show', compact('payment'));
+    }
+
+    
+
+
     // Admin approval of order
     public function approveOrder($orderId)
     {
         $order = Order::find($orderId);
-        $order->update(['status' => 'approved']);
+        $order->update([
+            'status' => 'approved',
+            'approved_at' => now() // Set the approved timestamp
+        ]);
     
         return back()->with('success', 'Order approved successfully.');
     }
+    
 
     // Handle payment verification by admin
     public function verifyPayment($paymentId)
     {
         $payment = Payment::find($paymentId);
-        $payment->update(['status' => 'approved']);
-    
-        // Mark the order as 'payment_verified'
+
+        // Check if the payment exists before proceeding
+        if (!$payment) {
+            return back()->with('error', 'Payment not found.');
+        }
+
+        // Update the payment status
+        $payment->update(['status' => 'approved', 'is_viewed' => true]); // Mark as viewed when verifying
+
+        // Mark the associated order as 'payment_verified'
         $order = $payment->order;
-        $order->update(['status' => 'payment_verified']);
-    
+        $order->update([
+            'status' => 'payment_verified',
+            'payment_verified_at' => now() // Set payment verified timestamp
+        ]);
+
         return back()->with('success', 'Payment verified successfully.');
     }
+
+    public function rejectPayment($paymentId)
+{
+    // Find the payment by ID
+    $payment = Payment::find($paymentId);
+
+    // Check if the payment exists before proceeding
+    if (!$payment) {
+        return back()->with('error', 'Payment not found.');
+    }
+
+    // Update the payment status to 'rejected' and mark as viewed
+    $paymentUpdated = $payment->update(['status' => 'rejected', 'is_viewed' => true]); // Mark as viewed when rejecting
+
+    // Check if the update was successful
+    if (!$paymentUpdated) {
+        return back()->with('error', 'Failed to update payment status.');
+    }
+
+    // Update the associated order status to 'cancelled_by_system'
+    $order = $payment->order; // Assuming there's a relationship defined in the Payment model
+    if ($order) {
+        $orderUpdated = $order->update([
+            'status' => 'cancelled_by_system', // Ensure this value is valid in your database schema
+            'cancelled_at' => now() // Optional: you can also track when it was cancelled
+        ]);
+
+        // Check if the order update was successful
+        if (!$orderUpdated) {
+            return back()->with('error', 'Failed to update order status.');
+        }
+    }
+
+    return back()->with('success', 'Payment rejected successfully and order status updated.');
+}
+
+
+    
+
+
 
     // Admin marks order as packing
     public function markAsPacking($orderId)
     {
         $order = Order::find($orderId);
-        $order->update(['status' => 'packing']);
+        $order->update([
+            'status' => 'packing',
+            'packing_at' => now() // Set packing timestamp
+        ]);
 
-        return back()->with('success', 'Order is now in packing process.');
+        return back()->with('success', 'Order is now in the packing process.');
     }
 
     // Admin marks order as shipped and adds tracking number
@@ -73,39 +161,9 @@ class OrderHandleController extends Controller
             'status' => 'shipped',
             'tracking_number' => $request->tracking_number,
             'shipping_service_id' => $request->shipping_service_id, // Save the selected shipping service
+            'shipped_at' => now() // Set shipped timestamp
         ]);
 
         return back()->with('success', 'Order marked as shipped.');
-    }
-
-
-    // Handle complaints
-    public function handleComplaint($complaintId)
-    {
-        $complaint = Complaint::find($complaintId);
-        $complaint->update(['status' => 'resolved']);
-
-        return back()->with('success', 'Complaint resolved successfully.');
-    }
-
-    // Manage negotiation
-    public function handleNegotiation($orderId, Request $request)
-    {
-        $order = Order::find($orderId);
-
-        if ($request->accept_negotiation) {
-            $negotiation = Negotiation::create([
-                'order_id' => $orderId,
-                'user_id' => $order->user_id,
-                'status' => 'accepted',
-                'negotiated_price' => $request->negotiated_price,
-            ]);
-
-            $order->update(['status' => 'negotiated']);
-        } else {
-            $order->update(['status' => 'negotiation_failed']);
-        }
-
-        return back()->with('success', 'Negotiation handled successfully.');
     }
 }

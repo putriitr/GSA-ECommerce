@@ -29,4 +29,13 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function completedOrderCount()
+    {
+        return $this->hasMany(OrderItem::class, 'product_id')
+                    ->whereHas('t_orders', function($query) {
+                        $query->where('status', 'completed');
+                    })
+                    ->count();
+    }
 }

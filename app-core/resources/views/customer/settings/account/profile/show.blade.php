@@ -6,7 +6,7 @@
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3">
-                @include('customer.settings.account.partials.sidebar')
+                @include('customer.settings.partials.sidebar')
             </div>
 
             <!-- Main Content: Update Profile Info & Change Password -->

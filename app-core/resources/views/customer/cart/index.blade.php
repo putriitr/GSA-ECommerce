@@ -2,8 +2,21 @@
 
 @section('content')
 
-<div class="container-fluid py-5 mt-5">
-    <div class="container py-5">
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5"
+style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/page-header.jpg') }}') no-repeat center center; background-size: cover;">
+<div style="background: rgba(0, 0, 0, 0.5); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+</div>
+<h1 class="text-center text-white display-6" style="position: relative; z-index: 2;">Wishlist</h1>
+<ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
+    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">Beranda</a></li>
+    <li class="breadcrumb-item active text-white">Wishlist</li>
+</ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5">
+    <div class="container">
         @if($cartItems->isEmpty())
         <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
             <div class="alert alert-warning text-center">
@@ -13,7 +26,7 @@
         @else
             <div class="table-responsive">
                 <table class="table" id="cart-table">
-                    <thead>
+                    <thead class="bg-light">
                         <tr>
                             <th scope="col">Products</th>
                             <th scope="col">Name</th>
@@ -98,10 +111,21 @@
                         </div>
 
                         <!-- Form to handle checkout -->
-                        <form action="{{ route('customer.checkout') }}" method="POST">
-                            @csrf
-                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
-                        </form>
+                        @php
+                        $userAddress = \App\Models\UserAddress::where('user_id', auth()->id())->where('is_active', true)->first();
+                    @endphp
+                    @if($userAddress)
+                    <!-- Form to handle checkout -->
+                    <form action="{{ route('customer.checkout') }}" method="POST">
+                        @csrf
+                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
+                    </form>
+                    @else
+                    <div class="alert alert-warning text-center">
+                        Anda harus menambahkan alamat sebelum melakukan checkout.
+                    </div>
+                    @endif
+                    
                     </div>
                 </div>
             </div>

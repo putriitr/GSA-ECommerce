@@ -17,7 +17,7 @@
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a class="nav-link" style="color: white; padding: 10px; border-radius: 8px;">
+                <a class="nav-link{{ request()->is('/customer/orders') ? 'active' : '' }}" href="{{ route('customer.orders.index') }}" style="color: white; font-weight: bold; background-color: {{ request()->is('/customer/orders') ? '#ffffff' : 'transparent' }}; color: {{ request()->is('/customer/orders') ? '#0d6efd' : 'white' }}; padding: 10px; border-radius: 8px;">
                     <i class="bi bi-receipt"></i> Riwayat Pesanan
                 </a>
             </li>

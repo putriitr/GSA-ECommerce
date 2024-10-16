@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('t_orders')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected']);
-            $table->string('payment_proof'); // File path to payment proof        
+            $table->string('payment_proof'); // File path to payment proof     
+            $table->boolean('is_viewed')->default(false);   
             $table->timestamps();
         });
     }

@@ -15,13 +15,12 @@
             <div class="shadow-lg p-4 rounded">
                 <div class="text-center mb-4">
                     <h4 class="fw-bold">{{ __('Daftar Sekarang') }}</h4>
-                    <p>Sudah punya akun? <a href="#" class="btn-open-modal">Masuk</a></p>
-                    @include('auth.modal.login')
+                    <p>Sudah punya akun? <a href="{{ route('home') }}" class="btn-open-modal">Masuk</a></p>
 
                 </div>
 
                 <div class="d-grid">
-                    <a href="#" class="btn btn-outline-secondary btn-block">
+                    <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-block">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="me-2" style="width: 20px;">
                         {{ __('Daftar dengan Google') }}
                     </a>

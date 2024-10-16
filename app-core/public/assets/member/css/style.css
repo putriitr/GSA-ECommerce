@@ -700,3 +700,48 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Style for the filter message */
+.filter-message {
+    background-color: #f0f4f8; /* Soft background color */
+    padding: 12px 24px; /* Adjust padding for better spacing */
+    border-radius: 6px; /* Smooth rounded corners */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+}
+
+.filter-message p {
+    font-size: 16px; /* Comfortable text size */
+    font-weight: 400;
+    color: #6c757d; /* Muted text color */
+    margin: 0;
+    line-height: 1.4;
+}
+
+.filter-message i {
+    color: #007bff; /* Icon color */
+    font-size: 18px; /* Slightly larger icon */
+}
+
+/* Style for the sorting dropdown */
+.sorting-dropdown {
+    background-color: #f8f9fa;
+    padding: 8px 16px; /* Padding yang lebih proporsional */
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e3e6f0;
+}
+
+.sorting-dropdown label {
+    font-size: 14px; /* Ukuran font lebih kecil agar muat dalam satu baris */
+    font-weight: 500;
+    color: #495057;
+}
+
+.sorting-dropdown select {
+    font-size: 14px;
+    color: #495057;
+    padding: 6px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    width: 50%; /* Lebar yang lebih kecil agar label dan dropdown muat */
+}

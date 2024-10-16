@@ -20,7 +20,7 @@
     <div class="container px-5">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
             <a href="{{ route('home') }}" class="navbar-brand brand-logo" style="padding-right: 10px;">
-                <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" alt="Logo Ecommerce" style="height: 40px;">
+                <img src="{{ asset('assets/member/img/logo.svg') }}" alt="Logo Ecommerce" style="height: 40px;">
             </a>
             
             <!-- Logo Cinta Produk Indonesia di kanan -->
@@ -31,26 +31,42 @@
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
                     <!-- Form Pencarian -->
-                    <form class="d-none d-lg-flex align-items-center search-bar w-100" style="background-color: white; border-radius: 50px; padding: 5px;">
+                    <form action="{{ route('shop') }}" method="GET" class="d-none d-lg-flex align-items-center search-bar w-100" style="background-color: white; border-radius: 50px; padding: 5px;">
                         <!-- Dropdown for Product Categories -->
                         <div class="dropdown me-2">
                             <button class="btn btn-light dropdown-toggle rounded-pill px-3" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Semua Produk
+                                <span id="categoryLabel">
+                                    <!-- If category exists in request, display the selected category name, else default to "Semua Produk" -->
+                                    {{ $selectedCategoryName ?? 'Semua Produk' }}
+                                </span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Kategori 1</a></li>
-                                <li><a class="dropdown-item" href="#">Kategori 1</a></li>
-                                <li><a class="dropdown-item" href="#">Kategori 1</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="selectCategory(null, 'Semua Produk')">Semua Produk</a></li>
+                                @foreach($categories as $category)
+                                    <li><a class="dropdown-item" href="#" onclick="selectCategory({{ $category->id }}, '{{ $category->name }}')">{{ $category->name }}</a></li>
+                                @endforeach
                             </ul>
                         </div>
+                        <!-- Hidden input for category -->
+                        <input type="hidden" name="category_id" id="categoryInput" value="{{ request()->get('category_id') }}">
                         <!-- Search Input -->
-                        <input type="text" class="form-control border-0 rounded-pill px-4 py-2" placeholder="Cari Barang Impian Kamu Disini">
+                        <input type="text" class="form-control border-0 rounded-pill px-4 py-2" placeholder="Cari Barang Impian Kamu Disini" name="keyword" value="{{ request()->get('keyword') }}">
                         <!-- Search Button -->
-                        <button class="btn  mx-2" type="submit" style="width: 40px; height: 40px;">
+                        <button class="btn mx-2" type="submit" style="width: 40px; height: 40px;">
                             <i class="fas fa-search text-dark"></i>
                         </button>
                     </form>
                 </div>
+                
+                <script>
+                    function selectCategory(categoryId, categoryName) {
+                        document.getElementById('categoryInput').value = categoryId;
+                        document.getElementById('categoryLabel').innerText = categoryName;
+                    }
+                </script>
+                
+                
+                
     
                 <div class="d-flex m-3 me-0">
                     @if(Auth::check())
@@ -67,34 +83,55 @@
                                 </span>
                             @endif
                         </a>
-                
+                        
                         <!-- Wishlist Icon -->
-                        <a href="#" class="position-relative me-4 my-auto mx-2">
+                        <a href="{{ route('wishlist.index') }}" class="position-relative me-4 my-auto mx-2">
                             <i class="fas fa-heart fa-2x text-primary"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
-                                5
-                            </span>
-                        </a>
+                            @php
+                                // Get the count of items in the wishlist for the logged-in user
+                                $wishlistCount = Auth::check() ? \App\Models\Wishlist::where('user_id', Auth::id())->count() : 0;
+                            @endphp
+                            @if ($wishlistCount > 0)
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                                    {{ $wishlistCount }}
+                                </span>
+                            @endif
+                        </a>                        
                 
                         <!-- Separator -->
                         <span class="mx-2">|</span>
                 
                         <!-- Tampilkan nama pengguna -->
                         <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center my-auto dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user fa-2x me-2"></i>
+                            <a href="#" class="d-flex align-items-center my-auto dropdown-toggle text-dark" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user fa-2x me-2 text-primary"></i>
                                 <span class="d-none d-md-inline">Halo, {{ Auth::user()->name }}</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
-                                <!-- Option for viewing profile or other options can be added here -->
-                                <li><a class="dropdown-item" href="{{ route('user.profile.show') }}">Profil</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-lg" aria-labelledby="dropdownUser" style="min-width: 200px; border-radius: 15px;">
+                                <!-- Profile Section -->
+                                <li class="text-center">
+                                    <div class="p-3 border-bottom">
+                                        <!-- Check if the user has a profile photo, otherwise display a default image -->
+                                        <img src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('storage/img/default-profile.png') }}" 
+                                             alt="{{ Auth::user()->name }}" 
+                                             class="rounded-circle" 
+                                             style="width: 80px; height: 80px; object-fit: cover;">
+                                        <p class="mb-0 mt-2 fw-bold">{{ Auth::user()->name }}</p>
+                                        <small class="text-muted">{{ Auth::user()->email }}</small>
+                                    </div>
+                                </li>
+                                
+                                
+                                <!-- Links -->
+                                <li><a class="dropdown-item py-2" href="{{ route('user.profile.show') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
+                                <li><a class="dropdown-item py-2" href="{{ route('customer.orders.index') }}"><i class="fas fa-box me-2"></i> Pesanan</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <!-- Logout Option -->
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
+                                    <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        <i class="fas fa-sign-out-alt me-2"></i> {{ __('Logout') }}
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
@@ -102,6 +139,7 @@
                                 </li>
                             </ul>
                         </div>
+                        
                         
                     @else
                     <a href="#" class="position-relative me-4 my-auto mx-2 btn-open-modal2">

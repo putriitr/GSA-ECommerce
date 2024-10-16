@@ -16,6 +16,7 @@ class Payment extends Model
         'order_id',
         'status',
         'payment_proof',
+        'is_viewed',
     ];
 
     public function order()
