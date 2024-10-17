@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid py-5 mt-5">
-    <div class="container py-5">
+    <div class="container py-5 mt-5">
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3">
@@ -38,7 +38,7 @@
                     </div>
                 @endif
 
-                <h2 class="mb-4">Your Orders</h2>
+                <h2 class="mb-4">Daftar Pesanan</h2>
 
                 <!-- Status Filter Buttons -->
                 <div class="mb-4 d-flex align-items-center flex-wrap">
@@ -57,7 +57,7 @@
                     <a href="{{ route('customer.orders.index', ['status' => 'packing']) }}" class="btn {{ $status == 'packing' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Diproses</a>
                     <a href="{{ route('customer.orders.index', ['status' => 'shipped']) }}" class="btn {{ $status == 'shipped' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dikirim</a>
                     <a href="{{ route('customer.orders.index', ['status' => 'completed']) }}" class="btn {{ $status == 'completed' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Tiba di Tujuan</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'cancelled']) }}" class="btn {{ $status == 'cancelled' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dibatalkan</a>
+                    <a href="{{ route('customer.orders.index', ['status' => 'cancelled']) }}"  class="btn {{ in_array($status, ['cancelled', 'cancelled_by_system']) ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2"> Dibatalkan </a>
                     <a href="{{ route('customer.orders.index', ['status' => '']) }}" class="text-success ms-auto mt-2">Reset Filter</a>
                 </div>
                 
@@ -82,6 +82,7 @@
                                             @case('shipped') bg-secondary @break
                                             @case('completed') bg-success @break
                                             @case('cancelled') bg-danger @break
+                                            @case('cancelled_by_system') bg-danger @break
                                             @default bg-light
                                         @endswitch
                                     ">
@@ -106,6 +107,8 @@
                                                 @break
                                             @case('cancelled')
                                                 Dibatalkan
+                                            @case('cancelled_by_system')
+                                                Dibatalkan oleh sistem
                                                 @break
                                             @default
                                                 {{ ucfirst($order->status) }}
@@ -152,9 +155,6 @@
                                             </li>
                                         @endif
                                     </ul>
-                                    
-                                    
-                                    
                                 </div>
                             </div>
                         </div>

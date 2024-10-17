@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Admin\Banner\BannerHomeController;
 use App\Http\Controllers\Admin\Banner\BannerMicroController;
+use App\Http\Controllers\Admin\FAQ\FaqController;
 use App\Http\Controllers\Admin\MasterData\CategoryController;
+use App\Http\Controllers\Admin\MasterData\ParameterController;
 use App\Http\Controllers\Admin\MasterData\Shipping\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\Cart\CartController;
 use App\Http\Controllers\Customer\Order\OrderController;
 use App\Http\Controllers\Customer\Product\ProductMemberController;
@@ -16,6 +19,7 @@ use App\Http\Controllers\Customer\Wishlist\WishlistController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,19 +31,36 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => [
+            \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+            \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
+            \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
+            ]
+    ], function () {
+        
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
 Route::post('/category/filter', [HomeController::class, 'filterByCategory'])->name('category.filter.ajax');
 Route::get('/product/{slug}', [ProductMemberController::class, 'show'])->name('customer.product.show');
+Route::get('/auth/login', [LoginController::class, 'loginPage'])->name('login.page');
+Route::post('/auth/login', [LoginController::class, 'loginPageLogic'])->name('login.logic');
+Route::get('/customer/faq', [HomeController::class, 'faq'])->name('customer.faq');
+
 
 Auth::routes();
 
-Route::middleware(['preventDirectLoginAccess'])->group(function () {
-    Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 
 
-    Route::get('/customer/cart', [CartController::class, 'index'])->name('cart.show');
+    
+
+
+   
+//Normal Users Routes List
+Route::middleware(['auth', 'user-access:customer'])->group(function () {
+   Route::get('/customer/cart', [CartController::class, 'index'])->name('cart.show');
     Route::post('/customer/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/customer/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/customer/cart/update/{id}', [CartController::class, 'updateCartQuantity'])->name('cart.update');
@@ -74,14 +95,10 @@ Route::middleware(['preventDirectLoginAccess'])->group(function () {
 
     Route::post('/reviews', [ReviewCustomerController::class, 'storeReview'])->name('reviews.store');
 
-
 });
 
-   
-//Normal Users Routes List
-Route::middleware(['auth', 'user-access:user'])->group(function () {
-   
-});
+
+
    
 //Admin Routes List
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
@@ -103,6 +120,15 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('admin/masterdata/shipping-services/{id}', [ShippingServiceController::class, 'update'])->name('masterdata.shipping.update');
     Route::delete('admin/masterdata/shipping-services/{id}', [ShippingServiceController::class, 'destroy'])->name('masterdata.shipping.destroy');
     
+
+    Route::get('admin/masterdata/parameter', [ParameterController::class, 'index'])->name('masterdata.parameters.index');
+    Route::get('admin/masterdata/parameter/create', [ParameterController::class, 'create'])->name('masterdata.parameters.create');
+    Route::post('admin/masterdata/parameter', [ParameterController::class, 'store'])->name('masterdata.parameters.store');
+    Route::get('admin/masterdata/parameter/{id}/edit', [ParameterController::class, 'edit'])->name('masterdata.parameters.edit');
+    Route::put('admin/masterdata/parameter/{id}', [ParameterController::class, 'update'])->name('masterdata.parameters.update');
+    Route::delete('admin/masterdata/parameter/{id}', [ParameterController::class, 'destroy'])->name('masterdata.parameters.destroy');
+
+
     Route::get('admin/product', [ProductController::class, 'index'])->name('product.index');
     Route::get('admin/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('admin/product', [ProductController::class, 'store'])->name('product.store');
@@ -149,5 +175,15 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::delete('admin/banner-micro/banners/{id}', [BannerMicroController::class, 'destroy'])->name('admin.banner-micro.banners.destroy');
     Route::get('admin/banner-micro/banners/{id}', [BannerMicroController::class, 'show'])->name('admin.banner-micro.banners.show');
 
+
+    Route::get('admin/faq', [FaqController::class, 'index'])->name('admin.faq.index'); // List admin.FAQ
+    Route::get('admin/faq/create', [FaqController::class, 'create'])->name('admin.faq.create'); // Show create form
+    Route::post('admin/faq', [FaqController::class, 'store'])->name('admin.faq.store'); // Store new FAQ
+    Route::get('admin/faq/{id}/edit', [FaqController::class, 'edit'])->name('admin.faq.edit'); // Show edit form
+    Route::put('admin/faq/{id}', [FaqController::class, 'update'])->name('admin.faq.update'); // Update existing FAQ
+    Route::delete('admin/faq/{id}', [FaqController::class, 'destroy'])->name('admin.faq.destroy'); // Delete FAQ
+    Route::get('admin.faq/{id}', [FaqController::class, 'show'])->name('admin.faq.show'); // Show a specific FAQ
+
+});
 
 });

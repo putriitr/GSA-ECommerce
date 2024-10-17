@@ -4,28 +4,28 @@
             <div class="top-info ps-2">
                 <small class="me-3">
                     <i class="fas fa-phone-alt me-2 text-secondary"></i> <!-- Ikon telepon -->
-                    <a href="tel:+6281390069009" class="text-white">+62813 9006 9009</a>
+                    <a href="tel:+6281390069009" class="text-white">{{ $parameter->nomor_wa }}</a>
                 </small>
                 <small class="me-3">
                     <i class="fas fa-envelope me-2 text-secondary"></i> <!-- Ikon email -->
-                    <a href="mailto:info@gsacommerce.com" class="text-white">info@gsacommerce.com</a>
+                    <a href="mailto:info@gsacommerce.com" class="text-white">{{ $parameter->email }}</a>
                 </small>
             </div>
             
             <div class="top-link pe-2">
-                <a href="#" class="text-white"><small class="text-white mx-2">Selamat datang di Toko GS acommerce</small></a>
+                <a href="#" class="text-white"><small class="text-white mx-2">{{ $parameter->slogan_welcome }}</small></a>
             </div>
         </div>
     </div>
     <div class="container px-5">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
             <a href="{{ route('home') }}" class="navbar-brand brand-logo" style="padding-right: 10px;">
-                <img src="{{ asset('assets/member/img/logo.svg') }}" alt="Logo Ecommerce" style="height: 40px;">
+                <img src="{{ asset($parameter->logo) }}" alt="Logo Ecommerce" style="height: 40px;">
             </a>
             
             <!-- Logo Cinta Produk Indonesia di kanan -->
-            <a href="https://banggabuatanindonesia.co.id/" target="_blank" class="brand-logo-right">
-                <img src="https://kemenparekraf.go.id/_next/image?url=https%3A%2F%2Fapi2.kemenparekraf.go.id%2Fstorage%2Fapp%2Fuploads%2Fpublic%2F621%2F436%2Ff46%2F621436f463b3f837489693.png&w=3840&q=75" alt="Cinta Produk Indonesia" style="height: 40px;">
+            <a href="{{ route('home') }}" target="_blank" class="brand-logo-right">
+                <img src="{{ asset($parameter->logo_tambahan) }}" alt="Cinta Produk Indonesia" style="height: 40px;">
             </a>
             
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
@@ -41,8 +41,12 @@
                                 </span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#" onclick="selectCategory(null, 'Semua Produk')">Semua Produk</a></li>
-                                @foreach($categories as $category)
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="selectCategory(null, '{{ __('navbar.all_products') }}')">
+                                        {{ __('navbar.all_products') }}
+                                    </a>
+                                </li>
+                                                                @foreach($categories as $category)
                                     <li><a class="dropdown-item" href="#" onclick="selectCategory({{ $category->id }}, '{{ $category->name }}')">{{ $category->name }}</a></li>
                                 @endforeach
                             </ul>
@@ -112,7 +116,7 @@
                                 <li class="text-center">
                                     <div class="p-3 border-bottom">
                                         <!-- Check if the user has a profile photo, otherwise display a default image -->
-                                        <img src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('storage/img/default-profile.png') }}" 
+                                        <img src="{{ Auth::user()->profile_photo ? asset(Auth::user()->profile_photo) : asset('assets/default/image/user.png') }}" 
                                              alt="{{ Auth::user()->name }}" 
                                              class="rounded-circle" 
                                              style="width: 80px; height: 80px; object-fit: cover;">
@@ -123,8 +127,17 @@
                                 
                                 
                                 <!-- Links -->
-                                <li><a class="dropdown-item py-2" href="{{ route('user.profile.show') }}"><i class="fas fa-user me-2"></i> Profil</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ route('customer.orders.index') }}"><i class="fas fa-box me-2"></i> Pesanan</a></li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="{{ route('user.profile.show') }}">
+                                        <i class="fas fa-user me-2"></i> {{ __('navbar.profile') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="{{ route('customer.orders.index') }}">
+                                        <i class="fas fa-box me-2"></i> {{ __('navbar.orders') }}
+                                    </a>
+                                </li>
+                                
                                 <li><hr class="dropdown-divider"></li>
                                 <!-- Logout Option -->
                                 <li>
@@ -172,24 +185,7 @@
 
 
 
-<!-- Modal Search Start -->
-<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content rounded-0">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex align-items-center">
-                <div class="input-group w-75 mx-auto d-flex">
-                    <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                    <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Search End -->
+    
 
 
 

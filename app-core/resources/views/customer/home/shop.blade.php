@@ -3,15 +3,19 @@
 @section('content')
 
 
- <!-- Single Page Header start -->
- <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Shop</h1>
-    <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active text-white">Shop</li>
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5"
+    style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/cart-header-bg.jpg') }}') no-repeat center center; background-size: cover;">
+    <div style="background: rgba(0, 0, 0, 0.096); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+    </div>
+    <h1 class="text-center display-6 text-dark" style="position: relative; z-index: 2;">{{ __('shop.page_title') }}</h1>
+    <ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
+        <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-dark">{{ __('shop.breadcrumb_home') }}</a></li>
+        <li class="breadcrumb-item active text-primary">{{ __('shop.breadcrumb_shop') }}</li>
     </ol>
 </div>
 <!-- Single Page Header End -->
+
 
 
 <div class="container-fluid fruite">
@@ -25,54 +29,49 @@
                         <div class="filter-message w-100 mx-auto d-flex align-items-center justify-content-between">
                             <p class="text-muted mb-0 d-flex align-items-center">
                                 <i class="fas fa-filter me-2"></i>
-                                <span>{{ $filterMessage }}</span>
+                                <span>{{ __('shop.filter_applied', ['message' => $filterMessage]) }}</span>
                             </p>
                             <!-- Ikon Refresh -->
                             <a href="{{ route('shop') }}" class="btn btn-secondary" style="background: none; border: none; padding: 0;">
-                                <i class="fas fa-sync-alt" style="font-size: 18px; color: #007bff;"></i>
+                                <i class="fas fa-sync-alt" style="font-size: 18px; color: #007bff;" aria-label="{{ __('shop.refresh') }}"></i>
                             </a>
                         </div>
                     </div>
                     
                     <div class="col-xl-3">
                         <div class="sorting-dropdown bg-light px-3 py-2 rounded d-flex justify-content-between align-items-center shadow-sm">
-                            <label for="fruits" class="me-2 mb-0 text-dark" style="font-weight: 500; white-space: nowrap;">Sort By:</label>
+                            <label for="fruits" class="me-2 mb-0 text-dark" style="font-weight: 500; white-space: nowrap;">{{ __('shop.sort_by') }}</label>
                             <select id="fruits" name="fruitlist" class="border-0 form-select bg-white text-dark rounded w-100" style="min-width: 150px;">
-                                <option value="terbaru" {{ request()->get('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                                <option value="terlama" {{ request()->get('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
-                                <option value="termahal" {{ request()->get('sort') == 'termahal' ? 'selected' : '' }}>Termahal</option>
-                                <option value="termurah" {{ request()->get('sort') == 'termurah' ? 'selected' : '' }}>Termurah</option>
+                                <option value="terbaru" {{ request()->get('sort') == 'terbaru' ? 'selected' : '' }}>{{ __('shop.newest') }}</option>
+                                <option value="terlama" {{ request()->get('sort') == 'terlama' ? 'selected' : '' }}>{{ __('shop.oldest') }}</option>
+                                <option value="termahal" {{ request()->get('sort') == 'termahal' ? 'selected' : '' }}>{{ __('shop.most_expensive') }}</option>
+                                <option value="termurah" {{ request()->get('sort') == 'termurah' ? 'selected' : '' }}>{{ __('shop.cheapest') }}</option>
                             </select>
                         </div>
                     </div>
-                    @else
+                @else
                     <div class="col-xl-12 d-flex justify-content-end">
                         <div class="sorting-dropdown bg-light px-3 py-2 rounded d-flex justify-content-between align-items-center shadow-sm">
-                            <label for="fruits" class="me-2 mb-0 text-dark" style="font-weight: 500; white-space: nowrap;">Sort By:</label>
+                            <label for="fruits" class="me-2 mb-0 text-dark" style="font-weight: 500; white-space: nowrap;">{{ __('shop.sort_by') }}</label>
                             <select id="fruits" name="fruitlist" class="border-0 form-select bg-white text-dark rounded w-100" style="min-width: 150px;">
-                                <option value="terbaru" {{ request()->get('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
-                                <option value="terlama" {{ request()->get('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
-                                <option value="termahal" {{ request()->get('sort') == 'termahal' ? 'selected' : '' }}>Termahal</option>
-                                <option value="termurah" {{ request()->get('sort') == 'termurah' ? 'selected' : '' }}>Termurah</option>
+                                <option value="terbaru" {{ request()->get('sort') == 'terbaru' ? 'selected' : '' }}>{{ __('shop.newest') }}</option>
+                                <option value="terlama" {{ request()->get('sort') == 'terlama' ? 'selected' : '' }}>{{ __('shop.oldest') }}</option>
+                                <option value="termahal" {{ request()->get('sort') == 'termahal' ? 'selected' : '' }}>{{ __('shop.most_expensive') }}</option>
+                                <option value="termurah" {{ request()->get('sort') == 'termurah' ? 'selected' : '' }}>{{ __('shop.cheapest') }}</option>
                             </select>
                         </div>
                     </div>
-                    @endif
+                @endif
+
                 </div>
                 
-                <!-- Custom CSS -->
-                <style>
-                    
-
-
-                </style>
                 
                 <div class="row g-4">
                     <div class="col-lg-3">
                         <div class="row g-4">
                             <div class="col-lg-12">
                                 <div class="mb-3">
-                                    <h4>Categories</h4>
+                                    <h4>{{ __('shop.categories') }}</h4>
                                     <ul class="list-unstyled fruite-categorie">
                                         @foreach($categories as $category)
                                         <li>
@@ -90,35 +89,32 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="mb-3">
-                                    <h4 class="mb-2">Price Filter</h4>
+                                    <h4 class="mb-2">{{ __('shop.price_filter') }}</h4>
                                     <form action="{{ route('shop') }}" method="GET">
                                         <input type="hidden" name="category_id" value="{{ request()->get('category_id') }}">
                                         <div class="d-flex flex-column">
                                             <div class="mb-3">
-                                                <label for="min_price">Min Price</label>
+                                                <label for="min_price">{{ __('shop.min_price') }}</label>
                                                 <input type="text" class="form-control" id="min_price" name="min_price" value="{{ request()->get('min_price') }}" placeholder="0" oninput="formatPrice(this)">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="max_price">Max Price</label>
+                                                <label for="max_price">{{ __('shop.max_price') }}</label>
                                                 <input type="text" class="form-control" id="max_price" name="max_price" value="{{ request()->get('max_price') }}" placeholder="..." oninput="formatPrice(this)">
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <button type="submit" class="btn btn-primary mt-3">Filter</button>
-                                                <!-- Ikon Refresh -->
+                                                <button type="submit" class="btn btn-primary mt-3">{{ __('shop.filter') }}</button>
                                                 <a href="{{ route('shop') }}" class="btn btn-secondary mt-3" style="background: none; border: none; padding: 0;">
-                                                    <i class="fas fa-sync-alt" style="font-size: 24px;"></i>
+                                                    <i class="fas fa-sync-alt" style="font-size: 24px;" aria-label="{{ __('shop.refresh') }}"></i>
                                                 </a>
                                             </div>
                                         </div>
                                     </form>
-                                    
                                 </div>
                             </div>                            
                             
                             <div class="col-lg-12 mt-5">
                                 <div class="position-relative">
                                     @php
-                                        // Fetch the active micro banner for the shop page
                                         $microBannerShop = \App\Models\BannerMicro::where('page', 'shop')->where('active', true)->first();
                                     @endphp
                                     
@@ -137,7 +133,7 @@
                     <div class="col-lg-9">
                         <div class="row g-4 justify-content-start">
                             @if($products->isEmpty())
-                                <p class="text-muted">Tidak ada produk yang ditemukan dalam kategori ini.</p> <!-- Pesan jika tidak ada produk -->
+                                <p class="text-muted">{{ __('shop.no_products') }}</p>
                             @else
                                 @foreach($products as $product)
                                     <div class="col-md-6 col-lg-4 col-xl-3">
@@ -155,12 +151,12 @@
                                 
                                                 <!-- Pre-Order Badge -->
                                                 @if($product->is_pre_order)
-                                                <div class="text-white bg-primary px-2 py-1 rounded position-absolute" style="top: 10px; left: 10px; font-size: 12px;">Pre Order</div>
+                                                <div class="text-white bg-primary px-2 py-1 rounded position-absolute" style="top: 10px; left: 10px; font-size: 12px;">{{ __('shop.pre_order') }}</div>
                                                 @endif
                                 
                                                 <!-- Out of Stock Badge -->
                                                 @if($product->stock <= 0)
-                                                <div class="text-white bg-danger px-2 py-1 rounded position-absolute" style="top: 10px; right: 10px; font-size: 12px;">Out of Stock</div>
+                                                <div class="text-white bg-danger px-2 py-1 rounded position-absolute" style="top: 10px; right: 10px; font-size: 12px;">{{ __('shop.out_of_stock') }}</div>
                                                 @endif
                                 
                                                 <!-- Product Details -->
@@ -183,13 +179,13 @@
                                                     <p class="text-dark text-start fs-6 mb-2">
                                                         <span class="text-decoration-line-through text-muted">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
                                                         <span class="text-danger fw-bold" style="font-size: 12px;">
-                                                            {{ round((($product->price - $product->discount_price) / $product->price) * 100) }}% off
+                                                            {{ __('shop.discount', ['percentage' => round((($product->price - $product->discount_price) / $product->price) * 100)]) }}
                                                         </span> <br>
                                                         <span class="text-danger fw-bold mb-2">Rp{{ number_format($product->discount_price, 0, ',', '.') }}</span>
                                                     </p>
                                                     @else
                                                     <p class="text-dark text-start fs-6 mb-2">Rp{{ number_format($product->price, 0, ',', '.') }}</p>
-                                                    <p class="text-muted text-start fs-6 mb-2 small"><i class="fa fa-check-circle text-success me-1"></i>{{ __("Bekasi") }}</p>
+                                                    <p class="text-muted text-start fs-6 mb-2 small"><i class="fa fa-check-circle text-success me-1"></i>{{ __('shop.location') }}</p>
                                                     @endif
                                 
                                                     <!-- Rating and Purchase Info -->
@@ -199,7 +195,7 @@
                                                             {{ $product->rating ?? '0.0' }}
                                                         </span>
                                                         <span class="mx-2">|</span>
-                                                        <span class="text-muted small">{{ $product->completed_order_count }}+ terjual</span>
+                                                        <span class="text-muted small">{{ __('shop.sold', ['count' => $product->completed_order_count]) }}</span>
                                                     </div>
                                                 </div>
                                             </div>

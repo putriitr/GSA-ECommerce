@@ -41,14 +41,59 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
+    public function loginPage()
+    {
+        return view('auth.login'); // Ensure the view file resources/views/auth/login.blade.php exists
+    }
+
+    public function loginPageLogic(Request $request)
+    {
+        // Validate the form inputs
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+        
+        if (Auth::attempt($credentials)) {
+            // Login successful
+            $user = Auth::user();
+            // Flash a welcome back message into the session
+            session()->flash('welcome_back', 'Selamat datang kembali, ' . $user->name . '!');
+
+            // Redirect users based on their user type
+            switch ($user->type) {
+                case 'admin':
+                    return redirect()->route('dashboard');
+                case 'customer':
+                    return redirect()->route('home');
+                default:
+                    return redirect()->route('home');
+            }
+        } else {
+            // Login failed, redirect back with error message
+            return redirect()->back()
+                ->withInput($request->only('email'))
+                ->withErrors(['login' => 'Email atau password salah!']);
+        }
+    }
+
+
+
 
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-    
+        
         if (Auth::attempt($credentials)) {
-            // Login berhasil, kembalikan respons JSON
+            // Login berhasil
             $user = Auth::user();
+            
+            // Flash a welcome back message into the session
+            session()->flash('welcome_back', 'Selamat datang kembali, ' . $user->name . '!');
+            
+            // Kembalikan respons JSON dengan sukses
             return response()->json([
                 'success' => true,
                 'user_type' => $user->type // Pastikan ada 'role' atau 'user_type' di user model
@@ -58,5 +103,6 @@ class LoginController extends Controller
             return response()->json(['success' => false], 401);
         }
     }
+    
     
 }

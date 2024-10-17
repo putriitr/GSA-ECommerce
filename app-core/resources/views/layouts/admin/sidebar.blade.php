@@ -118,6 +118,48 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Master Data</span>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div data-i18n="Account Settings">Master</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="{{ route('masterdata.shipping.index') }}" class="menu-link">
+                                    <div data-i18n="Basic">Jasa Angkutan</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="{{ route('masterdata.parameters.index') }}" class="menu-link">
+                                    <div data-i18n="Notifications">Parameter</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">FAQ</span>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div data-i18n="Account Settings">FAQ</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="{{ route('admin.faq.index') }}" class="menu-link">
+                                    <div data-i18n="Basic">FAQ</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </aside>
             <!-- / Menu -->
+
+
+            

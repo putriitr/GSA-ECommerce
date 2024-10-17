@@ -3,16 +3,21 @@
 @section('content')
 
 
- <!-- Single Page Header start -->
- <div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Shop Detail</h1>
-    <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-        <li class="breadcrumb-item active text-white">Shop Detail</li>
-    </ol>
+    <!-- Single Page Header start -->
+<div class="container-fluid page-header py-5"
+style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/cart-header-bg.jpg') }}') no-repeat center center; background-size: cover;">
+<div style="background: rgba(0, 0, 0, 0.096); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+</div>
+<h1 class="text-center display-6 text-dark" style="position: relative; z-index: 2;">{{ $product->name }}</h1>
+<ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
+    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-dark">Beranda</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('shop') }}" class="text-dark">Shop</a></li>
+    <li class="breadcrumb-item active text-primary">{{ $product->name }}</li>
+</ol>
 </div>
 <!-- Single Page Header End -->
+
+
 <div class="container-fluid py-5">
     <div class="container py-5">
         <div class="row g-4 mb-5">

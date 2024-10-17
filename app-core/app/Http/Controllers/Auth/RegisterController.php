@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 
 class RegisterController extends Controller
@@ -88,4 +89,17 @@ class RegisterController extends Controller
         // If the slug exists, append a unique identifier
         return $count ? "{$slug}-" . ($count + 1) : $slug;
     }
+
+
+    protected function registered(Request $request, $user)
+    {
+        // Flash a welcome message into the session
+        session()->flash('welcome', 'Selamat datang, ' . $user->name . '! Terima kasih telah bergabung.');
+    
+        // Redirect to home
+        return redirect($this->redirectPath());
+    }
+    
+    
+
 }

@@ -4,23 +4,25 @@
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5"
-style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/page-header.jpg') }}') no-repeat center center; background-size: cover;">
-<div style="background: rgba(0, 0, 0, 0.5); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
-</div>
-<h1 class="text-center text-white display-6" style="position: relative; z-index: 2;">Wishlist</h1>
-<ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
-    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">Beranda</a></li>
-    <li class="breadcrumb-item active text-white">Wishlist</li>
-</ol>
+    style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/cart-header-bg.jpg') }}') no-repeat center center; background-size: cover;">
+    <div style="background: rgba(0, 0, 0, 0.096); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+    </div>
+    <h1 class="text-center display-6 text-dark" style="position: relative; z-index: 2;">{{ __('cart.page_title') }}</h1>
+    <ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
+        <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-dark">{{ __('cart.breadcrumb_home') }}</a></li>
+        <li class="breadcrumb-item active text-primary">{{ __('cart.breadcrumb_cart') }}</li>
+    </ol>
 </div>
 <!-- Single Page Header End -->
+
+
 
 <div class="container-fluid py-5">
     <div class="container">
         @if($cartItems->isEmpty())
         <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
             <div class="alert alert-warning text-center">
-                Keranjang anda kosong, silahkan berbelanja <a href="{{ route('home') }}" class="text-primary">di sini</a>.
+                {!! __('cart.empty_cart', ['link' => route('home')]) !!}
             </div>
         </div>
         @else
@@ -28,12 +30,12 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                 <table class="table" id="cart-table">
                     <thead class="bg-light">
                         <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">{{ __('cart.products') }}</th>
+                            <th scope="col">{{ __('cart.name') }}</th>
+                            <th scope="col">{{ __('cart.price') }}</th>
+                            <th scope="col">{{ __('cart.quantity') }}</th>
+                            <th scope="col">{{ __('cart.total') }}</th>
+                            <th scope="col">{{ __('cart.handle') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,7 +109,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         </div>
                         <!-- Notification for PPN inclusion -->
                         <div class="text-end pe-4 mb-3">
-                            <small class="text-muted">* Harga Total Sudah Termasuk PPN</small>
+                            <small class="text-muted">* {{ __('cart.ppn_included') }}</small>
                         </div>
 
                         <!-- Form to handle checkout -->
@@ -118,11 +120,11 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                     <!-- Form to handle checkout -->
                     <form action="{{ route('customer.checkout') }}" method="POST">
                         @csrf
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">Proceed Checkout</button>
+                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">{{ __('cart.checkout') }}</button>
                     </form>
                     @else
                     <div class="alert alert-warning text-center">
-                        Anda harus menambahkan alamat sebelum melakukan checkout.
+                        {{ __('cart.address_warning') }}
                     </div>
                     @endif
                     

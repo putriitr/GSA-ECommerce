@@ -24,6 +24,10 @@
                                 <span class="badge bg-primary">Shipped</span>
                             @elseif ($order->status == 'completed')
                                 <span class="badge bg-success">Completed</span>
+                            @elseif ($order->status == 'cancelled')
+                                <span class="badge bg-warning">Cancelled</span>
+                            @elseif ($order->status == 'cancelled_by_system')
+                                <span class="badge bg-danger">Cancelled By System</span>
                             @else
                                 <span class="badge bg-secondary">{{ ucfirst($order->status) }}</span>
                             @endif
@@ -54,6 +58,10 @@
                                 @if($order->cancelled_at)
                                     <li>Cancelled: <strong>{{ $order->cancelled_at->format('d M Y, H:i') }}</strong></li>
                                 @endif
+                                @if($order->cancelled_by_system_at)
+                                <li>Cancelled: <strong>{{ $order->cancelled_by_system_at->format('d M Y, H:i') }}</strong></li>
+                            @endif
+
                             </ul>
                         </div>
 
@@ -142,6 +150,21 @@
                                 <div class="alert alert-warning" role="alert">
                                     <strong>Penting!</strong> Jika Anda mengupload atau mengirim bukti pembayaran yang salah, pesanan Anda akan dibatalkan secara otomatis oleh sistem. Kami tidak bertanggung jawab atas kesalahan transfer.
                                 </div>
+
+                                @php
+                                    // Calculate the time left for payment (48 hours)
+                                    $approvedTime = $order->approved_at; // The timestamp when the order was approved
+                                    $timeLimit = 48 * 60 * 60; // 48 hours in seconds
+                                    $currentTime = now(); // Current timestamp
+                                    $elapsedTime = $currentTime->diffInSeconds($approvedTime); // Time elapsed since approved
+                                    $remainingTime = max(0, $timeLimit - $elapsedTime); // Calculate remaining time
+                                    $hours = floor($remainingTime / 3600); // Calculate hours only
+                                @endphp
+
+                                <div id="countdown-timer" class="mt-2">
+                                    Waktu tersisa untuk menyelesaikan pembayaran: <strong>{{ $hours }} jam</strong>.
+                                </div> <!-- Countdown timer display -->
+
                                 <form action="{{ route('customer.payment.submit', $order->id) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">
@@ -151,7 +174,34 @@
                                     <button type="submit" class="btn btn-success">Submit Payment</button>
                                 </form>
                             </div>
+
+                            <script>
+                                // Set the countdown time in seconds for this order
+                                let remainingTime = {{ $remainingTime }};
+                                
+                                function updateTimer() {
+                                    // Calculate hours only
+                                    const hours = Math.floor(remainingTime / 3600);
+
+                                    // Display the countdown timer
+                                    document.getElementById('countdown-timer').innerHTML = 
+                                        `Waktu tersisa untuk menyelesaikan pembayaran: <strong>${hours} jam</strong>.`;
+
+                                    // If time is up, you can implement logic to handle this case
+                                    if (remainingTime <= 0) {
+                                        clearInterval(timerInterval);
+                                        // Logic to cancel the order can be added here (optional)
+                                    }
+
+                                    remainingTime--; // Decrease the remaining time by one second
+                                }
+
+                                // Update timer every second
+                                const timerInterval = setInterval(updateTimer, 1000);
+                                updateTimer(); // Initial call to display timer immediately
+                            </script>
                         @endif
+
 
 
 

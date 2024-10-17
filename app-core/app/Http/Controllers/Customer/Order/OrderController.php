@@ -87,25 +87,34 @@ class OrderController extends Controller
 
     // Submit payment proof
     public function submitPaymentProof(Request $request, $orderId)
-    {
-        // Validate the payment proof
-        $request->validate([
-            'payment_proof' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
-        ]);
+{
+    // Find the order
+    $order = Order::find($orderId);
 
-        // Store the payment proof in public/payments
-        $fileName = time() . '_' . $request->file('payment_proof')->getClientOriginalName();
-        $request->file('payment_proof')->move(public_path('payments'), $fileName);
-
-        // Save the payment details
-        Payment::create([
-            'order_id' => $orderId,
-            'payment_proof' => 'payments/' . $fileName,
-            'status' => 'pending',
-        ]);
-
-        return back()->with('success', 'Payment proof submitted. Awaiting verification.');
+    // Check if the order is cancelled
+    if ($order->status === 'cancelled_by_system') {
+        return back()->with('info', 'Your order has been cancelled due to non-payment.');
     }
+
+    // Validate the payment proof
+    $request->validate([
+        'payment_proof' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+    ]);
+
+    // Store the payment proof in public/payments
+    $fileName = time() . '_' . $request->file('payment_proof')->getClientOriginalName();
+    $request->file('payment_proof')->move(public_path('payments'), $fileName);
+
+    // Save the payment details
+    Payment::create([
+        'order_id' => $orderId,
+        'payment_proof' => 'payments/' . $fileName,
+        'status' => 'pending',
+    ]);
+
+    return back()->with('success', 'Payment proof submitted. Awaiting verification.');
+}
+
 
         // Customer marks order as complete
     public function completeOrder($orderId)

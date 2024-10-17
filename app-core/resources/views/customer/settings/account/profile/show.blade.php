@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid py-5 mt-5">
-    <div class="container py-5">
+    <div class="container py-5 mt-5">
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3">
@@ -40,59 +40,61 @@
                 @endif
 
                 <!-- Profile Update Card -->
-                <div class="card mb-3 shadow-sm border-0 rounded-lg">
+                <div class="card mb-3 shadow-sm border-0 rounded-lg mt-2">
                     <div class="card-header bg-white border-bottom-0 rounded-top-lg py-2">
-                        <h6 class="fw-bold text-primary mb-0">Ubah Informasi Akun</h6>
+                        <h6 class="fw-bold text-primary mb-0">{{ __('settings.update_account_info') }}</h6>
                     </div>
                     <div class="card-body p-3">
                         <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-2">
-                                <label for="full_name" class="form-label text-muted small">Nama Lengkap</label>
+                                <label for="full_name" class="form-label text-muted small">{{ __('settings.full_name') }}</label>
                                 <input type="text" class="form-control form-control-sm rounded" name="full_name" value="{{ $user->full_name }}" required>
                             </div>
                             <div class="mb-2">
-                                <label for="email" class="form-label text-muted small">Email</label>
+                                <label for="email" class="form-label text-muted small">{{ __('settings.email') }}</label>
                                 <input type="email" class="form-control form-control-sm rounded" name="email" value="{{ $user->email }}" required>
                             </div>
                             <div class="mb-2">
-                                <label for="phone" class="form-label text-muted small">Nomor Telepon</label>
+                                <label for="phone" class="form-label text-muted small">{{ __('settings.phone_number') }}</label>
                                 <input type="text" class="form-control form-control-sm rounded" name="phone" value="{{ $user->phone }}">
                             </div>
                             <div class="mb-2">
-                                <label for="profile_photo" class="form-label text-muted small">Pilih Foto</label>
+                                <label for="profile_photo" class="form-label text-muted small">{{ __('settings.select_photo') }}</label>
                                 <input type="file" class="form-control form-control-sm rounded" name="profile_photo">
                             </div>
-                            <button type="submit" class="btn btn-warning btn-sm fw-bold rounded-pill px-3 py-1 shadow-sm">SIMPAN</button>
+                            <button type="submit" class="btn btn-warning btn-sm fw-bold rounded-pill px-3 py-1 shadow-sm">{{ __('settings.save') }}</button>
                         </form>
                     </div>
                 </div>
                 
+                
                 <!-- Password Update Card -->
-                <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card shadow-sm border-0 rounded-lg mt-2">
                     <div class="card-header bg-white border-bottom-0 rounded-top-lg py-2">
-                        <h6 class="fw-bold text-primary mb-0">Ganti Kata Sandi</h6>
+                        <h6 class="fw-bold text-primary mb-0">{{ __('settings.change_password') }}</h6>
                     </div>
                     <div class="card-body p-3">
                         <form action="{{ route('user.password.update') }}" method="POST">
                             @csrf
                             <div class="mb-2">
-                                <label for="current_password" class="form-label text-muted small">Kata Sandi Lama</label>
+                                <label for="current_password" class="form-label text-muted small">{{ __('settings.current_password') }}</label>
                                 <input type="password" class="form-control form-control-sm rounded" name="current_password" required>
                             </div>
                             <div class="mb-2">
-                                <label for="new_password" class="form-label text-muted small">Kata Sandi Baru</label>
+                                <label for="new_password" class="form-label text-muted small">{{ __('settings.new_password') }}</label>
                                 <input type="password" class="form-control form-control-sm rounded" name="new_password" required>
                             </div>
                             <div class="mb-2">
-                                <label for="new_password_confirmation" class="form-label text-muted small">Ulangi Kata Sandi Baru</label>
+                                <label for="new_password_confirmation" class="form-label text-muted small">{{ __('settings.confirm_new_password') }}</label>
                                 <input type="password" class="form-control form-control-sm rounded" name="new_password_confirmation" required>
                             </div>
-                            <button type="submit" class="btn btn-warning btn-sm fw-bold rounded-pill px-3 py-1 shadow-sm">SIMPAN</button>
+                            <button type="submit" class="btn btn-warning btn-sm fw-bold rounded-pill px-3 py-1 shadow-sm">{{ __('settings.save') }}</button>
                         </form>
-                        <p class="text-muted small mt-2">*Kosongkan jika tidak ingin mengganti kata sandi.</p>
+                        <p class="text-muted small mt-2">{{ __('settings.password_note') }}</p>
                     </div>
                 </div>
+                
                 
                 
             </div>

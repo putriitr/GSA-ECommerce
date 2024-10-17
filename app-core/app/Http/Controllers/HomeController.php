@@ -9,9 +9,13 @@ use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\Service;
 use App\Models\Category;
-
+use App\Models\Faq;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\TranslationHelper;
+
 
 class HomeController extends Controller
 {
@@ -21,6 +25,8 @@ class HomeController extends Controller
         $categories = Category::whereHas('products', function($query) {
             $query->where('status_published', 'published');
         })->get();
+
+        
 
         // Get only products that are published and include their completed order count
         $products = Product::withCount(['orderItems as completed_order_count' => function($query) {
@@ -41,8 +47,12 @@ class HomeController extends Controller
 
         $banners = BannerHome::where('active', 1)->orderBy('order')->get();
 
+        $approvedOrders = Order::where('user_id', Auth::id())
+            ->where('status', 'approved')
+            ->get();
 
-        return view('customer.home.home', compact('categories', 'products', 'bestsellerProducts','banners'));
+
+        return view('customer.home.home', compact('categories', 'products', 'bestsellerProducts','banners','approvedOrders'));
     }
 
     public function filterByCategory(Request $request)
@@ -198,9 +208,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function managerHome()
+    public function faq()
     {
-        return view('managerHome');
+        $faqs = Faq::all();
+        return view('customer.faq.index',compact('faqs'));
     }
 
 

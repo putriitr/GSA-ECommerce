@@ -2,7 +2,7 @@
 
 
 <!-- Modal 1: Memasukkan Email atau Nomor HP -->
-<div id="emailModal" class="custom-modal">
+<div id="emailModal" class="custom-modal" style="display: none;">
     <div class="custom-modal-content">
         <div class="custom-modal-header">
             <span class="custom-close">&times;</span>
@@ -14,8 +14,8 @@
             <!-- Form untuk memasukkan email atau nomor HP -->
             <form id="emailForm">
                 <div class="input-group">
-                    <label for="emailOrPhone">Nomor HP atau Email</label>
-                    <input type="text" id="emailOrPhone" name="emailOrPhone" placeholder="Masukkan Nomor HP atau Email" required>
+                    <label for="emailOrPhone">Email</label>
+                    <input type="text" id="emailOrPhone" name="emailOrPhone" placeholder="Masukkan Email" required>
                 </div>
 
                 <a href="#" class="help-link">Butuh bantuan?</a>
@@ -31,7 +31,7 @@
 </div>
 
 <!-- Modal 2: Memasukkan Password -->
-<div id="passwordModal" class="custom-modal">
+<div id="passwordModal" class="custom-modal" style="display: none;">
     <div class="custom-modal-content">
         <div class="custom-modal-header">
             <span class="custom-close">&times;</span>
@@ -59,7 +59,7 @@
 
 
 <!-- Modal 3: Memilih Metode Lainnya (Google, dll.) -->
-<div id="otherMethodsModal" class="custom-modal">
+<div id="otherMethodsModal" class="custom-modal" style="display: none;">
     <div class="custom-modal-content">
         <div class="custom-modal-header">
             <span class="custom-close">&times;</span>

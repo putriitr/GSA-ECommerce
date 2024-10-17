@@ -1,10 +1,10 @@
 @extends('layouts.customer.master__auth')
 
 @section('content')
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="row justify-content-center align-items-center w-100">
         <!-- Image on the left -->
-        <div class="col-md-5 text-center">
+        <div class="col-md-5 text-center mb-4 mb-md-0">
             <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" alt="Illustration" class="img-fluid mb-4">
             <h4>Jual Beli Mudah Hanya di Toko Anda</h4>
             <p>Gabung dan rasakan kemudahan bertransaksi di toko Anda</p>
@@ -12,14 +12,13 @@
 
         <!-- Form on the right -->
         <div class="col-md-6">
-            <div class="shadow-lg p-4 rounded">
+            <div class="shadow-lg p-4 rounded bg-white">
                 <div class="text-center mb-4">
                     <h4 class="fw-bold">{{ __('Daftar Sekarang') }}</h4>
                     <p>Sudah punya akun? <a href="{{ route('home') }}" class="btn-open-modal">Masuk</a></p>
-
                 </div>
 
-                <div class="d-grid">
+                <div class="d-grid mb-3">
                     <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-block">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="me-2" style="width: 20px;">
                         {{ __('Daftar dengan Google') }}
