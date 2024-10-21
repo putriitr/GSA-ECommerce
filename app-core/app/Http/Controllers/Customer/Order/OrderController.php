@@ -11,7 +11,7 @@ use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PDF; 
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 class OrderController extends Controller
 {

@@ -33,7 +33,12 @@ class HomeController extends Controller
             $query->whereHas('order', function($query) {
                 $query->where('status', 'completed');
             });
-        }])->where('status_published', 'published')->limit(12)->get();
+        }])
+        ->where('status_published', 'published')
+        ->inRandomOrder() // Ambil produk secara acak
+        ->limit(12) // Batasi hasil ke 12 produk
+        ->get();
+
         
         // Best-selling products query
         $bestsellerProducts = Product::select('t_product.id', 't_product.name', 't_product.price', 't_product.discount_price', 't_product.slug', 't_product.category_id', 't_product.status_published', DB::raw('SUM(t_ord_items.quantity) as total_quantity'))

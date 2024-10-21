@@ -262,14 +262,14 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                                     <div class="d-flex justify-content-between py-3 mb-5">
                                                         <div class="d-flex align-items-center">
                                                             <p class="mb-0 me-3">{{ __('product.please_rate') }}</p>
-                                                            <div class="d-flex align-items-center star-rating" style="font-size: 12px;">
-                                                                @for($i = 1; $i <= 5; $i++)
+                                                            <div class="star-rating">
+                                                                @for($i = 5; $i >= 1; $i--) <!-- Mulai dari bintang 5 ke bintang 1 -->
                                                                     <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}-{{ $order->id }}" required>
                                                                     <label for="star{{ $i }}-{{ $order->id }}" class="star-label">
                                                                         <i class="fa fa-star"></i>
                                                                     </label>
                                                                 @endfor
-                                                            </div>
+                                                            </div>                                                            
                                                         </div>
                                                         <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3">Post Comment</button>
                                                     </div>
@@ -283,34 +283,34 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
 
                                 <!-- Tambahkan custom style untuk bintang -->
                                 <style>
-                                    .star-label {
-                                        font-size: 24px;
-                                        cursor: pointer;
-                                        color: #e4e5e9; /* Default warna bintang yang belum dipilih */
-                                        transition: color 0.3s ease, transform 0.2s ease; /* Transisi untuk perubahan warna dan animasi */
-                                    }
+                                .star-rating {
+        display: inline-flex;
+        direction: ltr; /* Arah dari kiri ke kanan */
+    }
 
-                                    /* Warna bintang ketika di-hover atau dipilih */
-                                    input[type="radio"]:checked ~ label.star-label,
-                                    input[type="radio"]:hover ~ label.star-label,
-                                    label.star-label:hover {
-                                        color: #ffc107; /* Warna kuning bintang saat dipilih */
-                                        transform: scale(1.2); /* Zoom-in sedikit saat hover */
-                                    }
+    /* Gaya default bintang */
+    .star-label {
+        font-size: 24px;
+        cursor: pointer;
+        color: #e4e5e9; /* Default warna bintang */
+        transition: color 0.3s ease, transform 0.2s ease; /* Transisi untuk perubahan warna dan animasi */
+    }
 
-                                    .star-rating {
-                                        display: inline-flex;
-                                    }
+    /* Gaya ketika input radio dipilih (untuk semua bintang yang dipilih) */
+    input[type="radio"]:checked ~ label.star-label {
+        color: #ffc107; /* Warna kuning bintang saat dipilih */
+    }
 
-                                    /* Sembunyikan input radio */
-                                    input[type="radio"] {
-                                        display: none;
-                                    }
+    /* Hover untuk bintang dari kiri ke kanan */
+    label.star-label:hover,
+    label.star-label:hover ~ label.star-label {
+        color: #ffc107; /* Warna kuning bintang saat dihover */
+    }
 
-                                    /* Perbaiki posisi bintang agar teratur */
-                                    .star-label {
-                                        margin-right: 5px;
-                                    }
+    /* Hide the radio buttons */
+    input[type="radio"] {
+        display: none;
+    }
                                 </style>
 
                             </div>
