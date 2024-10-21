@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Parameter;
 use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PDF; 
 
 class OrderController extends Controller
@@ -139,19 +141,68 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Order has been cancelled successfully.');
     }
 
+    public static function generateInvoiceNumber()
+    {
+        // Format untuk tahun dan bulan
+        $yearMonth = date('Ym'); 
+        
+        // Ambil nomor terakhir di bulan ini dari database
+        $lastOrder = DB::table('t_orders')
+        ->whereRaw('YEAR(created_at) = ?', [date('Y')])
+        ->whereRaw('MONTH(created_at) = ?', [date('m')])
+        ->orderBy('invoice_number', 'desc')
+        ->first();
+
+        // Tentukan nomor urut baru
+        if ($lastOrder) {
+            // Jika sudah ada order di bulan ini, ambil angka terakhir dari nomor invoice dan tambahkan 1
+            $lastInvoiceNumber = intval(substr($lastOrder->invoice_number, -4));
+            $nextInvoiceNumber = str_pad($lastInvoiceNumber + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            // Jika belum ada order di bulan ini, mulai dari 0001
+            $nextInvoiceNumber = '0001';
+        }
+
+        // Gabungkan format untuk nomor invoice
+        return 'INV/' . $yearMonth . '/' . $nextInvoiceNumber;
+    }
+
     public function generateInvoice($id)
     {
         $order = Order::with('items.product')->findOrFail($id);
 
         // Check if the order is approved before generating the invoice
-        if ($order->status != 'approved') {
-            return redirect()->back()->with('error', 'The invoice can only be generated for approved orders.');
+        if (!in_array($order->status, ['approved', 'packing', 'shipped', 'completed'])) {
+            return redirect()->back()->with('error', 'Invoice can only be generated for approved, packing, shipped, or completed orders.');
         }
+
+        // Generate invoice number if not already generated
+        if (!$order->invoice_number) {
+            $order->invoice_number = Order::generateInvoiceNumber();
+            $order->save();
+        }
+
+        // Retrieve the e-commerce name from the parameter
+        $parameter = Parameter::first(); // Assuming there's only one record
+
+        // Sanitize invoice_number to remove any slashes or backslashes
+        $invoice_number = str_replace(['/', '\\'], '-', $order->invoice_number);
+
+        // Remove spaces from the e-commerce name
+        $nama_ecommerce = str_replace(' ', '', $parameter->nama_ecommerce);
+
+        // Set the invoice filename with the sanitized invoice number and e-commerce name
+        $filename = $nama_ecommerce . '_' . $invoice_number . '.pdf';
 
         $pdf = PDF::loadView('customer.order.invoice', compact('order'));
 
-        // Download the PDF file
-        return $pdf->download('invoice_order_' . $order->id . '.pdf');
+        // Download the PDF file with the sanitized invoice number as the filename
+        return $pdf->download($filename);
     }
+
+
+
+
+
 
 }

@@ -12,11 +12,19 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->paginate(5);
+        $search = $request->input('search');
+        
+        $products = Product::with('category')
+                    ->when($search, function ($query, $search) {
+                        return $query->where('name', 'like', "%{$search}%");
+                    })
+                    ->paginate(5);
+    
         return view('admin.product.index', compact('products'));
     }
+    
     
 
     public function create()

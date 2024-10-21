@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -86,5 +87,29 @@ public function updatePassword(Request $request)
         ->update(['password' => $hashedPassword]);
 
     return back()->with('success', 'Kata sandi berhasil diperbarui.');
+}
+
+public function createPassword(Request $request)
+{
+    // Validate the request data
+    $request->validate([
+        'new_password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // Get the authenticated user
+    $user = Auth::user();
+
+    // Ensure the user doesn't already have a password
+    if ($user->password) {
+        return redirect()->back()->with('error', 'You already have a password.');
+    }
+
+    // Update the password using the DB facade
+    DB::table('t_users')
+        ->where('id', $user->id)
+        ->update(['password' => Hash::make($request->new_password)]);
+
+    // Redirect back with success message
+    return redirect()->back()->with('success', 'Password created successfully. You can now log in using your email and password.');
 }
 }

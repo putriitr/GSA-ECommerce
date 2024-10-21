@@ -171,3 +171,6 @@ if (emailModal && passwordModal && otherMethodsModal) {
 } else {
     console.error('Modals not found. Please ensure modal IDs are correct.');
 }
+
+
+

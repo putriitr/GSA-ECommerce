@@ -10,11 +10,11 @@
                     <div class="card-body p-5">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="fw-bold">Order Details (#{{ $order->id }})</h4>
-                            @if($order->status == 'approved')
+                            @if(in_array($order->status, ['approved', 'packing', 'shipped', 'completed']))
                                 <a href="{{ route('customer.order.invoice', $order->id) }}" class="btn btn-primary">Download Invoice</a>
                             @endif
                         </div>
-
+                        <p class="fw-bold">Invoice Number: {{ $order->invoice_number }}</p>
                         <p>Status: 
                             @if ($order->status == 'pending')
                                 <span class="badge bg-warning">Pending</span>

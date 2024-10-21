@@ -20,5 +20,8 @@ class Parameter extends Model
         'nama_ecommerce',
         'email_pengaduan_kementrian',
         'website_kementerian',
+        'bank_vendor',
+        'bank_nama',
+        'bank_rekening',
     ];
 }

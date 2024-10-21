@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice #{{ $order->id }}</title>
+    <title>{{ $parameter->nama_ecommerce }}_{{ $order->invoice_number }}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -112,8 +112,8 @@
 
         <!-- Invoice Information -->
         <div class="invoice-details">
-            <p>Invoice #: <strong>{{ $order->id }}</strong></p>
-            <p>Date: <strong>{{ $order->created_at->format('d M Y') }}</strong></p>
+            <p>Number : <strong>{{ $order->invoice_number ?? 'N/A' }}</strong></p>
+            <p>Date   : <strong>{{ $order->created_at->format('d M Y') }}</strong></p>
         </div>
 
         <!-- Order Items -->
@@ -148,24 +148,24 @@
         <div class="bank-details">
             <h3>Bank Account Details</h3>
             <p>Please make your payment to the following account:</p>
-            <p><strong>Bank: Bank XYZ</strong></p>
-            <p><strong>Account Name: PT. Gudang Solusi Acommerce</strong></p>
-            <p><strong>Account Number: 123-456-7890</strong></p>
-            <p><strong>Payment Due: {{ now()->addDays(7)->format('d M Y') }}</strong></p>
+            <p><strong>Bank: {{ $parameter->bank_vendor ?? 'N/A' }}</strong></p>
+            <p><strong>Account Name: {{ $parameter->bank_nama ?? 'N/A' }}</strong></p>
+            <p><strong>Account Number: {{ $parameter->bank_rekening ?? 'N/A' }}</strong></p>
+            <p><strong>Payment Due: {{ $order->created_at->addDays(2)->format('d M Y') }}</strong></p>
         </div>
 
         <!-- Company Information -->
         <div class="company-info">
             <h3>Contact Information</h3>
-            <p><strong>Address:</strong> BIZPARK JABABEKA, Jl. Niaga Industri Selatan 2 Blok QQ2 No.6, Kel. Pasirsari, Kec. Cikarang Selatan, Kabupaten Bekasi, Provinsi Jawa Barat</p>
-            <p><strong>Email:</strong> info@gsacommerce.com</p>
-            <p><strong>WhatsApp:</strong> +62 813-9006-9009</p>
+            <p><strong>Address:</strong>{{ $parameter->alamat ?? 'N/A' }}</p>
+            <p><strong>Email:</strong> {{ $parameter->email ?? 'N/A'  }}</p>
+            <p><strong>WhatsApp:</strong> {{ $parameter->nomor_wa ?? 'N/A' }}</p>
         </div>
 
         <!-- Footer Section -->
         <div class="footer">
-            <p>Thank you for shopping with tokoGSacommerce!</p>
-            <p>If you have any questions, feel free to contact us at support@tokoGSacommerce.com</p>
+            <p>Thank you for shopping with {{ $parameter->nama_ecommerce }}!</p>
+            <p>If you have any questions, feel free to contact us at {{ $parameter->email ?? 'N/A' }}.</p>
         </div>
     </div>
 

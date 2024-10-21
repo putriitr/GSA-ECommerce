@@ -19,5 +19,10 @@ return [
     'confirm_new_password' => 'Confirm New Password',
     'password_note' => '*Leave blank if you do not want to change the password.',
 
+    "create_password" => "Create Password",
+    "google_login" => "Google Login",
+    "no_password_notice" => "It seems like you logged in using Google. You don't have a password yet, please create one.",
+    "create_password_button" => "Create Password"
+
     
 ];

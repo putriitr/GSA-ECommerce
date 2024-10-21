@@ -21,7 +21,7 @@ class ProductMemberController extends Controller
         $randomProducts = Product::where('status_published', 'published')
         ->whereNull('discount_price')  
         ->inRandomOrder()
-        ->take(6)
+        ->take(4)
         ->get();
 
         $relatedProducts = Product::where('category_id', $product->category_id)

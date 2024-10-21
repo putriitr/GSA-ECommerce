@@ -27,6 +27,7 @@ class Order extends Model
         'cancelled_at',
         'cancelled_by_system_at',
         'is_viewed',    
+        'invoice_number',
     ];
 
     protected $casts = [

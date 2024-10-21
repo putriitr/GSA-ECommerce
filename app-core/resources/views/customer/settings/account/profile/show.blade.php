@@ -67,10 +67,33 @@
                         </form>
                     </div>
                 </div>
+
+                @if(!$user->password)
+                <div class="card shadow-sm border-0 rounded-lg mt-3">
+                    <div class="card-header bg-white border-bottom-0 rounded-top-lg py-2">
+                        <h6 class="fw-bold text-primary mb-0">{{ __('settings.create_password') }} <span class="badge bg-info">{{ __('settings.google_login') }}</span></h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <p class="text-muted small">{{ __('settings.no_password_notice') }}</p>
+                        <form action="{{ route('user.password.create') }}" method="POST">
+                            @csrf
+                            <div class="mb-2">
+                                <label for="new_password" class="form-label text-muted small">{{ __('settings.new_password') }}</label>
+                                <input type="password" class="form-control form-control-sm rounded" name="new_password" required>
+                            </div>
+                            <div class="mb-2">
+                                <label for="new_password_confirmation" class="form-label text-muted small">{{ __('settings.confirm_new_password') }}</label>
+                                <input type="password" class="form-control form-control-sm rounded" name="new_password_confirmation" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm fw-bold rounded-pill px-3 py-1 shadow-sm">{{ __('settings.create_password') }}</button>
+                        </form>
+                    </div>
+                </div>
+                @endif
                 
                 
                 <!-- Password Update Card -->
-                <div class="card shadow-sm border-0 rounded-lg mt-2">
+                <div class="card shadow-sm border-0 rounded-lg mt-3">
                     <div class="card-header bg-white border-bottom-0 rounded-top-lg py-2">
                         <h6 class="fw-bold text-primary mb-0">{{ __('settings.change_password') }}</h6>
                     </div>
@@ -94,8 +117,6 @@
                         <p class="text-muted small mt-2">{{ __('settings.password_note') }}</p>
                     </div>
                 </div>
-                
-                
                 
             </div>
         </div>

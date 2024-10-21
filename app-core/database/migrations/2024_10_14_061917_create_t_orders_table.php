@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('t_users')->onDelete('cascade');
             $table->foreignId('shipping_service_id')->nullable()->constrained('t_md_shipping_services')->onDelete('set null');
             $table->decimal('total', 15, 2);
+            $table->string('invoice_number')->nullable();
             $table->enum('status', [
                 'pending',              
                 'approved',             
@@ -26,7 +27,6 @@ return new class extends Migration
                 'cancelled',
                 'cancelled_by_system',
             ])->default('pending');
-            $table->boolean('is_negotiated')->default(false);
             $table->string('tracking_number')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('payment_verified_at')->nullable();
@@ -36,6 +36,7 @@ return new class extends Migration
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamp('cancelled_by_system_at')->nullable();
             $table->boolean('is_viewed')->default(false);
+            
         
             $table->timestamps();
         });

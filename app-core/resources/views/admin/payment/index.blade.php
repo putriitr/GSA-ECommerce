@@ -2,18 +2,76 @@
 
 @section('content')
 <div class="container py-5">
-    <h1 class="mb-4">Payments</h1>
 
+    <!-- Kartu untuk Manajemen Pembayaran -->
     <div class="card">
+        <!-- Header Kartu -->
+        <div class="card-header">
+            <h1 class="mb-4">Pembayaran</h1>
+        </div>
+
         <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <!-- Bagian Pencarian dan Filter -->
+            <form action="{{ route('admin.payments.index') }}" method="GET" class="mb-4">
+                <div class="row g-3">
+                    <!-- Pencarian berdasarkan nama pelanggan -->
+                    <div class="col-md-3">
+                        <input type="text" name="name" class="form-control" placeholder="Cari berdasarkan nama" value="{{ request()->name }}">
+                    </div>
+
+                    <!-- Pencarian berdasarkan nomor faktur -->
+                    <div class="col-md-3">
+                        <input type="text" name="invoice_number" class="form-control" placeholder="Cari berdasarkan nomor faktur" value="{{ request()->invoice_number }}">
+                    </div>
+
+                    <!-- Filter berdasarkan status -->
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="all" {{ request()->status == 'all' ? 'selected' : '' }}>Semua Status</option>
+                            <option value="pending" {{ request()->status == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                            <option value="completed" {{ request()->status == 'completed' ? 'selected' : '' }}>Selesai</option>
+                            <option value="verified" {{ request()->status == 'verified' ? 'selected' : '' }}>Terverifikasi</option>
+                            <option value="rejected" {{ request()->status == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                        </select>
+                    </div>
+
+                    <!-- Tombol Cari dan Reset -->
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search p-1"></i> 
+                        </button>
+                    </div>
+                    <div class="col-md-1">
+                        <a href="{{ route('admin.payments.index') }}" class="btn btn-secondary w-100">
+                            <i class="fas fa-sync-alt p-1"></i> 
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Isi Kartu -->
+            @if($payments->isEmpty())
+                <!-- Notifikasi jika tidak ada hasil -->
+                <div class="alert alert-warning text-center" role="alert">
+                    <strong>Tidak ada pembayaran ditemukan</strong> yang sesuai dengan kriteria pencarian atau filter Anda.
+                </div>
+            @else
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Payment ID</th>
-                        <th>Order ID</th>
-                        <th>Customer</th>
+                        <th>ID Pembayaran</th>
+                        <th>ID Pesanan</th>
+                        <th>Invoice</th>
+                        <th>Pelanggan</th>
                         <th>Status</th>
-                        <th>Action</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,41 +79,38 @@
                     <tr>
                         <td>{{ $payment->id }}</td>
                         <td>{{ $payment->order_id }}</td>
+                        <td>{{ $payment->order->invoice_number }}</td>
                         <td>{{ optional($payment->order->user)->full_name ?? optional($payment->order->user)->name }}</td>
+                        <td>{{ ucfirst($payment->status) }}</td>
                         <td>
-                            {{ ucfirst($payment->status) }}
-                            @if (!$payment->is_viewed) <!-- Check if payment is not viewed -->
-                                <span class="badge bg-danger ms-2">New</span>
-                            @endif
-                        </td>
-                        <td>
-                            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#paymentModal-{{ $payment->id }}">View Details</button>
+                            <!-- Tombol untuk membuka modal -->
+                            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#paymentModal-{{ $payment->id }}">Lihat Detail</button>
                         </td>
                     </tr>
 
-                    <!-- Modal -->
+                    <!-- Modal untuk Detail Pembayaran -->
                     <div class="modal fade" id="paymentModal-{{ $payment->id }}" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="paymentModalLabel">Payment Details - ID: {{ $payment->id }}</h5>
+                                    <h5 class="modal-title" id="paymentModalLabel">Detail Pembayaran - ID: {{ $payment->id }}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <h6><strong>Order ID:</strong> {{ $payment->order_id }}</h6>
-                                    <h6><strong>Customer:</strong> {{ optional($payment->order->user)->full_name ?? optional($payment->order->user)->name }}</h6>
+                                    <h6><strong>ID Pesanan:</strong> {{ $payment->order_id }}</h6>
+                                    <h6><strong>Pelanggan:</strong> {{ optional($payment->order->user)->full_name ?? optional($payment->order->user)->name }}</h6>
                                     <h6><strong>Status:</strong> {{ ucfirst($payment->status) }}</h6>
-                                    <h6><strong>Payment Proof:</strong></h6>
+                                    <h6><strong>Bukti Pembayaran:</strong></h6>
                                     @if($payment->payment_proof)
                                         <div class="mb-3">
                                             @if(in_array(pathinfo($payment->payment_proof, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                                                <img src="{{ asset($payment->payment_proof) }}" alt="Payment Proof" class="img-fluid mb-2" style="max-width: 100%; height: auto; border-radius: 5px;">
+                                                <img src="{{ asset($payment->payment_proof) }}" alt="Bukti Pembayaran" class="img-fluid mb-2" style="max-width: 100%; height: auto; border-radius: 5px;">
                                             @else
-                                                <a href="{{ asset($payment->payment_proof) }}" target="_blank" class="btn btn-primary">View Proof</a>
+                                                <a href="{{ asset($payment->payment_proof) }}" target="_blank" class="btn btn-primary">Lihat Bukti</a>
                                             @endif
                                         </div>
                                     @else
-                                        <span class="text-muted">No proof uploaded</span>
+                                        <span class="text-muted">Tidak ada bukti yang diunggah</span>
                                     @endif
                                     <hr>
                                     @if($payment->status === 'pending')
@@ -63,11 +118,11 @@
                                             <form action="{{ route('admin.payments.verify', $payment->id) }}" method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('PUT')
-                                                <button type="submit" class="btn btn-success">Verify Payment</button>
+                                                <button type="submit" class="btn btn-success">Verifikasi Pembayaran</button>
                                             </form>
                                             <form action="{{ route('admin.payments.reject', $payment->id) }}" method="POST" style="display:inline-block;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this payment?')">Reject</button>
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak pembayaran ini?')">Tolak</button>
                                             </form>
                                         </div>
                                     @endif
@@ -75,10 +130,14 @@
                             </div>
                         </div>
                     </div>
-                    
                     @endforeach
                 </tbody>
             </table>
+            @endif
+        </div>
+
+        <div class="pagination justify-content-center">
+            {{ $payments->onEachSide(1)->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>

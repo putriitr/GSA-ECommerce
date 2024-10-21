@@ -57,10 +57,11 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                         <span class="visually-hidden">Next</span>
                                     </button>
                                 </div>
+                                
                             @elseif($product->images->isNotEmpty())
                                 <!-- Single image if only one exists -->
                                 <img src="{{ asset($product->images->first()->image) }}" class="d-block w-100 rounded" style="max-height: 400px;" alt="{{ $product->name }}">
-                            @else
+                                @else
                                 <!-- Fallback image if no images exist -->
                                 <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" class="img-fluid rounded" alt="No Image">
                             @endif
@@ -84,7 +85,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                     <div class="col-lg-6">
                         
                         <div style=" #ddd; border-radius: 8px; padding: 16px; width: 100%; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);" class="mb-2">
-                            <h1 style="line-height: 1.2; color: #333; margin-bottom: 5px;">{{ $product->name }}</h1>
+                            <h5 style="line-height: 1.2; color: #333; margin-bottom: 5px;">{{ $product->name }}</h5>
                             <div style="display: flex; align-items: center; margin-bottom: 8px;">
                                 @php
                                     // Average rating calculation
@@ -180,7 +181,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             <div class="nav nav-tabs mb-3">
                                 <button class="nav-link active border-white border-bottom-0 custom-tab" type="button" role="tab"
                                     id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
-                                    aria-controls="nav-about" aria-selected="true">Specification</button>
+                                    aria-controls="nav-about" aria-selected="true">Description</button>
                                 <button class="nav-link border-white border-bottom-0 custom-tab" type="button" role="tab"
                                     id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
                                     aria-controls="nav-mission" aria-selected="false">Reviews</button>
@@ -312,33 +313,14 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             <a href="{{ route('customer.product.show', $product->slug) }}" class="text-decoration-none" style="color: inherit; cursor: pointer;">
                                 <div class="d-flex align-items-center justify-content-start mb-3">
                                     <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img style="height: 80px;" src="{{ $product->images->isNotEmpty() ? asset($product->images->first()->image) : asset('assets/default/image/carousel_default.jpg') }}" class="img-fluid rounded" alt="{{ $product->name }}">
+                                        <img src="{{ $product->images->isNotEmpty() ? asset($product->images->first()->image) : asset('assets/default/image/carousel_default.jpg') }}" class="img-fluid rounded" alt="{{ $product->name }}">
                                     </div>
                                     <div>
                                         <h6 class="mb-2">{{ $product->name }}</h6>
-                                        @php
-                                            // Calculate the average rating for the product
-                                            $averageRating = $product->reviews->avg('rating');
-                                            // Calculate full, half, and empty stars
-                                            $fullStars = floor($averageRating);
-                                            $halfStar = ($averageRating - $fullStars) >= 0.5 ? 1 : 0;
-                                            $emptyStars = 5 - $fullStars - $halfStar;
-                                        @endphp
                                         <div class="d-flex align-items-center mb-2">
                                             {{-- Display full stars --}}
-                                            @for ($i = 0; $i < $fullStars; $i++)
-                                                <i class="fa fa-star text-warning" style="font-size: 16px;"></i>
-                                            @endfor
-                    
-                                            {{-- Display half star if applicable --}}
-                                            @if ($halfStar)
-                                                <i class="fa fa-star-half-alt text-warning" style="font-size: 16px;"></i>
-                                            @endif
-                    
-                                            {{-- Display empty stars --}}
-                                            @for ($i = 0; $i < $emptyStars; $i++)
-                                                <i class="fa fa-star" style="font-size: 16px; color: #ccc;"></i>
-                                            @endfor
+                                            <i class="fa fa-star" style="font-size: 16px; color: #ffc107;"></i>
+
                     
                                             {{-- Display the numeric average rating --}}
                                             <span class="ms-2" style="font-size: 14px; color: #333;">

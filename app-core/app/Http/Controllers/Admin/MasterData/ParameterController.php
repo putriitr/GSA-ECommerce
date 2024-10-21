@@ -31,6 +31,9 @@ class ParameterController extends Controller
             'nama_ecommerce' => 'nullable|string',
             'email_pengaduan_kementrian' => 'nullable|email',
             'website_kementerian' => 'nullable|url',
+            'bank_vendor' => 'nullable|string',
+            'bank_nama' => 'nullable|string',
+            'bank_rekening' => 'nullable|string',
         ]);
 
         // Check if there is already a parameter record
@@ -62,6 +65,9 @@ class ParameterController extends Controller
         $parameter->nama_ecommerce = $request->nama_ecommerce;
         $parameter->email_pengaduan_kementrian = $request->email_pengaduan_kementrian;
         $parameter->website_kementerian = $request->website_kementerian;
+        $parameter->bank_vendor = $request->bank_vendor;
+        $parameter->bank_nama = $request->bank_nama;
+        $parameter->bank_rekening = $request->bank_rekening;
 
         $parameter->save();
 
@@ -86,6 +92,9 @@ class ParameterController extends Controller
             'nama_ecommerce' => 'nullable|string',
             'email_pengaduan_kementrian' => 'nullable|email',
             'website_kementerian' => 'nullable',
+            'bank_vendor' => 'nullable|string',
+            'bank_nama' => 'nullable|string',
+            'bank_rekening' => 'nullable|string',
         ]);
 
         $parameter = Parameter::findOrFail($id);
@@ -120,6 +129,9 @@ class ParameterController extends Controller
         $parameter->nama_ecommerce = $request->nama_ecommerce;
         $parameter->email_pengaduan_kementrian = $request->email_pengaduan_kementrian;
         $parameter->website_kementerian = $request->website_kementerian;
+        $parameter->bank_vendor = $request->bank_vendor;
+        $parameter->bank_nama = $request->bank_nama;
+        $parameter->bank_rekening = $request->bank_rekening;
 
         $parameter->save();
 

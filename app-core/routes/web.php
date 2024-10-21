@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\Banner\BannerHomeController;
 use App\Http\Controllers\Admin\Banner\BannerMicroController;
 use App\Http\Controllers\Admin\FAQ\FaqController;
@@ -8,7 +9,9 @@ use App\Http\Controllers\Admin\MasterData\ParameterController;
 use App\Http\Controllers\Admin\MasterData\Shipping\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\User\AdminUserController as UserAdminUserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\Customer\Cart\CartController;
 use App\Http\Controllers\Customer\Order\OrderController;
 use App\Http\Controllers\Customer\Product\ProductMemberController;
@@ -31,6 +34,14 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::group([], function () {
+    Route::get('auth/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
+    Route::get('auth/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
+});
+
+
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
@@ -48,6 +59,8 @@ Route::get('/product/{slug}', [ProductMemberController::class, 'show'])->name('c
 Route::get('/auth/login', [LoginController::class, 'loginPage'])->name('login.page');
 Route::post('/auth/login', [LoginController::class, 'loginPageLogic'])->name('login.logic');
 Route::get('/customer/faq', [HomeController::class, 'faq'])->name('customer.faq');
+Route::get('/order/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('customer.order.invoice');
+
 
 
 Auth::routes();
@@ -74,7 +87,8 @@ Route::middleware(['auth', 'user-access:customer'])->group(function () {
     Route::get('/settings/account/profile', [UserController::class, 'show'])->name('user.profile.show');
     Route::post('/settings/account/profile/update', [UserController::class, 'update'])->name('user.profile.update');
     Route::post('/settings/account/password/update', [UserController::class, 'updatePassword'])->name('user.password.update');
-    
+    Route::post('/settings/account/password/create', [UserController::class, 'createPassword'])->name('user.password.create');
+
 
 
     Route::post('/checkout', [OrderController::class, 'checkout'])->name('customer.checkout');
@@ -84,7 +98,6 @@ Route::middleware(['auth', 'user-access:customer'])->group(function () {
     Route::post('/orders/{order}/complaint', [OrderController::class, 'submitComplaint'])->name('customer.complaint.submit');
     Route::put('/orders/{order}/cancel', [OrderController::class, 'cancelOrder'])->name('customer.order.cancel');
     Route::get('/customer/orders', [OrderController::class, 'index'])->name('customer.orders.index');
-    Route::get('/order/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('customer.order.invoice');
 
 
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -144,7 +157,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
 
     // Admin dashboard to view all orders, payments, complaints, and negotiations
-    Route::get('/admin/orders', [OrderHandleController::class, 'orders'])->name('admin.orders.index');
+    Route::get('/admin/orders', action: [OrderHandleController::class, 'orders'])->name('admin.orders.index');
     Route::get('/admin/payments', [OrderHandleController::class, 'payments'])->name('admin.payments.index');
 
 
@@ -156,6 +169,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('/admin/payments/{payment}/verify', [OrderHandleController::class, 'verifyPayment'])->name('admin.payments.verify');
     Route::post('admin/payments/{paymentId}/reject', [OrderHandleController::class, 'rejectPayment'])->name('admin.payments.reject');
     Route::get('admin/payments/{id}', [OrderHandleController::class, 'showPayment'])->name('admin.payments.show');
+    Route::put('/admin/orders/{order}/cancel', [OrderHandleController::class, 'cancelOrder'])->name('admin.orders.cancel');
+
 
 
     Route::get('admin/banner-home/banners', [BannerHomeController::class, 'index'])->name('admin.banner-home.banners.index');
@@ -184,6 +199,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::delete('admin/faq/{id}', [FaqController::class, 'destroy'])->name('admin.faq.destroy'); // Delete FAQ
     Route::get('admin.faq/{id}', [FaqController::class, 'show'])->name('admin.faq.show'); // Show a specific FAQ
 
+
+    Route::get('/admin/users', [UserAdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/{id}/edit', [UserAdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::post('/admin/users/{id}/update', [UserAdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{id}/destroy', [UserAdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::post('/{id}/update-password', [UserAdminUserController::class, 'updatePassword'])->name('admin.users.updatePassword');
+
 });
 
 });
+

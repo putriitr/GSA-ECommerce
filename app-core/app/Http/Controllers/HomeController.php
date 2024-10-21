@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\TranslationHelper;
-
+use App\Models\Payment;
 
 class HomeController extends Controller
 {
@@ -109,86 +109,87 @@ class HomeController extends Controller
 
 
     public function shop(Request $request)
-{
-    $sort = $request->get('sort', 'terbaru'); // Default sorting adalah 'terbaru'
-    $categoryId = $request->get('category_id'); // Ambil ID kategori dari URL jika ada
-    $keyword = $request->get('keyword'); // Ambil keyword pencarian
-
-    // Konversi input 'min_price' dan 'max_price' dari string ke angka
-    $minPrice = $request->get('min_price') ? intval(str_replace('.', '', $request->get('min_price'))) : null;
-    $maxPrice = $request->get('max_price') ? intval(str_replace('.', '', $request->get('max_price'))) : null;
-
-    $filterMessage = null; // Default tidak ada filter
-
-    // Ambil kategori yang dipilih
-    $selectedCategory = null;
-    if ($categoryId) {
-        $selectedCategory = Category::find($categoryId);
-    }
-
-    // Ambil kategori beserta jumlah produk yang dipublikasikan
-    $categories = Category::withCount(['products' => function ($query) {
-        $query->where('status_published', 'published');
-    }])->get();
-
-    // Mulai query untuk produk yang dipublikasikan
-    $products = Product::where('status_published', 'published');
-
-    // Terapkan filter keyword jika ada
-    if ($keyword) {
-        $products->where('name', 'LIKE', '%' . $keyword . '%');
-    }
-
-    // Terapkan filter harga hanya jika pengguna memasukkan nilai valid
-    if ($minPrice !== null && $maxPrice !== null) {
-        $products->whereBetween('price', [$minPrice, $maxPrice]);
-    }
-
-    // Terapkan filter kategori hanya jika pengguna memilih kategori
-    if ($categoryId) {
-        $products->where('category_id', $categoryId);
-    }
-
-    // Terapkan sorting berdasarkan pilihan pengguna
-    switch ($sort) {
-        case 'terbaru':
-            $products->orderBy('created_at', 'desc');
-            break;
-        case 'terlama':
-            $products->orderBy('created_at', 'asc');
-            break;
-        case 'termahal':
-            $products->orderBy('price', 'desc');
-            break;
-        case 'termurah':
-            $products->orderBy('price', 'asc');
-            break;
-    }
-
-    // Eksekusi query untuk mendapatkan data produk
-    $products = $products->paginate(16);
-
-    // Menyusun pesan filter hanya jika ada kategori, filter harga, atau keyword
-    if ($selectedCategory || ($minPrice !== null && $maxPrice !== null) || $keyword) {
-        $filterMessage = 'Produk yang ditemukan: ';
-        if ($selectedCategory) {
-            $filterMessage .= 'kategori ' . $selectedCategory->name;
+    {
+        $sort = $request->get('sort', 'terbaru'); // Default sorting adalah 'terbaru'
+        $categoryId = $request->get('category_id'); // Ambil ID kategori dari URL jika ada
+        $keyword = $request->get('keyword'); // Ambil keyword pencarian
+    
+        // Konversi input 'min_price' dan 'max_price' dari string ke angka
+        $minPrice = $request->get('min_price') ? intval(str_replace('.', '', $request->get('min_price'))) : null;
+        $maxPrice = $request->get('max_price') ? intval(str_replace('.', '', $request->get('max_price'))) : null;
+    
+        $filterMessage = null; // Default tidak ada filter
+    
+        // Ambil kategori yang dipilih
+        $selectedCategory = null;
+        if ($categoryId) {
+            $selectedCategory = Category::find($categoryId);
         }
-
-        if ($minPrice !== null && $maxPrice !== null) {
-            if ($selectedCategory) {
-                $filterMessage .= ' dari ';
-            }
-            $filterMessage .= 'harga Rp' . number_format($minPrice, 0, ',', '.') . ' - Rp' . number_format($maxPrice, 0, ',', '.');
-        }
-
+    
+        // Ambil kategori beserta jumlah produk yang dipublikasikan
+        $categories = Category::withCount(['products' => function ($query) {
+            $query->where('status_published', 'published');
+        }])->get();
+    
+        // Mulai query untuk produk yang dipublikasikan
+        $products = Product::where('status_published', 'published');
+    
+        // Terapkan filter keyword jika ada
         if ($keyword) {
-            $filterMessage .= ' dengan keyword "' . $keyword . '"';
+            $products->where('name', 'LIKE', '%' . $keyword . '%');
         }
+    
+        // Terapkan filter harga hanya jika pengguna memasukkan nilai valid
+        if ($minPrice !== null && $maxPrice !== null) {
+            $products->whereBetween('price', [$minPrice, $maxPrice]);
+        }
+    
+        // Terapkan filter kategori hanya jika pengguna memilih kategori
+        if ($categoryId) {
+            $products->where('category_id', $categoryId);
+        }
+    
+        // Terapkan sorting berdasarkan pilihan pengguna
+        switch ($sort) {
+            case 'terbaru':
+                $products->orderBy('created_at', 'desc');
+                break;
+            case 'terlama':
+                $products->orderBy('created_at', 'asc');
+                break;
+            case 'termahal':
+                $products->orderBy('price', 'desc');
+                break;
+            case 'termurah':
+                $products->orderBy('price', 'asc');
+                break;
+        }
+    
+        // Eksekusi query untuk mendapatkan data produk
+        $products = $products->paginate(16);
+    
+        // Menyusun pesan filter hanya jika ada kategori, filter harga, atau keyword
+        if ($selectedCategory || ($minPrice !== null && $maxPrice !== null) || $keyword) {
+            $filterMessage = 'Produk yang ditemukan: ';
+            if ($selectedCategory) {
+                $filterMessage .= 'kategori ' . $selectedCategory->name;
+            }
+    
+            if ($minPrice !== null && $maxPrice !== null) {
+                if ($selectedCategory) {
+                    $filterMessage .= ' dari ';
+                }
+                $filterMessage .= 'harga Rp' . number_format($minPrice, 0, ',', '.') . ' - Rp' . number_format($maxPrice, 0, ',', '.');
+            }
+    
+            if ($keyword) {
+                $filterMessage .= ' dengan keyword "' . $keyword . '"';
+            }
+        }
+    
+        return view('customer.home.shop', compact('products', 'categories', 'filterMessage', 'selectedCategory'));
     }
-
-    return view('customer.home.shop', compact('products', 'categories', 'filterMessage'));
-}
+    
 
 
 
@@ -200,8 +201,19 @@ class HomeController extends Controller
  
     public function dashboard()
     {
-        return view('admin.dashboard.dashboard');
+        // Load payments with their related orders, limited to 10, ordered by the latest
+        $payments = Payment::with('order')
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(5); // Paginate the payments, limit to 10
+
+        // Load orders with users and payments, limited to 10, ordered by the latest
+        $orders = Order::with('user', 'payments')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(5); // Paginate the orders, limit to 10
+
+        return view('admin.dashboard.dashboard', compact('payments', 'orders'));
     }
+
     
     /**
      * Show the application dashboard.

@@ -78,9 +78,9 @@
                                             <div class="d-flex justify-content-between fruite-name">
                                                 <a href="{{ route('shop', ['category_id' => $category->id, 'sort' => request()->get('sort')]) }}" 
                                                    class="{{ request()->get('category_id') == $category->id ? 'text-primary' : '' }}">
-                                                    <i class="fas fa-apple-alt me-2"></i>{{ $category->name }}
+                                                   <i class="fas fa-tools me-2"></i>{{ $category->name }}
                                                 </a>
-                                                <span>({{ $category->products_count }})</span>
+                                                <span>({{ $category->products->count() }})</span>
                                             </div>
                                         </li>
                                         @endforeach

@@ -4,15 +4,15 @@
 
 <div class="container-xxl flex-grow-1 container-p-y">
 
-  <!-- Success message -->
+  <!-- Pesan sukses -->
   @if(session('success'))
     <div class="alert alert-success alert-dismissible" role="alert">
       {{ session('success') }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
     </div>
   @endif
 
-  <!-- Error messages -->
+  <!-- Pesan error -->
   @if($errors->any())
     <div class="alert alert-danger alert-dismissible" role="alert">
       <ul>
@@ -20,26 +20,36 @@
           <li>{{ $error }}</li>
         @endforeach
       </ul>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
     </div>
   @endif
 
-  <!-- Product List Card -->
+  <!-- Kartu Daftar Produk -->
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">List of Products</h5>
-      <a href="{{ route('product.create') }}" class="btn btn-primary">Create New Product</a>
+      <h5 class="mb-2">Daftar Produk</h5>
+      <form action="{{ route('product.index') }}" method="GET" class="d-flex mb-2">
+        <input type="text" name="search" class="form-control" placeholder="Cari produk..." value="{{ request('search') }}">
+        <button type="submit" class="btn btn-primary ms-2">Cari</button>
+        @if(request('search'))
+          <a href="{{ route('product.index') }}" class="btn btn-secondary ms-2">
+            <i class="fas fa-sync-alt p-1"></i>
+          </a>
+        @endif
+      </form>
+      <a href="{{ route('product.create') }}" class="btn btn-primary mb-2">Tambah Produk Baru</a>
     </div>
+    
 
     <div class="table-responsive text-nowrap">
       <table class="table table-striped">
         <thead>
           <tr>
             <th>No</th>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Stock</th>
-            <th>Actions</th>
+            <th>Produk</th>
+            <th>Kategori</th>
+            <th>Stok</th>
+            <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -51,7 +61,7 @@
                   @if($product->images->first())
                     <img src="{{ asset($product->images->first()->image) }}" alt="{{ $product->name }}" width="100" class="me-2">
                   @else
-                    <span>No Image</span>
+                    <span>Tidak Ada Gambar</span>
                   @endif
                   <span class="product-name">{{ $product->name }}</span>
                   <span class="{{ $product->status_published == 'Published' ? 'text-success' : 'text-danger' }}">
@@ -64,22 +74,22 @@
               <td>{{ $product->category->name }}</td>
               <td>{{ $product->stock }}</td>
               <td>
-                <!-- Show button -->
+                <!-- Tombol Lihat -->
                 <a class="btn btn-sm btn-info" href="{{ route('product.show', $product->slug) }}">
-                  <i class="bx bx-show-alt "></i> Show
+                  <i class="bx bx-show-alt "></i> Lihat
                 </a>
 
-                <!-- Edit button -->
+                <!-- Tombol Ubah -->
                 <a class="btn btn-sm btn-primary" href="{{ route('product.edit', $product->slug) }}">
-                  <i class="bx bx-edit-alt "></i> Edit
+                  <i class="bx bx-edit-alt "></i> Ubah
                 </a>
 
-                <!-- Delete button -->
+                <!-- Tombol Hapus -->
                 <form action="{{ route('product.destroy', $product->slug) }}" method="POST" class="d-inline">
                   @csrf
                   @method('DELETE')
-                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">
-                    <i class="bx bx-trash "></i> Delete
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                    <i class="bx bx-trash "></i> Hapus
                   </button>
                 </form>
               </td>
@@ -94,7 +104,7 @@
   </div>
 </div>
 
-<!-- Styling to handle the image and name display -->
+<!-- Gaya untuk menangani tampilan gambar dan nama produk -->
 <style>
   .product-info {
     display: inline-block;

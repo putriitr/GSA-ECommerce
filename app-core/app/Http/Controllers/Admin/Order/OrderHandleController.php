@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Customer\Order\OrderController;
 use App\Models\Complaint;
 use App\Models\Negotiation;
 use App\Models\Order;
@@ -13,21 +14,105 @@ use Illuminate\Http\Request;
 class OrderHandleController extends Controller
 {
 
-    public function orders()
+    public function orders(Request $request)
     {
-        // Fetch all orders for the admin to review
-        $orders = Order::with('user')->orderBy('created_at', 'desc')->get();
+        $query = Order::with('user')->orderBy('created_at', 'desc');
+
+        // Search by customer name or invoice number
+        if ($request->input('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('full_name', 'like', "%{$search}%");
+            })->orWhere('invoice_number', 'like', "%{$search}%");
+        }
+
+        // Filter by invoice number
+        if ($request->input('invoice')) {
+            $invoiceInput = $request->input('invoice');
+            
+            // Check if the input is numeric and 4 digits long (for last 4 digits filtering)
+            if (is_numeric($invoiceInput) && strlen($invoiceInput) === 4) {
+                // Filter by the last 4 digits of the invoice number
+                $query->whereRaw('RIGHT(invoice_number, 4) = ?', [$invoiceInput]);
+            } 
+            // Check if the input is year and month (e.g., 202410)
+            elseif (is_numeric($invoiceInput) && strlen($invoiceInput) === 6) {
+                // Filter by the year and month in the invoice number
+                $query->where('invoice_number', 'like', $invoiceInput . '%');
+            } 
+            // Fallback to filtering by the entire invoice number
+            else {
+                $query->where('invoice_number', $invoiceInput);
+            }
+        }
+
+        // Filter by total range
+        if ($request->input('total_range')) {
+            switch ($request->input('total_range')) {
+                case 'less_1m':
+                    $query->where('total', '<', 1000000);
+                    break;
+                case '1m_5m':
+                    $query->whereBetween('total', [1000000, 5000000]);
+                    break;
+                case '5m_10m':
+                    $query->whereBetween('total', [5000000, 10000000]);
+                    break;
+                case '10m_up':
+                    $query->where('total', '>', 10000000);
+                    break;
+            }
+        }
+
+        // Filter by status
+        if ($request->input('status') && $request->input('status') != 'all') {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Paginate the result
+        $orders = $query->paginate(10);
+        
         $shipping = ShippingService::all();
-        return view('admin.order.index', compact('orders','shipping'));
+        
+        return view('admin.order.index', compact('orders', 'shipping'));
     }
 
 
-    public function payments()
+
+    public function payments(Request $request)
     {
-        // Fetch all payments for the admin to review
-        $payments = Payment::with('order.user')->orderBy('created_at', 'desc')->get();
+        // Create a query for payments
+        $query = Payment::with('order.user')->orderBy('created_at', 'desc');
+    
+        // Search by customer name
+        if ($request->input('name')) {
+            $name = $request->input('name');
+            $query->whereHas('order.user', function ($q) use ($name) {
+                $q->where('name', 'like', "%{$name}%")
+                  ->orWhere('full_name', 'like', "%{$name}%");
+            });
+        }
+    
+        // Search by invoice number
+        if ($request->input('invoice_number')) {
+            $invoice = $request->input('invoice_number');
+            $query->whereHas('order', function ($q) use ($invoice) {
+                $q->where('invoice_number', 'like', "%{$invoice}%");
+            });
+        }
+    
+        // Filter by payment status
+        if ($request->input('status') && $request->input('status') != 'all') {
+            $query->where('status', $request->input('status'));
+        }
+    
+        // Paginate the result
+        $payments = $query->paginate(10);
+    
         return view('admin.payment.index', compact('payments'));
     }
+    
 
     public function showOrders($id)
     {
@@ -64,6 +149,17 @@ class OrderHandleController extends Controller
     public function approveOrder($orderId)
     {
         $order = Order::find($orderId);
+
+        // Check if the order is not already approved
+    if ($order->status == 'approved') {
+        return back()->with('error', 'This order has already been approved.');
+    }
+
+    // Generate the invoice number if not already generated
+    if (!$order->invoice_number) {
+        $order->invoice_number = OrderController::generateInvoiceNumber();
+    }
+
         $order->update([
             'status' => 'approved',
             'approved_at' => now() // Set the approved timestamp
@@ -165,5 +261,20 @@ class OrderHandleController extends Controller
         ]);
 
         return back()->with('success', 'Order marked as shipped.');
+    }
+
+    public function cancelOrder(Request $request, $orderId)
+    {
+        $order = Order::findOrFail($orderId);
+
+        if ($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system') {
+            // Set the status to 'cancelled_by_system'
+            $order->status = 'cancelled_by_system';
+            $order->save();
+
+            return redirect()->back()->with('success', 'Order has been cancelled by the system.');
+        }
+
+        return redirect()->back()->with('error', 'Order has already been cancelled.');
     }
 }

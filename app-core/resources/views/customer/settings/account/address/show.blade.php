@@ -126,7 +126,10 @@
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <label for="label_alamat" class="form-label">Label Alamat (Rumah/Kantor)</label>
-                                                        <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="label_alamat" value="{{ $address->label_alamat }}" required>
+                                                        <select class="form-control form-control-sm rounded-pill shadow-sm" name="label_alamat" id="label_alamat" required>
+                                                            <option value="Rumah" {{ $address->label_alamat == 'Rumah' ? 'selected' : '' }}>Rumah</option>
+                                                            <option value="Kantor" {{ $address->label_alamat == 'Kantor' ? 'selected' : '' }}>Kantor</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -141,7 +144,10 @@
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                                                        <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="nomor_telepon" value="{{ $address->nomor_telepon }}" required>
+                                                        <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="nomor_telepon" value="{{ $address->nomor_telepon }}" required minlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                        <div class="invalid-feedback">
+                                                            Masukkan nomor telepon yang valid (minimal 9 angka).
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -171,7 +177,10 @@
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
                                                         <label for="kodepos" class="form-label">Kodepos</label>
-                                                        <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="kodepos" value="{{ $address->kodepos }}" required>
+                                                        <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="kodepos" value="{{ $address->kodepos }}" maxlength="5" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                                        <div class="invalid-feedback">
+                                                            Masukkan kodepos yang valid (5 angka).
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -192,6 +201,7 @@
                             </div>
                         </div>
                         <!-- End of Edit Modal -->
+
                         
                     @endforeach
                 @endif
@@ -205,7 +215,7 @@
 
 
 
-<!-- Modal for adding new address -->
+<!-- Modal untuk menambahkan alamat baru -->
 <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content shadow-lg border-0 rounded">
@@ -220,7 +230,11 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="label_alamat" class="form-label">Label Alamat (Rumah/Kantor)</label>
-                                <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="label_alamat" id="label_alamat" required>
+                                <select class="form-control form-control-sm rounded-pill shadow-sm" name="label_alamat" id="label_alamat" required>
+                                    <option value="" disabled selected>Pilih Label Alamat</option>
+                                    <option value="Rumah">Rumah</option>
+                                    <option value="Kantor">Kantor</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -235,9 +249,12 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                                <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="nomor_telepon" id="nomor_telepon" required>
+                                <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="nomor_telepon" id="nomor_telepon" required minlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Masukkan nomor telepon">
+                                <div class="invalid-feedback">
+                                    Masukkan nomor telepon yang valid (minimal 9 angka).
+                                </div>
                             </div>
-                        </div>
+                        </div>                        
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="provinsi" class="form-label">Provinsi</label>
@@ -265,15 +282,19 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="kodepos" class="form-label">Kodepos</label>
-                                <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="kodepos" id="kodepos" required>
+                                <input type="text" class="form-control form-control-sm rounded-pill shadow-sm" name="kodepos" id="kodepos" maxlength="5" required oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Masukkan kodepos">
+                                <div class="invalid-feedback">
+                                    Masukkan kodepos yang valid (5 angka).
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="detail_alamat" class="form-label">Detail Alamat</label>
-                                <textarea class="form-control form-control-sm rounded shadow-sm" name="detail_alamat" id="detail_alamat" rows="2" required></textarea>
+                                <textarea class="form-control form-control-sm rounded shadow-sm" name="detail_alamat" id="detail_alamat" rows="2" required placeholder="Masukkan detail alamat, contoh: Nama Jalan, No Rumah, RT/RW"></textarea>
                             </div>
-                        </div>
+                        </div>                        
                     </div>
 
                     <div class="text-end">
@@ -285,5 +306,6 @@
         </div>
     </div>
 </div>
+
 
 @endsection

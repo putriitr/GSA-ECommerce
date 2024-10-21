@@ -1,48 +1,87 @@
 @extends('layouts.admin.master')
 
 @section('content')
+
 <div class="container py-5">
-    <h1>FAQ Management</h1>
 
-    @if($faqs->count() < 1)
-        <a href="{{ route('admin.faq.create') }}" class="btn btn-primary mb-3">Add New FAQ</a>
-    @else
-        <div class="alert alert-info mb-3">
-            <strong>Notice:</strong> Only one FAQ entry is allowed. Please edit the existing entry instead of adding a new one.
+  <!-- Menampilkan pesan sukses -->
+  @if(session('success'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+      {{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
+
+  <!-- Menampilkan pesan error -->
+  @if($errors->any())
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
+
+  <!-- Kartu Daftar FAQ -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Daftar FAQ</h5>
+      
+      <!-- Tombol Tambah FAQ hanya muncul jika belum ada data -->
+      @if($faqs->count() < 1)
+        <a href="{{ route('admin.faq.create') }}" class="btn btn-primary mb-2">Tambah FAQ Baru</a>
+      @else
+        <div class="alert alert-info mb-2">
+          <strong>Pemberitahuan:</strong> Hanya satu entri FAQ yang diperbolehkan. Silakan ubah entri yang ada.
         </div>
-    @endif
+      @endif
+    </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
-    <table class="table">
-        <thead>
+    <!-- Jika ada data FAQ, tampilkan tabel -->
+    @if($faqs->count() > 0)
+      <div class="table-responsive text-nowrap">
+        <table class="table table-striped">
+          <thead>
             <tr>
-                <th>ID</th>
-                <th>Actions</th>
+              <th>No</th>
+              <th>ID</th>
+              <th>Aksi</th>
             </tr>
-        </thead>
-        <tbody>
-            @foreach($faqs as $faq)
-                <tr>
-                    <td>{{ $faq->id }}</td>
-                    <td>
-                        <a href="{{ route('admin.faq.show', $faq->id) }}" class="btn btn-info btn-sm">Show</a>
-                        <a href="{{ route('admin.faq.edit', $faq->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+          </thead>
+          <tbody>
+            @foreach($faqs as $index => $faq)
+              <tr>
+                <td>{{ $loop->iteration }}</td> <!-- Hanya 1 data, jadi nomor tetap 1 -->
+                <td>{{ $faq->id }}</td>
+                <td>
+                  <!-- Tombol Lihat -->
+                  <a class="btn btn-sm btn-info" href="{{ route('admin.faq.show', $faq->id) }}">
+                    <i class="bx bx-show-alt me-1"></i> Lihat
+                  </a>
+
+                  <!-- Tombol Ubah -->
+                  <a class="btn btn-sm btn-primary" href="{{ route('admin.faq.edit', $faq->id) }}">
+                    <i class="bx bx-edit-alt me-1"></i> Ubah
+                  </a>
+
+                  <!-- Tombol Hapus -->
+                  <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus FAQ ini?')">
+                      <i class="bx bx-trash me-1"></i> Hapus
+                    </button>
+                  </form>
+                </td>
+              </tr>
             @endforeach
-        </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
+    @endif
+  </div>
 </div>
+
 @endsection

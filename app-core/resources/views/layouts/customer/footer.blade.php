@@ -40,7 +40,7 @@
                     </div>
                     <div class="dropdown mt-3">
                         <button class="btn btn-outline-light dropdown-toggle w-100" type="button" id="languageToggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ LaravelLocalization::getCurrentLocale() == 'en' ? 'English' : 'Bahasa Indonesia' }}
+                            {{ LaravelLocalization::getCurrentLocale() == 'id' ? 'Bahasa Indonesia' : 'English' }}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="languageToggle" style="width: 100%; box-sizing: border-box;">
                             @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
@@ -52,6 +52,7 @@
                             @endforeach
                         </ul>
                     </div>
+                    
                 </div>
             </div>
         </div>

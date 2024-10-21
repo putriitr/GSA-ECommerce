@@ -22,6 +22,10 @@ return new class extends Migration
             $table->string('nama_ecommerce')->nullable();
             $table->string('email_pengaduan_kementrian')->nullable();
             $table->string('website_kementerian')->nullable();
+            $table->string('bank_vendor')->nullable();
+            $table->string('bank_nama')->nullable();
+            $table->string('bank_rekening')->nullable();
+    
             $table->timestamps();
         });
     }

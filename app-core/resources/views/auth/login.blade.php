@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="d-grid mb-3">
-                    <a href="{{-- {{ route('login.google') }} --}}" class="btn btn-outline-secondary btn-block">
+                    <a href="{{ url('auth/google/redirect') }}" class="btn btn-outline-secondary btn-block">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="me-2" style="width: 20px;">
                         {{ __('Masuk dengan Google') }}
                     </a>
@@ -74,9 +74,6 @@
 
                 </form>
 
-                <div class="text-center mt-3">
-                    <a href="{{ route('password.request') }}">{{ __('Lupa Password?') }}</a>
-                </div>
             </div>
         </div>
     </div>

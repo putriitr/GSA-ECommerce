@@ -37,7 +37,7 @@
                             <button class="btn btn-light dropdown-toggle rounded-pill px-3" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span id="categoryLabel">
                                     <!-- If category exists in request, display the selected category name, else default to "Semua Produk" -->
-                                    {{ $selectedCategoryName ?? 'Semua Produk' }}
+                                    {{ $selectedCategory->name ?? 'Semua Produk' }}
                                 </span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -46,20 +46,29 @@
                                         {{ __('navbar.all_products') }}
                                     </a>
                                 </li>
-                                                                @foreach($categories as $category)
-                                    <li><a class="dropdown-item" href="#" onclick="selectCategory({{ $category->id }}, '{{ $category->name }}')">{{ $category->name }}</a></li>
+                                @foreach($categories as $category)
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="selectCategory({{ $category->id }}, '{{ $category->name }}')">
+                                            {{ $category->name }}
+                                        </a>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
+                    
                         <!-- Hidden input for category -->
                         <input type="hidden" name="category_id" id="categoryInput" value="{{ request()->get('category_id') }}">
+                        
                         <!-- Search Input -->
                         <input type="text" class="form-control border-0 rounded-pill px-4 py-2" placeholder="Cari Barang Impian Kamu Disini" name="keyword" value="{{ request()->get('keyword') }}">
+                        
                         <!-- Search Button -->
                         <button class="btn mx-2" type="submit" style="width: 40px; height: 40px;">
                             <i class="fas fa-search text-dark"></i>
                         </button>
                     </form>
+
+                    
                 </div>
                 
                 <script>
@@ -109,7 +118,7 @@
                         <div class="dropdown">
                             <a href="#" class="d-flex align-items-center my-auto dropdown-toggle text-dark" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user fa-2x me-2 text-primary"></i>
-                                <span class="d-none d-md-inline">Halo, {{ Auth::user()->name }}</span>
+                                <span class="d-none d-md-inline">Halo, {{ explode(' ', Auth::user()->name)[0] }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-lg" aria-labelledby="dropdownUser" style="min-width: 200px; border-radius: 15px;">
                                 <!-- Profile Section -->
@@ -120,12 +129,25 @@
                                              alt="{{ Auth::user()->name }}" 
                                              class="rounded-circle" 
                                              style="width: 80px; height: 80px; object-fit: cover;">
+                                             
                                         <p class="mb-0 mt-2 fw-bold">{{ Auth::user()->name }}</p>
-                                        <small class="text-muted">{{ Auth::user()->email }}</small>
+                        
+                                        <!-- Display message based on profile completeness -->
+                                        @if(is_null(Auth::user()->full_name) || is_null(Auth::user()->phone))
+                                            <span class="badge bg-danger">Data diri Anda belum lengkap</span>
+                                        @else
+                                            <span class="badge bg-success">Data diri Anda lengkap</span>
+                                        @endif
+                        
+                                        <small class="text-muted">
+                                            {{ Auth::user()->email }}
+                                            @if(Auth::user()->socialite->where('provider_name', 'google')->isNotEmpty())
+                                            <span class="badge bg-info ms-1">Google Connected</span>
+                                            @endif
+                                        </small>
                                     </div>
                                 </li>
-                                
-                                
+                        
                                 <!-- Links -->
                                 <li>
                                     <a class="dropdown-item py-2" href="{{ route('user.profile.show') }}">
@@ -137,8 +159,9 @@
                                         <i class="fas fa-box me-2"></i> {{ __('navbar.orders') }}
                                     </a>
                                 </li>
-                                
+                        
                                 <li><hr class="dropdown-divider"></li>
+                                
                                 <!-- Logout Option -->
                                 <li>
                                     <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}"
@@ -152,6 +175,7 @@
                                 </li>
                             </ul>
                         </div>
+                        
                         
                         
                     @else

@@ -69,6 +69,24 @@
             <input type="text" class="form-control" name="slogan_welcome" value="{{ old('slogan_welcome', $parameter->slogan_welcome) }}">
         </div>
 
+        <!-- Bank Vendor Field -->
+        <div class="mb-3">
+            <label for="bank_vendor" class="form-label">Bank Vendor</label>
+            <input type="text" class="form-control" name="bank_vendor" value="{{ old('bank_vendor', $parameter->bank_vendor) }}">
+        </div>
+
+        <!-- Bank Name Field -->
+        <div class="mb-3">
+            <label for="bank_nama" class="form-label">Nama Bank</label>
+            <input type="text" class="form-control" name="bank_nama" value="{{ old('bank_nama', $parameter->bank_nama) }}">
+        </div>
+
+        <!-- Bank Account Field -->
+        <div class="mb-3">
+            <label for="bank_rekening" class="form-label">Nomor Rekening</label>
+            <input type="text" class="form-control" name="bank_rekening" value="{{ old('bank_rekening', $parameter->bank_rekening) }}">
+        </div>
+
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>

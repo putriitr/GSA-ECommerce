@@ -67,13 +67,62 @@
         <div class="custom-modal-body">
             <h2 class="modal-title">Pilih Akun Untuk Masuk</h2>
             <button class="btn-back register-link">&larr;</button>
+
+            <!-- Google Login Button -->
             <button class="btn-google-login">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="google-icon">
                 Google
             </button>
+
+            <!-- Facebook Login Button -->
+            <button class="btn-facebook-login mt-2">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" class="facebook-icon">
+                Facebook
+            </button>
         </div>
     </div>
 </div>
+
+<!-- Notification Box -->
+<div id="notification" class="custom-notification-modal-login" style="display: none;">
+    <p>Fitur login dengan Facebook saat ini masih dalam proses pengembangan. Silakan menggunakan Google untuk login. Terima kasih atas pengertiannya.</p>
+</div>
+
+<style>
+    .custom-notification-modal-login {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #f04e4e;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+</style>
+
+<script>
+    // JavaScript to handle redirection for Google login
+    document.querySelector('.btn-google-login').addEventListener('click', function() {
+        window.location.href = "{{ url('auth/google/redirect') }}";
+    });
+
+    // JavaScript to handle Facebook button click
+    document.querySelector('.btn-facebook-login').addEventListener('click', function() {
+        // Show notification
+        var notification = document.getElementById('notification');
+        notification.style.display = 'block';
+
+        // Hide notification after 5 seconds
+        setTimeout(function() {
+            notification.style.display = 'none';
+        }, 5000);
+    });
+</script>
+
+
+
 
 
 
