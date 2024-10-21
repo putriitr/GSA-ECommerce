@@ -5,6 +5,14 @@
     <div class="content-wrapper">
         <!-- Content -->
 
+    @if(session('admin_login'))
+    <div id="floating-notification-welcome-back" class="alert alert-info alert-dismissible fade show position-fixed d-flex align-items-center" role="alert" style="bottom: 20px; right: 20px; z-index: 1050; min-width: 320px; max-width: 420px; padding: 20px;">
+        <i class="fas fa-smile me-3" style="font-size: 24px;"></i>
+        <span>{{ session('admin_login') }}</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="row">
                 <div class="col-lg-12 mb-4">

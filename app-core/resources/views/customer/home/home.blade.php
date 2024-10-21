@@ -120,20 +120,6 @@
     });
 </script>
 
-
-{{-- <a href="{{ route('shop') }}" class="carousel-item active" style="cursor: pointer;">
-    <div class="container-fluid py-5 hero-header" style="background: linear-gradient(rgba(248, 223, 173, 0.1), rgba(248, 223, 173, 0.1)), url('{{ asset('assets/default/image/carousel_default.jpg') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-md-12 col-lg-12">
-                    <h4 class="mb-3 text-light">Toko GSacommerce</h4>
-                    <h1 class="mb-5 display-3 text-light">Your Professional Partner</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-</a> --}}
-
 <!-- Home Shop Start-->
 <div class="container-fluid fruite py-5">
     <div class="container py-5">

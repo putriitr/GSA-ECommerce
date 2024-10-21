@@ -62,6 +62,8 @@ class LoginController extends Controller
             // Flash a welcome back message into the session
             session()->flash('welcome_back', 'Selamat datang kembali, ' . $user->name . '!');
 
+            session()->flash('admin_login', 'Selamat Datang Kembali, Admin!');
+
             // Redirect users based on their user type
             switch ($user->type) {
                 case 'admin':
@@ -93,6 +95,8 @@ class LoginController extends Controller
             // Flash a welcome back message into the session
             session()->flash('welcome_back', 'Selamat datang kembali, ' . $user->name . '!');
             
+            session()->flash('admin_login', 'Selamat Datang Kembali, Admin!');
+
             // Kembalikan respons JSON dengan sukses
             return response()->json([
                 'success' => true,

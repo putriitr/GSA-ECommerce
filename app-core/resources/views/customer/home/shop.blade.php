@@ -5,7 +5,7 @@
 
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5"
-    style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/cart-header-bg.jpg') }}') no-repeat center center; background-size: cover;">
+    style="position: relative; overflow: hidden; background: url('{{ asset('storage/img/cart-header-bg.jpg') }}') no-repeat center center; background-size: cover; width: 100%;">
     <div style="background: rgba(0, 0, 0, 0.096); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
     </div>
     <h1 class="text-center display-6 text-dark" style="position: relative; z-index: 2;">{{ __('shop.page_title') }}</h1>

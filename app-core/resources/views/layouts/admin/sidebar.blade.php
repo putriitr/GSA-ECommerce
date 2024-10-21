@@ -21,7 +21,7 @@
                     <li class="menu-item">
                         <a href="{{ route('dashboard')}}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-alt"></i> <!-- Ikon diperbarui menjadi 'bx-home-alt' -->
-                            <div data-i18n="Dashboard">Dasbor</div>
+                            <div data-i18n="Dashboard">Dashboard</div>
                         </a>
                     </li>
 

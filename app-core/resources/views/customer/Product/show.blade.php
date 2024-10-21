@@ -10,8 +10,8 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
 </div>
 <h1 class="text-center display-6 text-dark" style="position: relative; z-index: 2;">{{ $product->name }}</h1>
 <ol class="breadcrumb justify-content-center mb-0" style="position: relative; z-index: 2;">
-    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-dark">Beranda</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('shop') }}" class="text-dark">Shop</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-dark">{{ __('product.home') }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('shop') }}" class="text-dark">{{ __('product.shop') }}</a></li>
     <li class="breadcrumb-item active text-primary">{{ $product->name }}</li>
 </ol>
 </div>
@@ -104,14 +104,14 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
 
                                 <div style="display: flex; align-items: center; font-family: Arial, sans-serif;">
                                     <p style="font-size: 14px; color: #666; margin-bottom: 0; margin-right: 10px;">
-                                        <i class="fa fa-shopping-bag" style="color: #28a745; margin-right: 4px;"></i>Terjual {{ $totalSold }}
+                                        <i class="fa fa-shopping-bag" style="color: #28a745; margin-right: 4px;"></i>{{ __('product.sold') }} {{ $totalSold }}
                                     </p>
                                     
                                     <span style="font-size: 20px; color: #666; margin: 0 10px;">.</span> <!-- Larger dot separator -->
                                     
                                     <i class="fa fa-star" style="font-size: 20px; color: #ffc107;"></i>
                                     <span style="font-size: 14px; color: #666; margin-left: 4px;">
-                                        {{ number_format($averageRating, 1) }} / 5 ({{ $reviewCount }} {{ __('review') }})
+                                        {{ number_format($averageRating, 1) }} / 5 ({{ $reviewCount }} {{ __('product.reviews') }})
                                     </span>
                                     
                                     <span style="font-size: 20px; color: #666; margin: 0 10px;">.</span> <!-- Larger dot separator -->
@@ -121,7 +121,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                     </p>
                                 </div>
                             </div>
-                            <p style="font-size: 14px; color: #666; margin-bottom: 5px;">Category: {{ $product->category->name }}</p>
+                            <p style="font-size: 14px; color: #666; margin-bottom: 5px;">{{ __('product.category') }}: {{ $product->category->name }}</p>
                         </div>
 
                         <p class="mb-4 mt-2">{{ $product->description }}</p>
@@ -143,8 +143,8 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             </div>
                         
                             <!-- Add to Cart Button -->
-                            <a href="#" id="add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 text-primary">
-                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                            <a href="#" id="add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 text-primary mx-1">
+                                <i class="fa fa-shopping-bag text-primary"></i> 
                             </a>
                             <a href="#" id="add-to-wishlist" class="btn border border-secondary rounded-pill px-4 py-2 text-primary mx-1" data-product-id="{{ $product->id }}">
                                 <i class="fa fa-heart text-primary"></i>
@@ -153,7 +153,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         @else
                             <!-- Notifikasi bahwa stok habis -->
                             <div class="alert alert-danger mt-3" role="alert">
-                                <i class="fa fa-exclamation-circle me-2"></i> This product is out of stock.
+                                <i class="fa fa-exclamation-circle me-2"></i> {{ __('Product.out_of_stock') }}
                             </div>
                         @endif
                         
@@ -161,7 +161,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         <div id="cart-message" class="cart-notification d-none" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(30, 30, 30, 0.9); color: white; padding: 20px 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); z-index: 1000; font-size: 18px;">
                             <div class="notification-content" style="display: flex; align-items: center; width: 100%;">
                                 <span class="notification-icon" style="font-size: 30px; margin-right: 15px;">🎉</span>
-                                <span class="notification-text" style="flex-grow: 1; font-weight: bold;">Product added to cart successfully!</span>
+                                <span class="notification-text" style="flex-grow: 1; font-weight: bold;">{{ __('Product.cart_message') }}</span>
                                 <button onclick="this.parentElement.parentElement.style.display='none'" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 22px; margin-left: 15px;">&times;</button>
                             </div>
                         </div>
@@ -170,7 +170,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         <div id="wishlist-message" class="wishlist-notification d-none" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(30, 30, 30, 0.9); color: white; padding: 20px 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); z-index: 1000; font-size: 18px;">
                             <div class="notification-content" style="display: flex; align-items: center; width: 100%;">
                                 <span class="notification-icon" style="font-size: 30px; margin-right: 15px;">🎉</span>
-                                <span class="notification-text" style="flex-grow: 1; font-weight: bold;">Product added to wishlist successfully!</span>
+                                <span class="notification-text" style="flex-grow: 1; font-weight: bold;">{{ __('product.wishlist_message') }}</span>
                                 <button onclick="this.parentElement.parentElement.style.display='none'" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 22px; margin-left: 15px;">&times;</button>
                             </div>
                         </div>
@@ -181,10 +181,10 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             <div class="nav nav-tabs mb-3">
                                 <button class="nav-link active border-white border-bottom-0 custom-tab" type="button" role="tab"
                                     id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
-                                    aria-controls="nav-about" aria-selected="true">Description</button>
+                                    aria-controls="nav-about" aria-selected="true">{{ __('product.description') }}</button>
                                 <button class="nav-link border-white border-bottom-0 custom-tab" type="button" role="tab"
                                     id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
-                                    aria-controls="nav-mission" aria-selected="false">Reviews</button>
+                                    aria-controls="nav-mission" aria-selected="false">{{ __('product.reviews') }}</button>
                             </div>
                         </nav>
                         
@@ -215,15 +215,17 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             </div>
                             <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                                 <!-- Display reviews -->
-                                <h4 class="mb-4 fw-bold">Customer Reviews</h4>
+                                <h4 class="mb-4 fw-bold">{{ __('product.customer_reviews') }}</h4>
                                 <div id="reviews-container">
                                     @if($reviews->isEmpty())
-                                        <p>No reviews yet. Be the first to leave a review!</p>
+                                        <p>{{ __('product.no_reviews') }}</p>
                                     @else
                                         @foreach($reviews as $review)
                                             <div class="review-item d-flex mb-4" id="review-{{ $review->id }}">
-                                                <img src="{{ asset($review->user->profile_photo) }}" class="img-fluid rounded-circle p-3" 
-                                                     style="width: 100px; height: 100px; object-fit: cover;" alt="User avatar">
+                                                <img src="{{ $review->user->profile_photo ? asset($review->user->profile_photo) : asset('assets/default/image/user.png') }}" 
+                                                class="img-fluid rounded-circle p-3" 
+                                                style="width: 100px; height: 100px; object-fit: cover;" 
+                                                alt="User avatar">                                           
                                                 <div class="ms-3">
                                                     <p class="mb-1" style="font-size: 14px; color: #6c757d;">{{ $review->created_at->format('F d, Y') }}</p>
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -243,41 +245,74 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             
                                 <!-- Display the review form only if the user has completed an order -->
                                 @foreach ($orders as $order)
-                                @if (!in_array($order->id, $reviewedOrderIds))
-                                    <form id="review-form-{{ $order->id }}" action="{{ route('reviews.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
-                                        <h4 class="mb-5 fw-bold">Leave a Reply for Order #{{ $order->id }}</h4>
-                                        <div class="review-messages mb-3"></div> <!-- Message container for each form -->
-                                        <div class="row g-4">
-                                            <div class="col-lg-12">
-                                                <div class="border-bottom rounded my-4">
-                                                    <textarea name="comment" class="form-control border-0" cols="30" rows="8" placeholder="Your Review *" spellcheck="false" required></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="d-flex justify-content-between py-3 mb-5">
-                                                    <div class="d-flex align-items-center">
-                                                        <p class="mb-0 me-3">Please rate:</p>
-                                                        <div class="d-flex align-items-center" style="font-size: 12px;">
-                                                            @for($i = 1; $i <= 5; $i++)
-                                                                <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}-{{ $order->id }}" required>
-                                                                <label for="star{{ $i }}-{{ $order->id }}" style="font-size: 20px; cursor: pointer;">
-                                                                    <i class="fa fa-star"></i>
-                                                                </label>
-                                                            @endfor
-                                                        </div>
+                                    @if (!in_array($order->id, $reviewedOrderIds))
+                                        <form id="review-form-{{ $order->id }}" action="{{ route('reviews.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                            <h4 class="mb-5 fw-bold">{{ __('product.leave_review') }} #{{ $order->id }}</h4>
+                                            <div class="review-messages mb-3"></div> <!-- Message container for each form -->
+                                            <div class="row g-4">
+                                                <div class="col-lg-12">
+                                                    <div class="border-bottom rounded my-4">
+                                                        <textarea name="comment" class="form-control border-0" cols="30" rows="8" placeholder="Your Review *" spellcheck="false" required></textarea>
                                                     </div>
-                                                    <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3">Post Comment</button>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="d-flex justify-content-between py-3 mb-5">
+                                                        <div class="d-flex align-items-center">
+                                                            <p class="mb-0 me-3">{{ __('product.please_rate') }}</p>
+                                                            <div class="d-flex align-items-center star-rating" style="font-size: 12px;">
+                                                                @for($i = 1; $i <= 5; $i++)
+                                                                    <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}-{{ $order->id }}" required>
+                                                                    <label for="star{{ $i }}-{{ $order->id }}" class="star-label">
+                                                                        <i class="fa fa-star"></i>
+                                                                    </label>
+                                                                @endfor
+                                                            </div>
+                                                        </div>
+                                                        <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3">Post Comment</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                @else
-                                    <p>You have already reviewed the product for Order #{{ $order->id }}.</p>
-                                @endif
+                                        </form>
+                                    @else
+                                        <p>{{ __('product.already_reviewed') }}{{ $order->id }}.</p>
+                                    @endif
                                 @endforeach
+
+                                <!-- Tambahkan custom style untuk bintang -->
+                                <style>
+                                    .star-label {
+                                        font-size: 24px;
+                                        cursor: pointer;
+                                        color: #e4e5e9; /* Default warna bintang yang belum dipilih */
+                                        transition: color 0.3s ease, transform 0.2s ease; /* Transisi untuk perubahan warna dan animasi */
+                                    }
+
+                                    /* Warna bintang ketika di-hover atau dipilih */
+                                    input[type="radio"]:checked ~ label.star-label,
+                                    input[type="radio"]:hover ~ label.star-label,
+                                    label.star-label:hover {
+                                        color: #ffc107; /* Warna kuning bintang saat dipilih */
+                                        transform: scale(1.2); /* Zoom-in sedikit saat hover */
+                                    }
+
+                                    .star-rating {
+                                        display: inline-flex;
+                                    }
+
+                                    /* Sembunyikan input radio */
+                                    input[type="radio"] {
+                                        display: none;
+                                    }
+
+                                    /* Perbaiki posisi bintang agar teratur */
+                                    .star-label {
+                                        margin-right: 5px;
+                                    }
+                                </style>
+
                             </div>
                             
                             
@@ -289,7 +324,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                 <div class="row g-4 fruite">
                     <div class="col-lg-12">
                         <div class="mb-4">
-                            <h4>Categories</h4>
+                            <h4>{{ __('product.category')  }}</h4>
                             <ul class="list-unstyled fruite-categorie">
                                 @foreach($categories as $category)
                                     <li>
@@ -308,7 +343,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                     </div>
                     
                     <div class="col-lg-12">
-                        <h4 class="mb-4">Featured Products</h4>
+                        <h4 class="mb-4">{{ __('product.related_products') }}</h4>
                         @foreach($randomProducts as $product)
                             <a href="{{ route('customer.product.show', $product->slug) }}" class="text-decoration-none" style="color: inherit; cursor: pointer;">
                                 <div class="d-flex align-items-center justify-content-start mb-3">
@@ -357,7 +392,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                 </div>
             </div>
         </div>
-        <h1 class="fw-bold mb-0">Related products</h1>
+        <h1 class="fw-bold mb-0">{{ __('product.related_products') }}</h1>
         <div class="container">
             <div class="vesitable">
                 @if($relatedProducts->isNotEmpty())
@@ -430,7 +465,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                             </span>
                                         </div>
                                         <span class="mx-2">|</span>
-                                        <span class="text-muted small">{{ $totalSold }} terjual</span>
+                                        <span class="text-muted small">{{ $totalSold }} {{ __('product.sold') }}</span>
                                     </div>
         
                                     <!-- Stock and Quantity Information -->
@@ -442,7 +477,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                 </div>
                 @else
                 <div class="text-center py-5">
-                    <p class="text-muted" style="font-size: 18px;">Belum Tersedia, Mohon Di Tunggu Secara Berkala</p>
+                    <p class="text-muted" style="font-size: 18px;">{{ __('product.out_of_stock') }}Belum Tersedia, Mohon Di Tunggu Secara Berkala</p>
                 </div>
                 @endif
             </div>

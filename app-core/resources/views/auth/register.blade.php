@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="d-grid mb-3">
-                    <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-block">
+                    <a href="{{ url('auth/google/redirect') }}" class="btn btn-outline btn-block">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="me-2" style="width: 20px;">
                         {{ __('Daftar dengan Google') }}
                     </a>
