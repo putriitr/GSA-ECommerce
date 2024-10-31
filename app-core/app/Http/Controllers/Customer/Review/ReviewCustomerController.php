@@ -13,11 +13,12 @@ class ReviewCustomerController extends Controller
     {
         $user = auth()->user();
         $order = Order::where('user_id', $user->id)
-                    ->where('status', 'completed')
-                    ->whereHas('items', function ($query) use ($productId) {
-                        $query->where('product_id', $productId);
-                    })
-                    ->first();
+            ->where('status', Order::STATUS_DELIVERED) // Gunakan status 'delivered'
+            ->whereHas('items', function ($query) use ($productId) {
+                $query->where('product_id', $productId);
+            })
+            ->first();
+
 
         if (!$order) {
             return redirect()->back()->with('error', 'You are not eligible to review this product.');
@@ -47,9 +48,10 @@ class ReviewCustomerController extends Controller
 
     // Retrieve the specific order based on the order ID and other conditions
     $order = Order::where('id', $validated['order_id'])
-                  ->where('user_id', auth()->id())
-                  ->where('status', 'completed')
-                  ->first();
+              ->where('user_id', auth()->id())
+              ->where('status', Order::STATUS_DELIVERED) // Ganti 'completed' menjadi 'delivered'
+              ->first();
+
 
     if (!$order) {
         return response()->json(['errors' => ['You do not have a completed order for this product.']], 422);

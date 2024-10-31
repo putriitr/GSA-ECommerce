@@ -33,7 +33,7 @@ class ProductMemberController extends Controller
         $reviews = $product->reviews()->with('user')->get();
 
         $orders = Order::where('user_id', auth()->id())
-        ->where('status', 'completed')
+        ->where('status', 'delivered')
         ->whereHas('items', function ($query) use ($product) {
             $query->where('product_id', $product->id);
         })

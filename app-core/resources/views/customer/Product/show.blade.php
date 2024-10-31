@@ -142,13 +142,40 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                 </div>
                             </div>
                         
-                            <!-- Add to Cart Button -->
-                            <a href="#" id="add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 text-primary mx-1">
-                                <i class="fa fa-shopping-bag text-primary"></i> 
+                            <!-- Kontainer Notifikasi -->
+                            <div id="login-notification" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1051;">
+                                <strong>Silakan login</strong> untuk menambahkan ke keranjang atau wishlist.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Tombol Add to Cart -->
+                            <a href="#" id="add-to-cart" class="btn border border-secondary rounded-pill px-4 py-2 text-primary mx-1"
+                            @if(!Auth::check()) onclick="showLoginNotification(event)" @endif>
+                                <i class="fa fa-shopping-bag text-primary"></i>
                             </a>
-                            <a href="#" id="add-to-wishlist" class="btn border border-secondary rounded-pill px-4 py-2 text-primary mx-1" data-product-id="{{ $product->id }}">
+
+                            <!-- Tombol Add to Wishlist -->
+                            <a href="#" id="add-to-wishlist" class="btn border border-secondary rounded-pill px-4 py-2 text-primary mx-1"
+                            data-product-id="{{ $product->id }}" @if(!Auth::check()) onclick="showLoginNotification(event)" @endif>
                                 <i class="fa fa-heart text-primary"></i>
                             </a>
+
+                            <!-- Script JavaScript untuk Menampilkan Notifikasi -->
+                            <script>
+                                function showLoginNotification(event) {
+                                    event.preventDefault(); // Mencegah tindakan default dari klik
+                                    
+                                    // Tampilkan notifikasi login
+                                    const notification = document.getElementById('login-notification');
+                                    notification.style.display = 'block';
+
+                                    // Sembunyikan notifikasi setelah 3 detik
+                                    setTimeout(() => {
+                                        notification.style.display = 'none';
+                                    }, 3000);
+                                }
+                            </script>
+
                         </div>
                         @else
                             <!-- Notifikasi bahwa stok habis -->
@@ -245,13 +272,13 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                             
                                 <!-- Display the review form only if the user has completed an order -->
                                 @foreach ($orders as $order)
-                                    @if (!in_array($order->id, $reviewedOrderIds))
+                                    @if ($order->status === 'delivered' && !in_array($order->id, $reviewedOrderIds))
                                         <form id="review-form-{{ $order->id }}" action="{{ route('reviews.store') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                                             <input type="hidden" name="order_id" value="{{ $order->id }}">
                                             <h4 class="mb-5 fw-bold">{{ __('product.leave_review') }} #{{ $order->id }}</h4>
-                                            <div class="review-messages mb-3"></div> <!-- Message container for each form -->
+                                            <div class="review-messages mb-3"></div>
                                             <div class="row g-4">
                                                 <div class="col-lg-12">
                                                     <div class="border-bottom rounded my-4">
@@ -263,7 +290,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                                         <div class="d-flex align-items-center">
                                                             <p class="mb-0 me-3">{{ __('product.please_rate') }}</p>
                                                             <div class="star-rating">
-                                                                @for($i = 5; $i >= 1; $i--) <!-- Mulai dari bintang 5 ke bintang 1 -->
+                                                                @for($i = 5; $i >= 1; $i--)
                                                                     <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}-{{ $order->id }}" required>
                                                                     <label for="star{{ $i }}-{{ $order->id }}" class="star-label">
                                                                         <i class="fa fa-star"></i>
@@ -277,9 +304,10 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                             </div>
                                         </form>
                                     @else
-                                        <p>{{ __('product.already_reviewed') }}{{ $order->id }}.</p>
+                                        <p>{{ __('product.already_reviewed') }} {{ $order->id }}.</p>
                                     @endif
                                 @endforeach
+
 
                                 <!-- Tambahkan custom style untuk bintang -->
                                 <style>

@@ -47,7 +47,7 @@ class Product extends Model
     public function orders()
     {
         return $this->hasMany(Order::class, 'product_id', 'id')
-                    ->where('status', 'completed');
+                    ->where('status', 'delivered');
     }
 
 

@@ -40,7 +40,7 @@ class OrderController extends Controller
     
             // Count orders with the 'approved' status (Menunggu Pembayaran)
         $waitingForPaymentCount = Order::where('user_id', auth()->id())
-        ->where('status', 'approved')
+        ->where('status', 'pending_payment')
         ->count();
         
         return view('customer.settings.order.index', compact('orders', 'status','user', 'waitingForPaymentCount'));
@@ -58,43 +58,66 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Your cart is empty.');
         }
 
-        // Calculate total
-        $total = $cartItems->sum(function ($item) {
-            return $item->quantity * ($item->product->discount_price ?? $item->product->price);
-        });
-
-        // Create the order
-        $order = Order::create([
-            'user_id' => $user->id,
-            'total' => $total,
-            'status' => 'pending', // default status is pending
-        ]);
-
-        // Attach items to the order
+        // Validasi stok produk
         foreach ($cartItems as $item) {
-            $order->items()->create([
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $item->product->discount_price ?? $item->product->price,
-                'total' => $item->quantity * ($item->product->discount_price ?? $item->product->price),
-            ]);
+            if ($item->quantity > $item->product->stock) {
+                return redirect()->back()->with('error', "Product {$item->product->name} is out of stock.");
+            }
         }
 
-        // Clear cart after checkout
-        Cart::where('user_id', $user->id)->delete();
+        // Mulai transaksi database
+        DB::beginTransaction();
+        try {
+            // Hitung total
+            $total = $cartItems->sum(function ($item) {
+                return $item->quantity * ($item->product->discount_price ?? $item->product->price);
+            });
 
-        return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
+            // Buat pesanan
+            $order = Order::create([
+                'user_id' => $user->id,
+                'total' => $total,
+                'status' => Order::STATUS_WAITING_APPROVAL, // gunakan konstanta untuk status
+                'waiting_approval_at' => now(),
+            ]);
+
+            // Tambahkan item ke pesanan
+            foreach ($cartItems as $item) {
+                $order->items()->create([
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->discount_price ?? $item->product->price,
+                    'total' => $item->quantity * ($item->product->discount_price ?? $item->product->price),
+                ]);
+
+                // Kurangi stok produk
+                $item->product->decrement('stock', $item->quantity);
+            }
+
+            // Kosongkan keranjang setelah checkout
+            Cart::where('user_id', $user->id)->delete();
+
+            // Commit transaksi database
+            DB::commit();
+
+            return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
+        }
+        
     }
 
 
     // Submit payment proof
     public function submitPaymentProof(Request $request, $orderId)
-{
+    {
     // Find the order
     $order = Order::find($orderId);
 
     // Check if the order is cancelled
-    if ($order->status === 'cancelled_by_system') {
+    if ($order->status === Order::STATUS_CANCELLED_BY_SYSTEM) {
         return back()->with('info', 'Your order has been cancelled due to non-payment.');
     }
 
@@ -107,25 +130,50 @@ class OrderController extends Controller
     $fileName = time() . '_' . $request->file('payment_proof')->getClientOriginalName();
     $request->file('payment_proof')->move(public_path('payments'), $fileName);
 
-    // Save the payment details
-    Payment::create([
-        'order_id' => $orderId,
-        'payment_proof' => 'payments/' . $fileName,
-        'status' => 'pending',
-    ]);
 
-    return back()->with('success', 'Payment proof submitted. Awaiting verification.');
-}
+    DB::beginTransaction();
+    try {
+        // Buat data pembayaran dengan status 'pending'
+        Payment::create([
+            'order_id' => $orderId,
+            'payment_proof' => 'payments/' . $fileName,
+            'status' => Payment::STATUS_PENDING,
+            'peding_at' => now(),
+        ]);
+
+        // Perbarui status pesanan menjadi 'pending_payment'
+        $order->update([
+            'status' => Order::STATUS_PENDING_PAYMENT,
+            'pending_payment_at' => now(),
+        ]);
+
+        DB::commit();
+
+        return back()->with('success', 'Payment proof submitted. Awaiting verification.');
+        
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Failed to submit payment proof: ' . $e->getMessage());
+    }
+    }
 
 
         // Customer marks order as complete
     public function completeOrder($orderId)
-    {
-        $order = Order::find($orderId);
-        $order->update(['status' => 'completed']);
-
-        return back()->with('success', 'Order marked as completed.');
-    }
+        {
+            $order = Order::find($orderId);
+        
+            // Periksa apakah pesanan ditemukan
+            if (!$order) {
+                return back()->with('error', 'Order not found.');
+            }
+        
+            // Set status order menjadi completed dengan menggunakan setStatus
+            $order->setStatus(Order::STATUS_DELIVERED);
+        
+            return back()->with('success', 'Order marked as completed.');
+        }
+        
 
     // Cancel the order
     public function cancelOrder($orderId)
@@ -172,7 +220,7 @@ class OrderController extends Controller
         $order = Order::with('items.product')->findOrFail($id);
 
         // Check if the order is approved before generating the invoice
-        if (!in_array($order->status, ['approved', 'packing', 'shipped', 'completed'])) {
+        if (!in_array($order->status, ['approved', 'pending_payment', 'confirmed', 'processing','shipped','delivered','cancelled'])) {
             return redirect()->back()->with('error', 'Invoice can only be generated for approved, packing, shipped, or completed orders.');
         }
 

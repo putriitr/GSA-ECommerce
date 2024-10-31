@@ -1,6 +1,21 @@
 @extends('layouts.admin.master')
 
 @section('content')
+
+@php
+    use App\Models\Payment;
+
+    $paymentStatusMap = [
+        Payment::STATUS_UNPAID => 'Belum Dibayar',
+        Payment::STATUS_PENDING => 'Menunggu Konfirmasi',
+        Payment::STATUS_PAID => 'Dibayar',
+        Payment::STATUS_FAILED => 'Gagal',
+        Payment::STATUS_REFUNDED => 'Dikembalikan',
+        Payment::STATUS_PARTIALLY_REFUNDED => 'Dikembalikan Sebagian',
+    ];
+@endphp
+
+
 <div class="container py-5">
 
     <!-- Kartu untuk Manajemen Pembayaran -->
@@ -35,12 +50,14 @@
                     <div class="col-md-3">
                         <select name="status" class="form-select">
                             <option value="all" {{ request()->status == 'all' ? 'selected' : '' }}>Semua Status</option>
-                            <option value="pending" {{ request()->status == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                            <option value="completed" {{ request()->status == 'completed' ? 'selected' : '' }}>Selesai</option>
-                            <option value="verified" {{ request()->status == 'verified' ? 'selected' : '' }}>Terverifikasi</option>
-                            <option value="rejected" {{ request()->status == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                            <option value="{{ Payment::STATUS_PENDING }}" {{ request()->status == Payment::STATUS_PENDING ? 'selected' : '' }}>Menunggu Konfirmasi</option>
+                            <option value="{{ Payment::STATUS_PAID }}" {{ request()->status == Payment::STATUS_PAID ? 'selected' : '' }}>Dibayar</option>
+                            <option value="{{ Payment::STATUS_FAILED }}" {{ request()->status == Payment::STATUS_FAILED ? 'selected' : '' }}>Gagal</option>
+                            <option value="{{ Payment::STATUS_REFUNDED }}" {{ request()->status == Payment::STATUS_REFUNDED ? 'selected' : '' }}>Dikembalikan</option>
+                            <option value="{{ Payment::STATUS_PARTIALLY_REFUNDED }}" {{ request()->status == Payment::STATUS_PARTIALLY_REFUNDED ? 'selected' : '' }}>Dikembalikan Sebagian</option>
                         </select>
                     </div>
+
 
                     <!-- Tombol Cari dan Reset -->
                     <div class="col-md-1">
@@ -79,9 +96,14 @@
                     <tr>
                         <td>{{ $payment->id }}</td>
                         <td>{{ $payment->order_id }}</td>
-                        <td>{{ $payment->order->invoice_number }}</td>
+                        <td>{{ $payment->order->invoice_number }} 
+                        </span>
+                        @if (!$payment->is_viewed)
+                            <span class="badge bg-danger ms-2">Baru</span>
+                        @endif
+                        </td>
                         <td>{{ optional($payment->order->user)->full_name ?? optional($payment->order->user)->name }}</td>
-                        <td>{{ ucfirst($payment->status) }}</td>
+                        <td>{{ $paymentStatusMap[$payment->status] ?? 'Status Tidak Diketahui' }}</td>
                         <td>
                             <!-- Tombol untuk membuka modal -->
                             <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#paymentModal-{{ $payment->id }}">Lihat Detail</button>
@@ -99,7 +121,7 @@
                                 <div class="modal-body">
                                     <h6><strong>ID Pesanan:</strong> {{ $payment->order_id }}</h6>
                                     <h6><strong>Pelanggan:</strong> {{ optional($payment->order->user)->full_name ?? optional($payment->order->user)->name }}</h6>
-                                    <h6><strong>Status:</strong> {{ ucfirst($payment->status) }}</h6>
+                                    <h6><strong>Status:</strong> {{ $paymentStatusMap[$payment->status] ?? 'Status Tidak Diketahui' }}</h6>
                                     <h6><strong>Bukti Pembayaran:</strong></h6>
                                     @if($payment->payment_proof)
                                         <div class="mb-3">
