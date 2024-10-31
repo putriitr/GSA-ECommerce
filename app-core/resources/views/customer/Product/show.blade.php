@@ -284,33 +284,33 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                 <!-- Tambahkan custom style untuk bintang -->
                                 <style>
                                 .star-rating {
-        display: inline-flex;
-        direction: ltr; /* Arah dari kiri ke kanan */
-    }
+                                    display: inline-flex;
+                                    direction: ltr; /* Arah dari kiri ke kanan */
+                                }
 
-    /* Gaya default bintang */
-    .star-label {
-        font-size: 24px;
-        cursor: pointer;
-        color: #e4e5e9; /* Default warna bintang */
-        transition: color 0.3s ease, transform 0.2s ease; /* Transisi untuk perubahan warna dan animasi */
-    }
+                                /* Gaya default bintang */
+                                .star-label {
+                                    font-size: 24px;
+                                    cursor: pointer;
+                                    color: #e4e5e9; /* Default warna bintang */
+                                    transition: color 0.3s ease, transform 0.2s ease; /* Transisi untuk perubahan warna dan animasi */
+                                }
 
-    /* Gaya ketika input radio dipilih (untuk semua bintang yang dipilih) */
-    input[type="radio"]:checked ~ label.star-label {
-        color: #ffc107; /* Warna kuning bintang saat dipilih */
-    }
+                                /* Gaya ketika input radio dipilih (untuk semua bintang yang dipilih) */
+                                input[type="radio"]:checked ~ label.star-label {
+                                    color: #ffc107; /* Warna kuning bintang saat dipilih */
+                                }
 
-    /* Hover untuk bintang dari kiri ke kanan */
-    label.star-label:hover,
-    label.star-label:hover ~ label.star-label {
-        color: #ffc107; /* Warna kuning bintang saat dihover */
-    }
+                                /* Hover untuk bintang dari kiri ke kanan */
+                                label.star-label:hover,
+                                label.star-label:hover ~ label.star-label {
+                                    color: #ffc107; /* Warna kuning bintang saat dihover */
+                                }
 
-    /* Hide the radio buttons */
-    input[type="radio"] {
-        display: none;
-    }
+                                /* Hide the radio buttons */
+                                input[type="radio"] {
+                                    display: none;
+                                }
                                 </style>
 
                             </div>
