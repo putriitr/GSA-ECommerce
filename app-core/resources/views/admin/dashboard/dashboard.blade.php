@@ -99,6 +99,33 @@
                 </div>
             </div>
             
+            @php
+            use App\Models\Order;
+            use App\Models\Payment;
+
+                $statusMap = [
+                    Order::STATUS_WAITING_APPROVAL => 'Menunggu Persetujuan',
+                    Order::STATUS_APPROVED => 'Disetujui',
+                    Order::STATUS_PENDING_PAYMENT => 'Menunggu Pembayaran',
+                    Order::STATUS_CONFIRMED => 'Pembayaran Diterima',
+                    Order::STATUS_PROCESSING => 'Sedang Dikemas',
+                    Order::STATUS_SHIPPED => 'Dikirim',
+                    Order::STATUS_DELIVERED => 'Tiba di Tujuan',
+                    Order::STATUS_CANCELLED => 'Dibatalkan',
+                    Order::STATUS_CANCELLED_BY_SYSTEM => 'Dibatalkan oleh Sistem',
+                    Order::STATUS_CANCELLED_BY_ADMIN => 'Dibatalkan oleh Admin',
+                ];
+
+                $paymentStatusMap = [
+                    Payment::STATUS_UNPAID => 'Belum Dibayar',
+                    Payment::STATUS_PENDING => 'Menunggu Konfirmasi',
+                    Payment::STATUS_PAID => 'Dibayar',
+                    Payment::STATUS_FAILED => 'Gagal',
+                    Payment::STATUS_REFUNDED => 'Dikembalikan',
+                    Payment::STATUS_PARTIALLY_REFUNDED => 'Dikembalikan Sebagian',
+                ];
+            @endphp
+
             <div class="row">
                 <div class="col-md-6 col-lg-6 order-2 mb-4">
                     <div class="card h-100">
@@ -109,7 +136,6 @@
                             <ul class="p-0 m-0">
                                 @foreach($payments as $payment)
                                     <li class="d-flex mb-4 pb-1">
-                                        <!-- Wrap the payment details inside an <a> tag pointing to the show payment route -->
                                         <a href="{{ route('admin.payments.index') }}" class="d-flex w-100 text-decoration-none">
                                             <div class="avatar flex-shrink-0 me-3">
                                                 <img src="{{ asset('assets/default/image/user.png') }}" alt="Payment" class="rounded" />
@@ -122,13 +148,13 @@
                                                 </div>
                                                 <div class="user-progress d-flex align-items-center gap-1">
                                                     @if($payment->status === 'completed')
-                                                        @if($order->status === 'cancelled' || $order->status === 'cancelled_by_system')
-                                                            <h6 class="mb-0 text-muted">Cancelled</h6>
+                                                        @if(in_array($payment->order->status, [Order::STATUS_CANCELLED, Order::STATUS_CANCELLED_BY_SYSTEM]))
+                                                            <h6 class="mb-0 text-muted">Dibatalkan</h6>
                                                         @else
                                                             <h6 class="mb-0 text-success">+{{ 'Rp' . number_format($payment->amount, 0, ',', '.') }}</h6>
                                                         @endif
                                                     @else
-                                                        <h6 class="mb-0 text-danger">{{ ucfirst($payment->status) }}</h6>
+                                                    <h6>{{ $paymentStatusMap[$payment->status] ?? 'Status Tidak Diketahui' }}</h6>
                                                     @endif
                                                 </div>
                                             </div>
@@ -142,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="col-md-6 col-lg-6 order-2 mb-4">
                     <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
@@ -152,7 +178,6 @@
                             <ul class="p-0 m-0">
                                 @foreach($orders as $order)
                                     <li class="d-flex mb-4 pb-1">
-                                        <!-- Wrap the entire order inside an <a> tag pointing to the show order route -->
                                         <a href="{{ route('admin.orders.show', $order->id) }}" class="d-flex w-100 text-decoration-none">
                                             <div class="avatar flex-shrink-0 me-3">
                                                 <img src="{{ asset('assets/default/image/user.png') }}" alt="Order" class="rounded" />
@@ -160,12 +185,12 @@
                                             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                 <div class="me-2">
                                                     <small class="text-muted d-block mb-1">Order #{{ $order->id }}</small>
-                                                    <h6 class="mb-0">Status: {{ ucfirst($order->status) }}</h6>
+                                                    <h6 class="mb-0">Status: {{ $statusMap[$order->status] ?? ucfirst($order->status) }}</h6>
                                                     <p class="mb-0">Customer: {{ $order->user->name ?? 'N/A' }}</p>
                                                 </div>
                                                 <div class="user-progress d-flex align-items-center gap-1">
-                                                    @if($order->status === 'cancelled' || $order->status === 'cancelled_by_system')
-                                                        <h6 class="mb-0 text-muted">Cancelled</h6>
+                                                    @if(in_array($order->status, [Order::STATUS_CANCELLED, Order::STATUS_CANCELLED_BY_SYSTEM]))
+                                                        <h6 class="mb-0 text-muted">Dibatalkan</h6>
                                                     @else
                                                         <h6 class="mb-0 text-success">+{{ 'Rp' . number_format($order->total, 0, ',', '.') }}</h6>
                                                     @endif
@@ -182,7 +207,8 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>
+           
         </div>
     </div>
 

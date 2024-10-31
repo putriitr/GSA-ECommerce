@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\ShippingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderHandleController extends Controller
 {
@@ -148,24 +149,64 @@ class OrderHandleController extends Controller
     // Admin approval of order
     public function approveOrder($orderId)
     {
+        // Temukan pesanan berdasarkan ID
         $order = Order::find($orderId);
 
-        // Check if the order is not already approved
-    if ($order->status == 'approved') {
-        return back()->with('error', 'This order has already been approved.');
+        // Periksa apakah pesanan ditemukan
+        if (!$order) {
+            return back()->with('error', 'Order not found.');
+        }
+
+        // Periksa apakah pesanan sudah disetujui
+        if ($order->status === Order::STATUS_APPROVED) {
+            return back()->with('error', 'This order has already been approved.');
+        }
+
+        DB::beginTransaction();
+        try {
+            // Buat nomor faktur jika belum ada
+            if (!$order->invoice_number) {
+                $order->invoice_number = OrderController::generateInvoiceNumber();
+            }
+
+            // Perbarui status dan waktu persetujuan
+            $order->update([
+                'status' => Order::STATUS_APPROVED,
+                'approved_at' => now(),
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Order approved successfully.');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to approve the order: ' . $e->getMessage());
+        }
     }
 
-    // Generate the invoice number if not already generated
-    if (!$order->invoice_number) {
-        $order->invoice_number = OrderController::generateInvoiceNumber();
-    }
+    public function allowPayment($orderId)
+    {
+        // Temukan pesanan berdasarkan ID
+        $order = Order::find($orderId);
 
-        $order->update([
-            'status' => 'approved',
-            'approved_at' => now() // Set the approved timestamp
-        ]);
-    
-        return back()->with('success', 'Order approved successfully.');
+        // Periksa apakah pesanan ditemukan dan apakah statusnya sudah disetujui
+        if (!$order || $order->status !== Order::STATUS_APPROVED) {
+            return back()->with('error', 'Order not eligible for payment.');
+        }
+
+        try {
+            // Ubah status pesanan menjadi 'pending_payment'
+            $order->update([
+                'status' => Order::STATUS_PENDING_PAYMENT,
+                'pending_payment_at' => now(),
+            ]);
+
+            // Redirect customer ke halaman pembayaran
+            return back()->with('success', 'Access Payment approved successfully.');
+            
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to proceed to payment: ' . $e->getMessage());
+        }
     }
     
 
@@ -174,58 +215,61 @@ class OrderHandleController extends Controller
     {
         $payment = Payment::find($paymentId);
 
-        // Check if the payment exists before proceeding
+        // Periksa apakah pembayaran ditemukan
         if (!$payment) {
             return back()->with('error', 'Payment not found.');
         }
 
-        // Update the payment status
-        $payment->update(['status' => 'approved', 'is_viewed' => true]); // Mark as viewed when verifying
+        // Perbarui status pembayaran menjadi 'paid' dan tandai sebagai dilihat
+        $payment->update([
+            'status' => Payment::STATUS_PAID,
+            'paid_at' => now(),
+            'is_viewed' => true,
+        ]);
 
-        // Mark the associated order as 'payment_verified'
+        // Perbarui status pesanan terkait menjadi 'confirmed' dan catat waktu verifikasi pembayaran
         $order = $payment->order;
         $order->update([
-            'status' => 'payment_verified',
-            'payment_verified_at' => now() // Set payment verified timestamp
+            'status' => Order::STATUS_CONFIRMED,
+            'payment_verified_at' => now(),
         ]);
 
         return back()->with('success', 'Payment verified successfully.');
     }
 
     public function rejectPayment($paymentId)
-{
-    // Find the payment by ID
-    $payment = Payment::find($paymentId);
+    {
+        // Temukan pembayaran berdasarkan ID
+        $payment = Payment::find($paymentId);
 
-    // Check if the payment exists before proceeding
-    if (!$payment) {
-        return back()->with('error', 'Payment not found.');
-    }
+        // Periksa apakah pembayaran ditemukan
+        if (!$payment) {
+            return back()->with('error', 'Payment not found.');
+        }
 
-    // Update the payment status to 'rejected' and mark as viewed
-    $paymentUpdated = $payment->update(['status' => 'rejected', 'is_viewed' => true]); // Mark as viewed when rejecting
-
-    // Check if the update was successful
-    if (!$paymentUpdated) {
-        return back()->with('error', 'Failed to update payment status.');
-    }
-
-    // Update the associated order status to 'cancelled_by_system'
-    $order = $payment->order; // Assuming there's a relationship defined in the Payment model
-    if ($order) {
-        $orderUpdated = $order->update([
-            'status' => 'cancelled_by_system', // Ensure this value is valid in your database schema
-            'cancelled_at' => now() // Optional: you can also track when it was cancelled
+        // Perbarui status pembayaran menjadi 'failed'
+        $payment->update([
+            'status' => Payment::STATUS_FAILED,
+            'is_viewed' => true,
         ]);
 
-        // Check if the order update was successful
-        if (!$orderUpdated) {
-            return back()->with('error', 'Failed to update order status.');
-        }
-    }
+        $order = $payment->order;
 
-    return back()->with('success', 'Payment rejected successfully and order status updated.');
-}
+        // Cek jumlah pembayaran gagal pada pesanan terkait
+        $failedPaymentsCount = $order->payments()->where('status', Payment::STATUS_FAILED)->count();
+
+        if ($failedPaymentsCount >= 2) {
+            // Jika jumlah gagal mencapai 2, batalkan pesanan secara otomatis
+            $order->update([
+                'status' => Order::STATUS_CANCELLED_BY_SYSTEM,
+                'cancelled_by_system_at' => now(),
+            ]);
+
+            return back()->with('error', 'Payment rejected and order cancelled due to multiple failed attempts.');
+        }
+
+        return back()->with('warning', 'Payment rejected. You may resubmit your payment proof one more time.');
+    }
 
 
     
@@ -235,10 +279,19 @@ class OrderHandleController extends Controller
     // Admin marks order as packing
     public function markAsPacking($orderId)
     {
+        // Temukan pesanan berdasarkan ID
         $order = Order::find($orderId);
+
+        // Periksa apakah pesanan ditemukan dan statusnya adalah 'processing'
+        if (!$order || $order->status !== Order::STATUS_CONFIRMED) {
+            return back()->with('error', 'Order is not eligible for packing.');
+        }
+
+        // Perbarui status dan catat timestamp
         $order->update([
-            'status' => 'packing',
-            'packing_at' => now() // Set packing timestamp
+            'status' => Order::STATUS_PROCESSING, // gunakan konstanta status
+            'packing_at' => now(),              // Set packing timestamp
+            'processing_at' => now(),           // Set processing timestamp
         ]);
 
         return back()->with('success', 'Order is now in the packing process.');
@@ -266,15 +319,17 @@ class OrderHandleController extends Controller
     public function cancelOrder(Request $request, $orderId)
     {
         $order = Order::findOrFail($orderId);
-
-        if ($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system') {
-            // Set the status to 'cancelled_by_system'
-            $order->status = 'cancelled_by_system';
+    
+        if ($order->status !== Order::STATUS_CANCELLED && $order->status !== Order::STATUS_CANCELLED_BY_ADMIN) {
+            // Set the status to 'cancelled_by_admin'
+            $order->status = Order::STATUS_CANCELLED_BY_ADMIN;
+            $order->cancelled_by_admin_at = now(); // Set the cancelled_by_admin timestamp
             $order->save();
-
-            return redirect()->back()->with('success', 'Order has been cancelled by the system.');
+    
+            return redirect()->back()->with('success', 'Order has been cancelled by the admin.');
         }
-
+    
         return redirect()->back()->with('error', 'Order has already been cancelled.');
     }
+    
 }

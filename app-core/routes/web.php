@@ -5,10 +5,14 @@ use App\Http\Controllers\Admin\Banner\BannerHomeController;
 use App\Http\Controllers\Admin\Banner\BannerMicroController;
 use App\Http\Controllers\Admin\FAQ\FaqController;
 use App\Http\Controllers\Admin\MasterData\CategoryController;
+use App\Http\Controllers\Admin\MasterData\SubcategoryController;
+use App\Http\Controllers\Admin\MasterData\BrandController;
 use App\Http\Controllers\Admin\MasterData\ParameterController;
 use App\Http\Controllers\Admin\MasterData\Shipping\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleController;
+use App\Http\Controllers\Admin\Product\HotspotController;
 use App\Http\Controllers\Admin\Product\ProductController;
+use App\Http\Controllers\Admin\Product\SceneController;
 use App\Http\Controllers\Admin\User\AdminUserController as UserAdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialiteController;
@@ -154,6 +158,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/product/{id}/upload-images', [ProductController::class, 'uploadImages'])->name('product.uploadImages');
     Route::post('admin/product/{id}/upload-video', [ProductController::class, 'uploadVideo'])->name('product.uploadVideo');
     Route::post('/admin/product/update-status', [ProductController::class, 'updateStatus'])->name('product.updateStatus');
+    Route::get('get-subcategories/{category_id}', [ProductController::class, 'getSubcategories']);
 
 
     // Admin dashboard to view all orders, payments, complaints, and negotiations
@@ -170,6 +175,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('admin/payments/{paymentId}/reject', [OrderHandleController::class, 'rejectPayment'])->name('admin.payments.reject');
     Route::get('admin/payments/{id}', [OrderHandleController::class, 'showPayment'])->name('admin.payments.show');
     Route::put('/admin/orders/{order}/cancel', [OrderHandleController::class, 'cancelOrder'])->name('admin.orders.cancel');
+    Route::put('admin/orders/{order}/payment', [OrderHandleController::class, 'allowPayment'])->name('customer.orders.payment');
+
 
 
 

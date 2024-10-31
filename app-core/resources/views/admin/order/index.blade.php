@@ -1,6 +1,10 @@
 @extends('layouts.admin.master')
 
 @section('content')
+@php
+    use App\Models\Order;
+@endphp
+
 <div class="container py-5">
     <!-- Kartu untuk Mengelola Pesanan -->
     <div class="card">
@@ -37,14 +41,16 @@
                     <div class="col-md-2">
                         <select name="status" class="form-select">
                             <option value="all" {{ request()->status == 'all' ? 'selected' : '' }}>Semua Status</option>
-                            <option value="pending" {{ request()->status == 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
-                            <option value="approved" {{ request()->status == 'approved' ? 'selected' : '' }}>Disetujui</option>
-                            <option value="payment_verified" {{ request()->status == 'payment_verified' ? 'selected' : '' }}>Pembayaran Diverifikasi</option>
-                            <option value="packing" {{ request()->status == 'packing' ? 'selected' : '' }}>Dikemas</option>
-                            <option value="shipped" {{ request()->status == 'shipped' ? 'selected' : '' }}>Dikirim</option>
-                            <option value="completed" {{ request()->status == 'completed' ? 'selected' : '' }}>Selesai</option>
-                            <option value="cancelled" {{ request()->status == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                            <option value="cancelled_by_system" {{ request()->status == 'cancelled_by_system' ? 'selected' : '' }}>Dibatalkan oleh Sistem</option>
+                            <option value="{{ Order::STATUS_WAITING_APPROVAL }}" {{ request()->status == Order::STATUS_WAITING_APPROVAL ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                            <option value="{{ Order::STATUS_APPROVED }}" {{ request()->status == Order::STATUS_APPROVED ? 'selected' : '' }}>Disetujui</option>
+                            <option value="{{ Order::STATUS_PENDING_PAYMENT }}" {{ request()->status == Order::STATUS_PENDING_PAYMENT ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                            <option value="{{ Order::STATUS_CONFIRMED }}" {{ request()->status == Order::STATUS_CONFIRMED ? 'selected' : '' }}>Pembayaran Diverifikasi</option>
+                            <option value="{{ Order::STATUS_PROCESSING }}" {{ request()->status == Order::STATUS_PROCESSING ? 'selected' : '' }}>Dikemas</option>
+                            <option value="{{ Order::STATUS_SHIPPED }}" {{ request()->status == Order::STATUS_SHIPPED ? 'selected' : '' }}>Dikirim</option>
+                            <option value="{{ Order::STATUS_DELIVERED }}" {{ request()->status == Order::STATUS_DELIVERED ? 'selected' : '' }}>Selesai</option>
+                            <option value="{{ Order::STATUS_CANCELLED }}" {{ request()->status == Order::STATUS_CANCELLED ? 'selected' : '' }}>Dibatalkan</option>
+                            <option value="{{ Order::STATUS_CANCELLED_BY_SYSTEM }}" {{ request()->status == Order::STATUS_CANCELLED_BY_SYSTEM ? 'selected' : '' }}>Dibatalkan oleh Sistem</option>
+                            <option value="{{ Order::STATUS_CANCELLED_BY_ADMIN }}" {{ request()->status == Order::STATUS_CANCELLED_BY_ADMIN ? 'selected' : '' }}>Dibatalkan oleh Admin</option>
                         </select>
                     </div>                    
                     <div class="col-md-1">
@@ -74,7 +80,7 @@
                             <th>Invoice</th>
                             <th>Pelanggan</th>
                             <th>Total</th>
-                            <th>Status</th>
+                            <th class="text-center">Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -83,48 +89,54 @@
                         <tr>
                             <td>{{ $order->id }}</td>
                             <td>
-                                <a href="{{ route('customer.order.invoice', $order->id) }}" target="_blank">{{ $order->invoice_number }}</a>
+                                <a href="{{ $order->invoice_number ? route('customer.order.invoice', $order->id) : '#' }}">
+                                    {{ $order->invoice_number ?? '-' }}
+                                </a>
                             </td>                        
                             <td>{{ optional($order->user)->full_name ?? optional($order->user)->name }}</td>
                             <td>Rp{{ number_format($order->total, 0, ',', '.') }}</td>
                             <td class="text-center">
                                 <span class="badge 
                                     @switch($order->status)
-                                        @case('pending') bg-warning @break
-                                        @case('approved') bg-info @break
-                                        @case('payment_verified') bg-success @break
-                                        @case('packing') bg-primary @break
-                                        @case('shipped') bg-secondary @break
-                                        @case('completed') bg-success @break
-                                        @case('cancelled') bg-danger @break
-                                        @case('cancelled_by_system') bg-danger @break
+                                        @case(Order::STATUS_WAITING_APPROVAL) bg-warning @break
+                                        @case(Order::STATUS_APPROVED) bg-info @break
+                                        @case(Order::STATUS_PENDING_PAYMENT) bg-success @break
+                                        @case(Order::STATUS_CONFIRMED) bg-success @break
+                                        @case(Order::STATUS_PROCESSING) bg-primary @break
+                                        @case(Order::STATUS_SHIPPED) bg-secondary @break
+                                        @case(Order::STATUS_DELIVERED) bg-success @break
+                                        @case(Order::STATUS_CANCELLED)
+                                        @case(Order::STATUS_CANCELLED_BY_SYSTEM)
+                                        @case(Order::STATUS_CANCELLED_BY_ADMIN) bg-danger @break
                                         @default bg-light
                                     @endswitch
                                 ">
                                     @switch($order->status)
-                                        @case('pending')
+                                        @case(Order::STATUS_WAITING_APPROVAL)
                                             Menunggu Konfirmasi
                                             @break
-                                        @case('approved')
+                                        @case(Order::STATUS_APPROVED)
                                             Menunggu Pembayaran
                                             @break
-                                        @case('payment_verified')
+                                        @case(Order::STATUS_PENDING_PAYMENT)
+                                            Menunggu Pembayaran
+                                            @break
+                                        @case(Order::STATUS_CONFIRMED)
                                             Pembayaran Diterima
                                             @break
-                                        @case('packing')
-                                            Diproses
+                                        @case(Order::STATUS_PROCESSING)
+                                            Sedang Dikemas
                                             @break
-                                        @case('shipped')
+                                        @case(Order::STATUS_SHIPPED)
                                             Dikirim
                                             @break
-                                        @case('completed')
+                                        @case(Order::STATUS_DELIVERED)
                                             Tiba di Tujuan
                                             @break
-                                        @case('cancelled')
+                                        @case(Order::STATUS_CANCELLED)
+                                        @case(Order::STATUS_CANCELLED_BY_SYSTEM)
+                                        @case(Order::STATUS_CANCELLED_BY_ADMIN)
                                             Dibatalkan
-                                            @break
-                                        @case('cancelled_by_system')
-                                            Dibatalkan oleh sistem
                                             @break
                                         @default
                                             {{ ucfirst($order->status) }}
@@ -134,6 +146,7 @@
                                     <span class="badge bg-danger ms-2">Baru</span>
                                 @endif
                             </td>
+                            
                             
                             <td>
                                 <!-- Tampilkan Detail Pesanan -->

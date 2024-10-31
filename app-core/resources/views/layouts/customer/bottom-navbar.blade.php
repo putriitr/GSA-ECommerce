@@ -1,3 +1,11 @@
+<?php
+use App\Models\Order;
+                                
+$waitingForPaymentCount = Order::where('user_id', auth()->id())
+        ->where('status', 'pending_payment')
+        ->count();
+?>
+
 <nav class="navbar navbar-light navbar-expand rounded-pill mb-3 ms-3 me-3 fixed-bottom d-lg-none shadow"
     style="background: #38a3a5;">
     <ul class="nav nav-justified w-100" id="myTab" role="tablist">
@@ -33,8 +41,14 @@
         <!-- Transactions -->
         <li class="nav-item" role="presentation">
             @if (Auth::check())
-                <a href="{{ route('customer.orders.index') }}" class="nav-link" id="transactions-tab" role="tab">
+                <a href="{{ route('customer.orders.index') }}" class="nav-link position-relative" id="transactions-tab" role="tab">
                     <span><i class="bi bi-receipt-cutoff"></i></span>
+                    @if($waitingForPaymentCount > 0)
+                        <span class="position-absolute top-0 start-120 translate-middle badge rounded-pill bg-danger">
+                            {{ $waitingForPaymentCount }}
+                            <span class="visually-hidden">Pesanan menunggu pembayaran</span>
+                        </span>
+                    @endif
                 </a>
             @else
                 <a href="{{ route('login.page') }}" class="nav-link" id="transactions-tab" role="tab">

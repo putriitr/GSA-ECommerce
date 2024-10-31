@@ -1,6 +1,12 @@
 @extends('layouts.customer.master')
 
 @section('content')
+
+@php
+    use App\Models\Order;
+@endphp
+
+
 <div class="container-fluid py-5 mt-5">
     <div class="container py-5 mt-5">
         <div class="row">
@@ -44,20 +50,32 @@
                 <div class="mb-4 d-flex align-items-center flex-wrap">
                     <!-- Adjust these links to pass the status as a parameter in the URL -->
                     <a href="{{ route('customer.orders.index', ['status' => 'semua']) }}" class="btn {{ $status == 'semua' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Semua</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'pending']) }}" class="btn {{ $status == 'pending' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Menunggu Konfirmasi</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'approved']) }}" class="btn {{ $status == 'approved' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2 position-relative">
-                        Menunggu Pembayaran
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_WAITING_APPROVAL]) }}" class="btn {{ $status == Order::STATUS_WAITING_APPROVAL ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Menunggu Konfirmasi</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_APPROVED]) }}" class="btn {{ $status == Order::STATUS_APPROVED ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Disetujui</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_PENDING_PAYMENT]) }}" class="btn {{ $status == Order::STATUS_PENDING_PAYMENT ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2 position-relative">Menunggu Pembayaran
                         @if($waitingForPaymentCount > 0)
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 {{ $waitingForPaymentCount }}
                                 <span class="visually-hidden">unread messages</span>
                             </span>
                         @endif
-                    </a>                    <a href="{{ route('customer.orders.index', ['status' => 'payment_verified']) }}" class="btn {{ $status == 'payment_verified' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Pembayaran Diterima</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'packing']) }}" class="btn {{ $status == 'packing' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Diproses</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'shipped']) }}" class="btn {{ $status == 'shipped' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dikirim</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'completed']) }}" class="btn {{ $status == 'completed' ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Tiba di Tujuan</a>
-                    <a href="{{ route('customer.orders.index', ['status' => 'cancelled']) }}"  class="btn {{ in_array($status, ['cancelled', 'cancelled_by_system']) ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2"> Dibatalkan </a>
+                    </a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_PROCESSING]) }}" class="btn {{ $status == Order::STATUS_PROCESSING ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Diproses</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_SHIPPED]) }}" class="btn {{ $status == Order::STATUS_SHIPPED ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dikirim</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_DELIVERED]) }}" class="btn {{ $status == Order::STATUS_DELIVERED ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Tiba di Tujuan</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_CANCELLED]) }}" class="btn {{ $status == Order::STATUS_CANCELLED ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dibatalkan</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_CANCELLED_BY_ADMIN]) }}" class="btn {{ $status == Order::STATUS_CANCELLED_BY_ADMIN ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dibatalkan oleh Admin</a>
+                    
+                    <a href="{{ route('customer.orders.index', ['status' => Order::STATUS_CANCELLED_BY_SYSTEM]) }}" class="btn {{ $status == Order::STATUS_CANCELLED_BY_SYSTEM ? 'btn-success' : 'btn-outline-secondary' }} rounded-pill me-2 mb-2">Dibatalkan oleh Sistem</a>
+
                     <a href="{{ route('customer.orders.index', ['status' => '']) }}" class="text-success ms-auto mt-2">Reset Filter</a>
                 </div>
                 
@@ -75,47 +93,52 @@
                                     <p class="mb-0 text-muted">Belanja {{ $order->created_at->format('d M Y') }}</p>
                                     <span class="badge 
                                         @switch($order->status)
-                                            @case('pending') bg-warning @break
-                                            @case('approved') bg-info @break
-                                            @case('payment_verified') bg-success @break
-                                            @case('packing') bg-primary @break
-                                            @case('shipped') bg-secondary @break
-                                            @case('completed') bg-success @break
-                                            @case('cancelled') bg-danger @break
-                                            @case('cancelled_by_system') bg-danger @break
+                                            @case(Order::STATUS_WAITING_APPROVAL) bg-warning @break
+                                            @case(Order::STATUS_APPROVED) bg-info @break
+                                            @case(Order::STATUS_PENDING_PAYMENT) bg-warning @break
+                                            @case(Order::STATUS_CONFIRMED) bg-success @break
+                                            @case(Order::STATUS_PROCESSING) bg-primary @break
+                                            @case(Order::STATUS_SHIPPED) bg-secondary @break
+                                            @case(Order::STATUS_DELIVERED) bg-success @break
+                                            @case(Order::STATUS_CANCELLED)
+                                            @case(Order::STATUS_CANCELLED_BY_ADMIN)
+                                            @case(Order::STATUS_CANCELLED_BY_SYSTEM) bg-danger @break
                                             @default bg-light
                                         @endswitch
                                     ">
                                         @switch($order->status)
-                                            @case('pending')
+                                            @case(Order::STATUS_WAITING_APPROVAL)
                                                 Menunggu Konfirmasi
                                                 @break
-                                            @case('approved')
+                                            @case(Order::STATUS_APPROVED)
                                                 Menunggu Pembayaran
                                                 @break
-                                            @case('payment_verified')
+                                            @case(Order::STATUS_PENDING_PAYMENT)
+                                                Menunggu Pembayaran Anda
+                                                @break
+                                            @case(Order::STATUS_CONFIRMED)
                                                 Pembayaran Diterima
                                                 @break
-                                            @case('packing')
+                                            @case(Order::STATUS_PROCESSING)
                                                 Diproses
                                                 @break
-                                            @case('shipped')
+                                            @case(Order::STATUS_SHIPPED)
                                                 Dikirim
                                                 @break
-                                            @case('completed')
+                                            @case(Order::STATUS_DELIVERED)
                                                 Tiba di Tujuan
                                                 @break
-                                            @case('cancelled')
+                                            @case(Order::STATUS_CANCELLED)
+                                            @case(Order::STATUS_CANCELLED_BY_ADMIN)
+                                            @case(Order::STATUS_CANCELLED_BY_SYSTEM)
                                                 Dibatalkan
-                                            @case('cancelled_by_system')
-                                                Dibatalkan oleh sistem
                                                 @break
                                             @default
                                                 {{ ucfirst($order->status) }}
                                         @endswitch
                                     </span>
                                     <small class="text-muted d-block">INV/{{ $order->invoice_number }}</small>
-                                </div>                                
+                                </div>                              
                                 <div class="text-end">
                                     <p class="mb-0"><strong>Total Belanja</strong></p>
                                     <p class="mb-0">Rp{{ number_format($order->total, 0, ',', '.') }}</p>

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class Order extends Model
 {
@@ -19,28 +21,39 @@ class Order extends Model
         'is_negotiated',
         'tracking_number',
         'shipping_service_id',
+        'waiting_approval_at',
         'approved_at',
-        'payment_verified_at',
-        'packing_at',
+        'pending_payment_at',
+        'confirmed_at',
+        'processing_at',
         'shipped_at',
-        'completed_at',
+        'delivered_at',
         'cancelled_at',
+        'cancelled_by_admin_at',
         'cancelled_by_system_at',
         'is_viewed',    
         'invoice_number',
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'approved_at' => 'datetime',
-        'payment_verified_at' => 'datetime',
-        'packing_at' => 'datetime',
-        'shipped_at' => 'datetime',
-        'completed_at' => 'datetime',
-        'cancelled_at' => 'datetime',
-        'cancelled_by_system_at' => 'datetime',
-    ];
+    const STATUS_WAITING_APPROVAL = 'waiting_approval';
+    const STATUS_APPROVED = 'approved'; // Status approved yang ditambahkan
+
+    const STATUS_PENDING_PAYMENT = 'pending_payment';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_SHIPPED = 'shipped';
+    const STATUS_DELIVERED = 'delivered';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_CANCELLED_BY_ADMIN = 'cancelled_by_admin';
+    const STATUS_CANCELLED_BY_SYSTEM = 'cancelled_by_system';
+
+    public function setStatus($status)
+    {
+        $this->update([
+            'status' => $status,
+            $status . '_at' => Carbon::now(),
+        ]);
+    }
 
     public function user()
     {

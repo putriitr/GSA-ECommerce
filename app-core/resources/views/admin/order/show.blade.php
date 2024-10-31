@@ -2,29 +2,54 @@
 
 @section('content')
 @php
+    use App\Models\Order;
+
     $statusMap = [
-        'pending' => 'Menunggu Persetujuan',
-        'approved' => 'Disetujui',
-        'payment_verified' => 'Pembayaran Terverifikasi',
-        'packing' => 'Sedang Dikemas',
-        'shipped' => 'Dikirim',
-        'completed' => 'Selesai',
-        'cancelled' => 'Dibatalkan',
-        'cancelled_by_system' => 'Dibatalkan oleh Sistem',
+        Order::STATUS_WAITING_APPROVAL => 'Menunggu Persetujuan',
+        Order::STATUS_APPROVED => 'Disetujui',
+        Order::STATUS_PENDING_PAYMENT => 'Menunggu Pembayaran',
+        Order::STATUS_CONFIRMED => 'Pembayaran Diterima',
+        Order::STATUS_PROCESSING => 'Sedang Dikemas',
+        Order::STATUS_SHIPPED => 'Dikirim',
+        Order::STATUS_DELIVERED => 'Selesai',
+        Order::STATUS_CANCELLED => 'Dibatalkan',
+        Order::STATUS_CANCELLED_BY_SYSTEM => 'Dibatalkan oleh Sistem',
+        Order::STATUS_CANCELLED_BY_ADMIN => 'Dibatalkan oleh Admin',
     ];
 
     $statusBgClasses = [
-            'pending' => 'bg-warning text-dark',
-            'approved' => 'bg-primary text-white',
-            'payment_verified' => 'bg-success text-white',
-            'packing' => 'bg-info text-white',
-            'shipped' => 'bg-primary text-white',
-            'completed' => 'bg-success text-white',
-            'cancelled' => 'bg-danger text-white',
-            'cancelled_by_system' => 'bg-secondary text-white',
-        ];
-        
+        Order::STATUS_WAITING_APPROVAL => 'bg-warning text-dark',
+        Order::STATUS_APPROVED => 'bg-primary text-white',
+        Order::STATUS_PENDING_PAYMENT => 'bg-success text-white',
+        Order::STATUS_CONFIRMED => 'bg-success text-white',
+        Order::STATUS_PROCESSING => 'bg-info text-white',
+        Order::STATUS_SHIPPED => 'bg-primary text-white',
+        Order::STATUS_DELIVERED => 'bg-success text-white',
+        Order::STATUS_CANCELLED => 'bg-danger text-white',
+        Order::STATUS_CANCELLED_BY_SYSTEM => 'bg-secondary text-white',
+        Order::STATUS_CANCELLED_BY_ADMIN => 'bg-danger text-white',
+    ];
 @endphp
+
+
+    <!-- Notification for Error Messages -->
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
 <div class="container py-5">
     <!-- Judul dan Tombol Aksi -->
@@ -33,15 +58,23 @@
     
         <!-- Aksi untuk Admin -->
         <div class="d-flex align-items-center gap-2">
-            @if($order->status === 'pending')
+            @if($order->status === Order::STATUS_WAITING_APPROVAL)
                 <form action="{{ route('admin.orders.approve', $order->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-success btn-sm">Setujui Pesanan</button>
                 </form>
             @endif
+
+            @if($order->status === Order::STATUS_APPROVED)
+            <form action="{{ route('customer.orders.payment', $order->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-success btn-sm">Berikan Akses Pembayaran</button>
+            </form>
+            @endif
     
-            @if($order->status === 'payment_verified')
+            @if($order->status === 'confirmed')
                 <form action="{{ route('admin.mark.packing', $order->id) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -49,17 +82,23 @@
                 </form>
             @endif
     
-            @if($order->status === 'packing')
+            @if($order->status === 'processing')
                 <!-- Tombol untuk modal pengiriman -->
                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#shippingModal">
                     Tandai Sebagai Dikirim
                 </button>
             @endif
+
+            @if($order->status === 'delivered')
+                <!-- Tombol untuk modal pengiriman -->
+                <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
+            @endif
+
         </div>
     </div>
     
 
-    @if($order->status === 'approved')
+    @if($order->status === 'pending_payment')
         <div class="alert alert-info alert-dismissible fade show" role="alert">
             <strong>Menunggu customer melakukan pembayaran</strong> dan menunggu persetujuan admin.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
@@ -78,20 +117,21 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Informasi Pesanan</h5>
             
-            @if($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system')
-                <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" class="mb-0">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="btn btn-danger btn-sm">Batalkan Pesanan</button>
-                </form>
+            @if($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system' && $order->status !== 'delivered')
+            <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" class="mb-0">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-danger btn-sm">Batalkan Pesanan</button>
+            </form>
             @endif
+
         </div>
         
         <div class="card-body">
             <table class="table table-striped">
                 <tr>
                     <th>Nama Pelanggan</th>
-                    <td>{{ $order->user->full_name }}</td>
+                    <td>{{ $order->user->full_name ?? $order->user->name }}</td>
                 </tr>
                 <tr>
                     <th>Nomor Invoice</th>

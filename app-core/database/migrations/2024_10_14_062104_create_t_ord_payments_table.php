@@ -14,8 +14,15 @@ return new class extends Migration
         Schema::create('t_ord_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('t_orders')->onDelete('cascade');
-            $table->enum('status', ['pending', 'approved', 'rejected']);
-            $table->string('payment_proof'); // File path to payment proof     
+            $table->enum('status', ['pending', 'pading', 'paid', 'failed', 'refunded', 'partially_refunded']);
+            $table->string('payment_proof');
+            $table->timestamp('unpaid_at')->nullable();
+            $table->timestamp('pending_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamp('failed_at')->nullable();
+            $table->timestamp('refunded_at')->nullable();
+            $table->timestamp('partially_refunded_at')->nullable();
+   
             $table->boolean('is_viewed')->default(false);   
             $table->timestamps();
         });

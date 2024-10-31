@@ -18,22 +18,27 @@ return new class extends Migration
             $table->decimal('total', 15, 2);
             $table->string('invoice_number')->nullable();
             $table->enum('status', [
-                'pending',              
-                'approved',             
-                'payment_verified',     
-                'packing',              
-                'shipped',              
-                'completed',            
-                'cancelled',
-                'cancelled_by_system',
-            ])->default('pending');
+                'waiting_approval',          // Menunggu Persetujuan Admin
+                'approved',          
+                'pending_payment',           // Setelah disetujui, menunggu pembayaran
+                'confirmed',                 // Pesanan dan pembayaran dikonfirmasi
+                'processing',                // Pesanan diproses oleh penjual
+                'shipped',                   // Pesanan dalam pengiriman
+                'delivered',                 // Pesanan telah diterima
+                'cancelled',                 // Pesanan dibatalkan oleh pembeli
+                'cancelled_by_admin',        // Pesanan dibatalkan admin
+                'cancelled_by_system',       // Pesanan dibatalkan sistem
+            ])->default('waiting_approval');
             $table->string('tracking_number')->nullable();
+            $table->timestamp('waiting_approval_at')->nullable();
             $table->timestamp('approved_at')->nullable();
-            $table->timestamp('payment_verified_at')->nullable();
-            $table->timestamp('packing_at')->nullable();
+            $table->timestamp('pending_payment_at')->nullable();
+            $table->timestamp('confirmed_at')->nullable();
+            $table->timestamp('processing_at')->nullable();
             $table->timestamp('shipped_at')->nullable();
-            $table->timestamp('completed_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
+            $table->timestamp('cancelled_by_admin_at')->nullable();
             $table->timestamp('cancelled_by_system_at')->nullable();
             $table->boolean('is_viewed')->default(false);
             

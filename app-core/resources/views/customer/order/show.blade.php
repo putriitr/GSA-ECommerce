@@ -1,69 +1,92 @@
 @extends('layouts.customer.master')
 
 @section('content')
+
+<?php 
+use Carbon\Carbon;
+use App\Models\Parameter; // Memanggil model di bagian atas
+use App\Models\Order;
+
+// Mengambil semua data dari tabel parameters
+$parameters = Parameter::first();
+?>
+
 <div class="container-fluid py-5 mt-5">
     <div class="container py-5">
         <div class="row">
             <div class="col-md-12">
+                
                 <!-- Order Details -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-5">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="fw-bold">Order Details (#{{ $order->id }})</h4>
-                            @if(in_array($order->status, ['approved', 'packing', 'shipped', 'completed']))
+                            @if(in_array($order->status, ['approved', 'pending_payment', 'confirmed', 'processing','shipped','delivered','cancelled']))
                                 <a href="{{ route('customer.order.invoice', $order->id) }}" class="btn btn-primary">Download Invoice</a>
                             @endif
                         </div>
                         <p class="fw-bold">Invoice Number: {{ $order->invoice_number }}</p>
                         <p>Status: 
-                            @if ($order->status == 'pending')
-                                <span class="badge bg-warning">Pending</span>
-                            @elseif ($order->status == 'approved')
-                                <span class="badge bg-info">Approved</span>
-                            @elseif ($order->status == 'shipped')
-                                <span class="badge bg-primary">Shipped</span>
-                            @elseif ($order->status == 'completed')
-                                <span class="badge bg-success">Completed</span>
-                            @elseif ($order->status == 'cancelled')
-                                <span class="badge bg-warning">Cancelled</span>
-                            @elseif ($order->status == 'cancelled_by_system')
-                                <span class="badge bg-danger">Cancelled By System</span>
+                            @if ($order->status == Order::STATUS_WAITING_APPROVAL)
+                                <span class="badge bg-warning">Menunggu Persetujuan</span>
+                            @elseif ($order->status == Order::STATUS_APPROVED)
+                                <span class="badge bg-info">Disetujui</span>
+                            @elseif ($order->status == Order::STATUS_PENDING_PAYMENT)
+                                <span class="badge bg-warning">Menunggu Pembayaran</span>
+                            @elseif ($order->status == Order::STATUS_CONFIRMED)
+                                <span class="badge bg-success">Dikonfirmasi</span>
+                            @elseif ($order->status == Order::STATUS_PROCESSING)
+                                <span class="badge bg-primary text-white">Diproses</span>
+                            @elseif ($order->status == Order::STATUS_SHIPPED)
+                                <span class="badge bg-primary">Dikirim</span>
+                            @elseif ($order->status == Order::STATUS_DELIVERED)
+                                <span class="badge bg-success">Tiba di Tujuan</span>
+                            @elseif ($order->status == Order::STATUS_CANCELLED)
+                                <span class="badge bg-warning">Dibatalkan</span>
+                            @elseif ($order->status == Order::STATUS_CANCELLED_BY_ADMIN)
+                                <span class="badge bg-danger">Dibatalkan oleh Admin</span>
+                            @elseif ($order->status == Order::STATUS_CANCELLED_BY_SYSTEM)
+                                <span class="badge bg-danger">Dibatalkan oleh Sistem</span>
                             @else
                                 <span class="badge bg-secondary">{{ ucfirst($order->status) }}</span>
                             @endif
                         </p>
+                        
 
                         <!-- Display timestamps for status changes -->
                         <div class="mt-3">
-                            <h6 class="fw-bold">Status History:</h6>
+                            <h6 class="fw-bold">Riwayat Status:</h6>
                             <ul class="list-unstyled">
                                 @if($order->created_at)
-                                    <li>Order Placed: <strong>{{ $order->created_at->format('d M Y, H:i') }}</strong></li>
+                                    <li>Pesanan Dibuat: <strong>{{ $order->created_at->format('d M Y, H:i') }}</strong></li>
                                 @endif
                                 @if($order->approved_at)
-                                    <li>Approved: <strong>{{ $order->approved_at->format('d M Y, H:i') }}</strong></li>
+                                    <li>Disetujui: <strong>{{ Carbon::parse($order->approved_at)->format('d M Y, H:i') }}</strong></li>
                                 @endif
-                                @if($order->payment_verified_at)
-                                    <li>Payment Verified: <strong>{{ $order->payment_verified_at->format('d M Y, H:i') }}</strong></li>
+                                @if($order->pending_payment_at)
+                                    <li>Menunggu Pembayaran: <strong>{{ Carbon::parse($order->pending_payment_at)->format('d M Y, H:i') }}</strong></li>
                                 @endif
-                                @if($order->packing_at)
-                                    <li>Packing: <strong>{{ $order->packing_at->format('d M Y, H:i') }}</strong></li>
+                                @if($order->processing_at)
+                                    <li>Diproses: <strong>{{ Carbon::parse($order->processing_at)->format('d M Y, H:i') }}</strong></li>
                                 @endif
                                 @if($order->shipped_at)
-                                    <li>Shipped: <strong>{{ $order->shipped_at->format('d M Y, H:i') }}</strong></li>
+                                    <li>Dikirim: <strong>{{ Carbon::parse($order->shipped_at)->format('d M Y, H:i') }}</strong></li>
                                 @endif
-                                @if($order->completed_at)
-                                    <li>Completed: <strong>{{ $order->completed_at->format('d M Y, H:i') }}</strong></li>
+                                @if($order->delivered_at)
+                                    <li>Selesai: <strong>{{ Carbon::parse($order->delivered_at)->format('d M Y, H:i') }}</strong></li>
                                 @endif
                                 @if($order->cancelled_at)
-                                    <li>Cancelled: <strong>{{ $order->cancelled_at->format('d M Y, H:i') }}</strong></li>
+                                    <li>Dibatalkan: <strong>{{ Carbon::parse($order->cancelled_at)->format('d M Y, H:i') }}</strong></li>
+                                @endif
+                                @if($order->cancelled_by_admin_at)
+                                    <li>Dibatalkan oleh Admin: <strong>{{ Carbon::parse($order->cancelled_by_admin_at)->format('d M Y, H:i') }}</strong></li>
                                 @endif
                                 @if($order->cancelled_by_system_at)
-                                <li>Cancelled: <strong>{{ $order->cancelled_by_system_at->format('d M Y, H:i') }}</strong></li>
-                            @endif
-
+                                    <li>Dibatalkan oleh Sistem: <strong>{{ Carbon::parse($order->cancelled_by_system_at)->format('d M Y, H:i') }}</strong></li>
+                                @endif
                             </ul>
                         </div>
+                        
 
                         <p class="h5 mt-3">Total Amount: <strong class="text-primary">Rp{{ number_format($order->total, 0, ',', '.') }}</strong></p>
 
@@ -90,9 +113,9 @@
                             </tbody>
                         </table>
 
-                        @if($order->status === 'completed')
-                        <div class="mt-5">
-                            <h5 class="fw-bold">Write a Review</h5>
+                        @if($order->status === 'delivered')
+                        <div class="mt-4 bg-light p-4 rounded mb-4">
+                            <h5 class="fw-bold">Give a Review</h5>
                             <ul class="list-unstyled">
                                 @foreach($order->items as $item)
                                     @php
@@ -104,7 +127,7 @@
                                     @endphp
 
                                     @if(!$reviewExists)
-                                        <li>
+                                        <li class="mb-2">
                                             <a href="{{ route('customer.product.show', ['slug' => $item->product->slug]) }}?order={{ $order->id }}" class="btn btn-outline-primary">
                                                 Review {{ $item->product->name }}
                                             </a>
@@ -142,9 +165,15 @@
                             </form>
                         </div>
                         @endif
+                        
+                        @if($order->status === 'approved')
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Mohon Bersabar!</strong> Menunggu Admin Memberikan Akses Pembayaran
+                        </div>
+                        @endif
 
                         <!-- Payment Proof Submission -->
-                        @if($order->status == 'approved')
+                        @if($order->status == 'pending_payment')
                             <div class="mt-5">
                                 <h5 class="fw-bold">Submit Payment Proof</h5>
                                 <div class="alert alert-warning" role="alert">
@@ -202,6 +231,32 @@
                             </script>
                         @endif
 
+                        @if($order->payments->where('status', 'pending')->isNotEmpty())
+                            <div class="alert alert-warning mt-2" role="alert">
+                                <strong>Mohon Bersabar!</strong> 
+                                Kami sedang memproses bukti pembayaran Anda. Jika Anda merasa telah menunggu terlalu lama, 
+                                silakan hubungi admin melalui 
+                                <a href="https://wa.me/{{ $parameters->nomor_wa }}" target="_blank">
+                                    {{ $parameters->nomor_wa }}
+                                </a>.
+                            </div>
+                        @endif
+
+
+                        @if($order->payments->where('status', 'failed')->isNotEmpty())
+                        @if($order->status === 'payment_pending')
+                            <div class="alert alert-danger mt-2" role="alert">
+                                <strong>Hati Hati!</strong> Silahkan lakukan pembayaran kembali, dan Anda hanya memiliki 1 kesempatan lagi sebelum pesanan Anda dibatalkan oleh sistem karena terdeteksi kejanggalan dalam pembayaran Anda.
+                            </div>
+                        @elseif($order->status === 'cancelled_by_system')
+                            <div class="alert alert-danger mt-2" role="alert">
+                                <strong>Pesanan Dibatalkan!</strong>  Pesanan Anda telah dibatalkan oleh sistem karena terdeteksi adanya aktivitas yang mencurigakan dan berpotensi merugikan. Mohon diperhatikan untuk transaksi berikutnya.
+                            </div>
+                        @endif
+                    @endif
+                    
+                    
+
 
 
 
@@ -241,10 +296,9 @@
                         <div class="mt-5">
                             <h5 class="fw-bold">Shipping Information</h5>
                             <p>Shipping Service: <strong>{{ $order->shippingService->name ?? 'Not specified' }}</strong></p>
-                            <p>Tracking Number: <strong>{{ $order->tracking_number }}</strong></p>
+                            <p>Tracking Number: <strong class="bg-warning rounded">{{ $order->tracking_number }}</strong></p>
                         </div>
                         @endif
-
                     </div>
                 </div>
             </div>

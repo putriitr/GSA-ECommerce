@@ -1,3 +1,12 @@
+
+<?php
+                                use App\Models\Order;
+                                
+                                $waitingForPaymentCount = Order::where('user_id', auth()->id())
+                                    ->where('status', 'pending_payment')
+                                    ->count();
+                                ?>
+
 <div class="container-fluid fixed-top">
     <div class="container-fluid topbar bg-primary d-none d-lg-block px-5">
         <div class="d-flex justify-content-between">
@@ -118,7 +127,12 @@
                         <div class="dropdown">
                             <a href="#" class="d-flex align-items-center my-auto dropdown-toggle text-dark" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user fa-2x me-2 text-primary"></i>
-                                <span class="d-none d-md-inline">Halo, {{ explode(' ', Auth::user()->name)[0] }}</span>
+                                    <span class="d-none d-md-inline">Halo, {{ explode(' ', Auth::user()->name)[0] }}</span>
+                                    @if($waitingForPaymentCount > 0) {{-- Misalnya, variabel ini berisi jumlah pesan baru --}}
+                                        <span class="badge rounded-pill bg-danger me-2">
+                                            {{ $waitingForPaymentCount }}
+                                        </span>
+                                    @endif
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-lg rounded-lg" aria-labelledby="dropdownUser" style="min-width: 200px; border-radius: 15px;">
                                 <!-- Profile Section -->
@@ -154,11 +168,20 @@
                                         <i class="fas fa-user me-2"></i> {{ __('navbar.profile') }}
                                     </a>
                                 </li>
+                                
                                 <li>
-                                    <a class="dropdown-item py-2" href="{{ route('customer.orders.index') }}">
+                                    <a class="dropdown-item py-2 position-relative" href="{{ route('customer.orders.index') }}">
                                         <i class="fas fa-box me-2"></i> {{ __('navbar.orders') }}
+                                        @if($waitingForPaymentCount > 0)
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                {{ $waitingForPaymentCount }}
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                        @endif
                                     </a>
                                 </li>
+                                
+
                         
                                 <li><hr class="dropdown-divider"></li>
                                 

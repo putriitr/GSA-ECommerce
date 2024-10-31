@@ -25,7 +25,6 @@ return new class extends Migration
             $table->boolean('is_negotiable')->default(false); 
             $table->enum('status_published', ['Published', 'Unpublished'])->default('Unpublished'); 
             $table->timestamps();
-
             $table->foreign('category_id')->references('id')->on('t_p_category')->onDelete('cascade');
         });
     }
