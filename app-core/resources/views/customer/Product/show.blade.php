@@ -86,6 +86,43 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         
                         <div style=" #ddd; border-radius: 8px; padding: 16px; width: 100%; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);" class="mb-2">
                             <h5 style="line-height: 1.2; color: #333; margin-bottom: 5px;">{{ $product->name }}</h5>
+                            @php
+                                // Tentukan harga akhir yang akan ditampilkan
+                                $finalPrice = $product->price;
+                                $isBigSaleProduct = isset($bigSales) && $bigSales->products->contains($product->id);
+
+                                if ($isBigSaleProduct) {
+                                    // Jika produk ada dalam Big Sale, terapkan diskon dari Big Sale
+                                    if ($bigSales->discount_amount) {
+                                        $finalPrice = $product->price - $bigSales->discount_amount;
+                                    } elseif ($bigSales->discount_percentage) {
+                                        $finalPrice = $product->price - ($bigSales->discount_percentage / 100) * $product->price;
+                                    }
+                                } elseif ($product->discount_price > 0) {
+                                    // Jika produk tidak dalam Big Sale, gunakan harga diskon produk
+                                    $finalPrice = $product->discount_price;
+                                }
+
+                                // Hitung persentase diskon untuk ditampilkan
+                                $discountPercentage = ($product->price > $finalPrice) ? round((($product->price - $finalPrice) / $product->price) * 100) : null;
+                            @endphp
+
+                            <div class="d-flex mb-2">
+                                <h5 class="fw-bold me-2">
+                                    @if ($finalPrice < $product->price)
+                                        {{-- Tampilkan harga dengan diskon jika ada Big Sale --}}
+                                        <span class="text-decoration-line-through text-muted">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                        <span class="text-danger fw-bold" style="font-size: 12px;">
+                                            {{ __('shop.discount', ['percentage' => $discountPercentage]) }}
+                                        </span> <br>
+                                        <span class="text-danger fw-bold mb-2">Rp{{ number_format($finalPrice, 0, ',', '.') }}</span>
+                                    @else
+                                        {{-- Jika tidak ada diskon, tampilkan harga biasa --}}
+                                        <span class="text-dark text-start fs-6 mb-2">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                    @endif
+                                </h5>
+                            </div>
+
                             <div style="display: flex; align-items: center; margin-bottom: 8px;">
                                 @php
                                     // Average rating calculation
@@ -370,37 +407,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         
                     </div>
                     
-                    <div class="col-lg-12">
-                        <h4 class="mb-4">{{ __('product.related_products') }}</h4>
-                        @foreach($randomProducts as $product)
-                            <a href="{{ route('customer.product.show', $product->slug) }}" class="text-decoration-none" style="color: inherit; cursor: pointer;">
-                                <div class="d-flex align-items-center justify-content-start mb-3">
-                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                        <img src="{{ $product->images->isNotEmpty() ? asset($product->images->first()->image) : asset('assets/default/image/carousel_default.jpg') }}" class="img-fluid rounded" alt="{{ $product->name }}">
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-2">{{ $product->name }}</h6>
-                                        <div class="d-flex align-items-center mb-2">
-                                            {{-- Display full stars --}}
-                                            <i class="fa fa-star" style="font-size: 16px; color: #ffc107;"></i>
-
-                    
-                                            {{-- Display the numeric average rating --}}
-                                            <span class="ms-2" style="font-size: 14px; color: #333;">
-                                                {{ number_format($averageRating, 1) }} / 5
-                                            </span>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            <h5 class="fw-bold me-2">Rp{{ number_format($product->discount_price ?? $product->price, 0, ',', '.') }}</h5>
-                                            @if($product->discount_price)
-                                                <h5 class="text-danger text-decoration-line-through">Rp{{ number_format($product->price, 0, ',', '.') }}</h5>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
+                    x
                     <div class="col-lg-12">
                         <div class="position-relative">
                             @php
@@ -671,18 +678,15 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Clone nodes to prevent multiple event listeners
         var minusBtn = document.querySelector('.btn-minus');
         var plusBtn = document.querySelector('.btn-plus');
 
         minusBtn.replaceWith(minusBtn.cloneNode(true)); // Clone the minus button
         plusBtn.replaceWith(plusBtn.cloneNode(true));   // Clone the plus button
 
-        // Get the cloned buttons (now without any previous event listeners)
         var newMinusBtn = document.querySelector('.btn-minus');
         var newPlusBtn = document.querySelector('.btn-plus');
 
-        // Attach event listeners to new cloned buttons
         newMinusBtn.addEventListener('click', function () {
             var input = document.getElementById('quantity');
             var quantity = parseInt(input.value);
@@ -697,14 +701,14 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
             input.value = quantity + 1;
         });
 
-        // Add to cart functionality with AJAX
+        // Ensure product_id is correctly passed when adding to cart
         document.getElementById('add-to-cart').addEventListener('click', function (e) {
             e.preventDefault();
 
-            var productId = {{ $product->id }}; // Replace with actual product ID from backend
+            var productId = {{ $product->id }}; // Ensure product_id is correct
             var quantity = document.getElementById('quantity').value;
 
-            // Send AJAX request
+            // Send AJAX request to add to cart
             fetch("{{ route('cart.add') }}", {
                 method: 'POST',
                 headers: {
@@ -719,6 +723,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Show success message
                     document.getElementById('cart-message').classList.remove('d-none');
                     setTimeout(() => {
                         document.getElementById('cart-message').classList.add('d-none');
@@ -731,6 +736,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
         });
     });
 </script>
+
 
 
 @endsection

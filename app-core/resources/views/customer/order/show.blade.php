@@ -174,62 +174,125 @@ $parameters = Parameter::first();
 
                         <!-- Payment Proof Submission -->
                         @if($order->status == 'pending_payment')
-                            <div class="mt-5">
-                                <h5 class="fw-bold">Submit Payment Proof</h5>
-                                <div class="alert alert-warning" role="alert">
-                                    <strong>Penting!</strong> Jika Anda mengupload atau mengirim bukti pembayaran yang salah, pesanan Anda akan dibatalkan secara otomatis oleh sistem. Kami tidak bertanggung jawab atas kesalahan transfer.
+                        <div class="mt-5">
+                            <h5 class="fw-bold">Upload Bukti Pembayaran</h5>
+                    
+                            <!-- Notifikasi mengenai konsekuensi pembayaran -->
+                            <div class="alert alert-warning" role="alert">
+                                <strong>Penting!</strong>
+                                Harap memastikan bukti pembayaran Anda benar. 
+                                Kesalahan transfer, termasuk:
+                                <ul>
+                                    <li>Jumlah pembayaran kurang</li>
+                                    <li>Jumlah pembayaran lebih</li>
+                                    <li>Kesalahan nomor rekening tujuan</li>
+                                </ul>
+                                akan menyebabkan sistem secara otomatis <strong>membatalkan pesanan Anda</strong>. 
+                                Kami tidak bertanggung jawab atas kekurangan atau kelebihan transfer.
+                            </div>
+                    
+                            @php
+                                // Hitung sisa waktu pembayaran (48 jam)
+                                $approvedTime = $order->approved_at; // Waktu order disetujui
+                                $timeLimit = 48 * 60 * 60; // 48 jam dalam detik
+                                $currentTime = now(); // Waktu saat ini
+                                $elapsedTime = $currentTime->diffInSeconds($approvedTime); // Waktu yang telah berlalu
+                                $remainingTime = max(0, $timeLimit - $elapsedTime); // Sisa waktu
+                                $hours = floor($remainingTime / 3600); // Jam tersisa
+                    
+                                // Cek jumlah pembayaran yang diupload
+                                $paymentAttempts = $order->payments->count();
+                                $latestPaymentStatus = $order->payments->last()->status ?? null; // Status pembayaran terakhir
+                            @endphp
+                    
+                            <!-- Tampilkan Error -->
+                            @if(session('error'))
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Error:</strong> {{ session('error') }}
                                 </div>
+                            @endif
+                    
+                            <!-- Tampilkan Validation Errors -->
+                            @if($errors->any())
+                                <div class="alert alert-danger rounded shadow-sm p-3" role="alert">
+                                    <h5 class="fw-bold text-danger mb-2">
+                                        <i class="fas fa-exclamation-circle me-2"></i> Terjadi Kesalahan
+                                    </h5>
+                                    <ul class="mb-0 ps-3">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
-                                @php
-                                    // Calculate the time left for payment (48 hours)
-                                    $approvedTime = $order->approved_at; // The timestamp when the order was approved
-                                    $timeLimit = 48 * 60 * 60; // 48 hours in seconds
-                                    $currentTime = now(); // Current timestamp
-                                    $elapsedTime = $currentTime->diffInSeconds($approvedTime); // Time elapsed since approved
-                                    $remainingTime = max(0, $timeLimit - $elapsedTime); // Calculate remaining time
-                                    $hours = floor($remainingTime / 3600); // Calculate hours only
-                                @endphp
-
+                    
+                            @if($paymentAttempts == 0 || ($latestPaymentStatus === 'failed' && $paymentAttempts < 2))
+                                <!-- Notifikasi jika pembayaran gagal -->
+                                @if($latestPaymentStatus === 'failed')
+                                    <div class="alert alert-danger" role="alert">
+                                        <strong>Penting!</strong> Bukti pembayaran Anda sebelumnya ditolak. Mohon upload ulang bukti pembayaran dengan benar. Anda memiliki kesempatan terakhir untuk menyelesaikan pembayaran.
+                                    </div>
+                                @endif
+                    
+                                <!-- Timer sisa waktu -->
                                 <div id="countdown-timer" class="mt-2">
                                     Waktu tersisa untuk menyelesaikan pembayaran: <strong>{{ $hours }} jam</strong>.
-                                </div> <!-- Countdown timer display -->
-
+                                </div>
+                    
+                                <!-- Form upload -->
                                 <form action="{{ route('customer.payment.submit', $order->id) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="payment_proof" class="form-label">Upload Payment Proof</label>
+                                        <label for="payment_proof" class="form-label">Upload Bukti Pembayaran</label>
                                         <input type="file" class="form-control" name="payment_proof" required>
                                     </div>
                                     <button type="submit" class="btn btn-success">Submit Payment</button>
                                 </form>
-                            </div>
-
-                            <script>
-                                // Set the countdown time in seconds for this order
-                                let remainingTime = {{ $remainingTime }};
-                                
-                                function updateTimer() {
-                                    // Calculate hours only
-                                    const hours = Math.floor(remainingTime / 3600);
-
-                                    // Display the countdown timer
-                                    document.getElementById('countdown-timer').innerHTML = 
-                                        `Waktu tersisa untuk menyelesaikan pembayaran: <strong>${hours} jam</strong>.`;
-
-                                    // If time is up, you can implement logic to handle this case
-                                    if (remainingTime <= 0) {
-                                        clearInterval(timerInterval);
-                                        // Logic to cancel the order can be added here (optional)
-                                    }
-
-                                    remainingTime--; // Decrease the remaining time by one second
+                            @elseif($paymentAttempts >= 2 && $latestPaymentStatus === 'failed')
+                                <!-- Notifikasi jika user sudah melebihi batas upload -->
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Pembayaran Gagal!</strong> Anda telah melewati batas maksimum upload bukti pembayaran. Silakan hubungi admin untuk informasi lebih lanjut.
+                                </div>
+                            @else
+                                <!-- Notifikasi jika pembayaran sedang diproses -->
+                                <div class="alert alert-success" role="alert">
+                                    <strong>Pembayaran Diproses!</strong> Bukti pembayaran Anda telah diunggah dan sedang menunggu konfirmasi admin.
+                                </div>
+                            @endif
+                        </div>
+                    
+                        <!-- Timer Script -->
+                        <script>
+                            // Set waktu hitung mundur dalam detik
+                            let remainingTime = {{ $remainingTime }};
+                    
+                            function updateTimer() {
+                                // Hitung jam
+                                const hours = Math.floor(remainingTime / 3600);
+                    
+                                // Tampilkan timer
+                                document.getElementById('countdown-timer').innerHTML =
+                                    `Waktu tersisa untuk menyelesaikan pembayaran: <strong>${hours} jam</strong>.`;
+                    
+                                // Hentikan jika waktu habis
+                                if (remainingTime <= 0) {
+                                    clearInterval(timerInterval);
+                                    document.getElementById('countdown-timer').innerHTML =
+                                        `<strong>Waktu telah habis untuk pembayaran.</strong>`;
                                 }
+                    
+                                remainingTime--; // Kurangi waktu per detik
+                            }
+                    
+                            // Perbarui timer setiap detik
+                            const timerInterval = setInterval(updateTimer, 1000);
+                            updateTimer(); // Panggil sekali untuk menampilkan langsung
+                        </script>
+                    @endif
+                    
+                    
 
-                                // Update timer every second
-                                const timerInterval = setInterval(updateTimer, 1000);
-                                updateTimer(); // Initial call to display timer immediately
-                            </script>
-                        @endif
 
                         @if($order->payments->where('status', 'pending')->isNotEmpty())
                             <div class="alert alert-warning mt-2" role="alert">

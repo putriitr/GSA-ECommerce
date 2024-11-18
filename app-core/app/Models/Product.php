@@ -50,6 +50,12 @@ class Product extends Model
                     ->where('status', 'delivered');
     }
 
+    public function bigSales()
+    {
+        return $this->belongsToMany(BigSale::class, 't_bigsales_product', 'product_id', 'bigsale_id');
+    }
+
+
 
 
 }

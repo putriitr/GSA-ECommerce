@@ -748,3 +748,44 @@ body {
 
 
 
+.gsac-btn {
+    background-color: #ffc107; /* Warna kuning untuk tombol */
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    width: 100%; /* Tombol penuh pada mobile */
+}
+
+.gsac-btn:hover {
+    background-color: #ffca2c; /* Warna hover */
+}
+
+@media (min-width: 768px) {
+    .gsac-btn {
+        width: auto; /* Tombol menjadi lebar normal di desktop */
+    }
+}
+
+.gsac-btn-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+}
+
+.gsac-btn-close:hover {
+    color: #555;
+}
+
+

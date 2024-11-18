@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer\Order;
 
 use App\Http\Controllers\Controller;
+use App\Models\BigSale;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -69,9 +70,34 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             // Hitung total
-            $total = $cartItems->sum(function ($item) {
-                return $item->quantity * ($item->product->discount_price ?? $item->product->price);
-            });
+            $total = 0;
+            foreach ($cartItems as $item) {
+                $product = $item->product;
+
+                // Get active Big Sale for the product
+                $activeBigSale = BigSale::where('status', true)
+                    ->where('start_time', '<=', now())
+                    ->where('end_time', '>=', now())
+                    ->whereHas('products', function ($query) use ($product) {
+                        $query->where('t_product.id', $product->id);
+                    })
+                    ->first();
+
+                // If the product is in an active Big Sale, apply Big Sale price
+                if ($activeBigSale) {
+                    if ($activeBigSale->discount_amount) {
+                        $productPrice = $product->price - $activeBigSale->discount_amount; // Apply flat discount
+                    } elseif ($activeBigSale->discount_percentage) {
+                        $productPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price; // Apply percentage discount
+                    }
+                } else {
+                    // If not in Big Sale, use the discount_price or regular price
+                    $productPrice = $product->discount_price ?? $product->price;
+                }
+
+                // Add to total
+                $total += $item->quantity * $productPrice;
+            }
 
             // Buat pesanan
             $order = Order::create([
@@ -83,15 +109,37 @@ class OrderController extends Controller
 
             // Tambahkan item ke pesanan
             foreach ($cartItems as $item) {
+                $product = $item->product;
+                $productPrice = $product->discount_price ?? $product->price;
+
+                // Check if the product is in an active Big Sale
+                $activeBigSale = BigSale::where('status', true)
+                    ->where('start_time', '<=', now())
+                    ->where('end_time', '>=', now())
+                    ->whereHas('products', function ($query) use ($product) {
+                        $query->where('t_product.id', $product->id);
+                    })
+                    ->first();
+
+                if ($activeBigSale) {
+                    // Apply Big Sale price
+                    if ($activeBigSale->discount_amount) {
+                        $productPrice = $product->price - $activeBigSale->discount_amount;
+                    } elseif ($activeBigSale->discount_percentage) {
+                        $productPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+                    }
+                }
+
+                // Add product item to the order
                 $order->items()->create([
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
-                    'price' => $item->product->discount_price ?? $item->product->price,
-                    'total' => $item->quantity * ($item->product->discount_price ?? $item->product->price),
+                    'price' => $productPrice,
+                    'total' => $item->quantity * $productPrice,
                 ]);
 
                 // Kurangi stok produk
-                $item->product->decrement('stock', $item->quantity);
+                $product->decrement('stock', $item->quantity);
             }
 
             // Kosongkan keranjang setelah checkout
@@ -106,30 +154,33 @@ class OrderController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
         }
-        
     }
+
 
 
     // Submit payment proof
     public function submitPaymentProof(Request $request, $orderId)
-    {
-    // Find the order
+{
+    // Cari pesanan berdasarkan ID
     $order = Order::find($orderId);
 
-    // Check if the order is cancelled
+    // Cek apakah pesanan sudah dibatalkan
     if ($order->status === Order::STATUS_CANCELLED_BY_SYSTEM) {
-        return back()->with('info', 'Your order has been cancelled due to non-payment.');
+        return back()->with('info', 'Pesanan Anda telah dibatalkan karena tidak ada pembayaran.');
     }
 
-    // Validate the payment proof
+    // Validasi bukti pembayaran
     $request->validate([
         'payment_proof' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+    ], [
+        'payment_proof.required' => 'Harap unggah bukti pembayaran.',
+        'payment_proof.mimes' => 'Format file harus berupa JPG, JPEG, PNG, atau PDF.',
+        'payment_proof.max' => 'Ukuran file maksimum adalah 2 MB.',
     ]);
 
-    // Store the payment proof in public/payments
+    // Simpan bukti pembayaran ke folder public/payments
     $fileName = time() . '_' . $request->file('payment_proof')->getClientOriginalName();
     $request->file('payment_proof')->move(public_path('payments'), $fileName);
-
 
     DB::beginTransaction();
     try {
@@ -138,7 +189,7 @@ class OrderController extends Controller
             'order_id' => $orderId,
             'payment_proof' => 'payments/' . $fileName,
             'status' => Payment::STATUS_PENDING,
-            'peding_at' => now(),
+            'pending_at' => now(),
         ]);
 
         // Perbarui status pesanan menjadi 'pending_payment'
@@ -149,13 +200,14 @@ class OrderController extends Controller
 
         DB::commit();
 
-        return back()->with('success', 'Payment proof submitted. Awaiting verification.');
+        return back()->with('success', 'Bukti pembayaran berhasil dikirim. Mohon tunggu proses verifikasi.');
         
     } catch (\Exception $e) {
         DB::rollBack();
-        return back()->with('error', 'Failed to submit payment proof: ' . $e->getMessage());
+        return back()->with('error', 'Gagal mengirim bukti pembayaran: ' . $e->getMessage());
     }
-    }
+}
+
 
 
         // Customer marks order as complete
@@ -217,13 +269,13 @@ class OrderController extends Controller
 
     public function generateInvoice($id)
     {
-        $order = Order::with('items.product')->findOrFail($id);
+        $order = Order::with(['items.product', 'user.addresses'])->findOrFail($id);
 
         // Check if the order is approved before generating the invoice
-        if (!in_array($order->status, ['approved', 'pending_payment', 'confirmed', 'processing','shipped','delivered','cancelled'])) {
+        if (!in_array($order->status, ['approved', 'pending_payment', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'])) {
             return redirect()->back()->with('error', 'Invoice can only be generated for approved, packing, shipped, or completed orders.');
         }
-
+    
         // Generate invoice number if not already generated
         if (!$order->invoice_number) {
             $order->invoice_number = Order::generateInvoiceNumber();
@@ -242,7 +294,7 @@ class OrderController extends Controller
         // Set the invoice filename with the sanitized invoice number and e-commerce name
         $filename = $nama_ecommerce . '_' . $invoice_number . '.pdf';
 
-        $pdf = PDF::loadView('customer.order.invoice', compact('order'));
+        $pdf = PDF::loadView('customer.order.invoice', compact('order', 'parameter'));
 
         // Download the PDF file with the sanitized invoice number as the filename
         return $pdf->download($filename);

@@ -51,20 +51,35 @@
                             </td>
                             <td>
                                 <p class="mb-0 mt-4" id="price-{{ $cartItem->id }}">
-                                    @if ($cartItem->product->discount_price)
+                                    @php
+                                        // Calculate final price with Big Sale (if applicable)
+                                        $finalPrice = $cartItem->product->price;
+                                        $bigSale = $cartItem->product->bigSales->firstWhere('status', true);
+                                        if ($bigSale) {
+                                            if ($bigSale->discount_amount) {
+                                                $finalPrice = $cartItem->product->price - $bigSale->discount_amount;
+                                            } elseif ($bigSale->discount_percentage) {
+                                                $finalPrice = $cartItem->product->price - ($bigSale->discount_percentage / 100) * $cartItem->product->price;
+                                            }
+                                        } elseif ($cartItem->product->discount_price) {
+                                            $finalPrice = $cartItem->product->discount_price;
+                                        }
+                                    @endphp
+                                    @if ($finalPrice < $cartItem->product->price)
+                                        {{-- Show the price with discount if Big Sale exists --}}
                                         <span class="text-muted text-decoration-line-through">
                                             Rp{{ number_format($cartItem->product->price, 0, ',', '.') }}
                                         </span>
                                         <span class="text-danger">
-                                            Rp{{ number_format($cartItem->product->discount_price, 0, ',', '.') }}
+                                            Rp{{ number_format($finalPrice, 0, ',', '.') }}
                                         </span>
                                     @else
+                                        {{-- Show the regular price if no discount --}}
                                         Rp{{ number_format($cartItem->product->price, 0, ',', '.') }}
                                     @endif
                                 </p>
                             </td>
-                            
-                                                    
+
                             <td>
                                 <div class="input-group quantity mt-4" style="width: 100px;">
                                     <div class="input-group-btn">
@@ -81,9 +96,15 @@
                                 </div>
                             </td>
                             <td>
-                                <p class="mb-0 mt-4" id="total-{{ $cartItem->id }}">Rp{{ number_format($cartItem->total_price, 0, ',', '.') }}</p>
+                                <p class="mb-0 mt-4" id="total-{{ $cartItem->id }}">
+                                    @php
+                                        // Calculate total price
+                                        $totalPrice = $finalPrice * $cartItem->quantity;
+                                    @endphp
+                                    Rp{{ number_format($totalPrice, 0, ',', '.') }}
+                                </p>
                             </td>
-                            
+
                             <td>
                                 <button class="btn btn-md rounded-circle bg-light border mt-4 remove-from-cart" data-id="{{ $cartItem->id }}" type="button">
                                     <i class="fa fa-times text-danger"></i>
@@ -104,7 +125,25 @@
                             <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
                             <div class="py-4 border-top border-bottom d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 ps-4 me-4">Total</h5>
-                                <p class="mb-0 pe-4" id="cart-total">Rp{{ number_format($total, 0, ',', '.') }}</p> <!-- Total ID for dynamic update -->
+                                <p class="mb-0 pe-4" id="cart-total">
+                                    @php
+                                        $totalCartPrice = $cartItems->sum(function ($cartItem) {
+                                            $finalPrice = $cartItem->product->price;
+                                            $bigSale = $cartItem->product->bigSales->firstWhere('status', true);
+                                            if ($bigSale) {
+                                                if ($bigSale->discount_amount) {
+                                                    $finalPrice = $cartItem->product->price - $bigSale->discount_amount;
+                                                } elseif ($bigSale->discount_percentage) {
+                                                    $finalPrice = $cartItem->product->price - ($bigSale->discount_percentage / 100) * $cartItem->product->price;
+                                                }
+                                            } elseif ($cartItem->product->discount_price) {
+                                                $finalPrice = $cartItem->product->discount_price;
+                                            }
+                                            return $finalPrice * $cartItem->quantity;
+                                        });
+                                    @endphp
+                                    Rp{{ number_format($totalCartPrice, 0, ',', '.') }}
+                                </p> <!-- Total ID for dynamic update -->
                             </div>
                         </div>
                         <!-- Notification for PPN inclusion -->
@@ -127,17 +166,13 @@
                         {{ __('cart.address_warning') }}
                     </div>
                     @endif
-                    
                     </div>
                 </div>
             </div>
-
-            
-            
-            
         @endif
     </div>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

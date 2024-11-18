@@ -1,18 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\Banner\BannerHomeController;
 use App\Http\Controllers\Admin\Banner\BannerMicroController;
 use App\Http\Controllers\Admin\FAQ\FaqController;
 use App\Http\Controllers\Admin\MasterData\CategoryController;
-use App\Http\Controllers\Admin\MasterData\SubcategoryController;
-use App\Http\Controllers\Admin\MasterData\BrandController;
 use App\Http\Controllers\Admin\MasterData\ParameterController;
 use App\Http\Controllers\Admin\MasterData\Shipping\ShippingServiceController;
 use App\Http\Controllers\Admin\Order\OrderHandleController;
-use App\Http\Controllers\Admin\Product\HotspotController;
 use App\Http\Controllers\Admin\Product\ProductController;
-use App\Http\Controllers\Admin\Product\SceneController;
 use App\Http\Controllers\Admin\User\AdminUserController as UserAdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialiteController;
@@ -27,6 +22,8 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Admin\Bigsales\BigSaleAdminHandleController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -56,14 +53,15 @@ Route::group(
             ]
     ], function () {
         
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
-Route::post('/category/filter', [HomeController::class, 'filterByCategory'])->name('category.filter.ajax');
-Route::get('/product/{slug}', [ProductMemberController::class, 'show'])->name('customer.product.show');
-Route::get('/auth/login', [LoginController::class, 'loginPage'])->name('login.page');
-Route::post('/auth/login', [LoginController::class, 'loginPageLogic'])->name('login.logic');
-Route::get('/customer/faq', [HomeController::class, 'faq'])->name('customer.faq');
-Route::get('/order/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('customer.order.invoice');
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
+        Route::post('/category/filter', [HomeController::class, 'filterByCategory'])->name('category.filter.ajax');
+        Route::get('/product/{slug}', [ProductMemberController::class, 'show'])->name('customer.product.show');
+        Route::get('/auth/login', [LoginController::class, 'loginPage'])->name('login.page');
+        Route::post('/auth/login', [LoginController::class, 'loginPageLogic'])->name('login.logic');
+        Route::get('/customer/faq', [HomeController::class, 'faq'])->name('customer.faq');
+        Route::get('/order/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('customer.order.invoice');
+        Route::get('/bigsale/{slug}', [HomeController::class, 'bigsale'])->name('customer.bigsale.index');
 
 
 
@@ -212,6 +210,16 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::post('/admin/users/{id}/update', [UserAdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}/destroy', [UserAdminUserController::class, 'destroy'])->name('admin.users.destroy');
     Route::post('/{id}/update-password', [UserAdminUserController::class, 'updatePassword'])->name('admin.users.updatePassword');
+
+
+    Route::get('/admin/bigsale/index', [BigSaleAdminHandleController::class, 'index'])->name('admin.bigsales.index');
+    Route::get('/admin/bigsale/create', [BigSaleAdminHandleController::class, 'create'])->name('admin.bigsales.create');
+    Route::post('/admin/bigsale/store', [BigSaleAdminHandleController::class, 'store'])->name('admin.bigsales.store');
+    Route::get('/admin/bigsale/{bigSale}', [BigSaleAdminHandleController::class, 'show'])->name('admin.bigsales.show');
+    Route::get('/admin/bigsale/{bigSale}/edit', [BigSaleAdminHandleController::class, 'edit'])->name('admin.bigsales.edit');
+    Route::put('/admin/bigsale/update/{bigSale}', [BigSaleAdminHandleController::class, 'update'])->name('admin.bigsales.update');
+    Route::delete('/admin/bigsale/{bigSale}', [BigSaleAdminHandleController::class, 'destroy'])->name('admin.bigsales.destroy');
+
 
 });
 

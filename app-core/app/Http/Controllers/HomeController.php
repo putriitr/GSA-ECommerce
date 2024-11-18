@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\TranslationHelper;
+use App\Models\BigSale;
 use App\Models\Payment;
 
 class HomeController extends Controller
@@ -28,40 +29,51 @@ class HomeController extends Controller
 
         
 
-        // Get only products that are published and include their completed order count
-        $products = Product::withCount(['orderItems as completed_order_count' => function($query) {
-            $query->whereHas('order', function($query) {
-                $query->where('status', 'completed');
-            });
-        }])
-        ->where('status_published', 'published')
-        ->inRandomOrder() // Ambil produk secara acak
-        ->limit(12) // Batasi hasil ke 12 produk
-        ->get();
-
+       // Ambil Big Sale yang aktif
+        $bigSaleActive = BigSale::where('status', true)
+        ->where('start_time', '<=', now())
+        ->where('end_time', '>=', now())
+        ->first();
         
-        // Best-selling products query
-        $bestsellerProducts = Product::select('t_product.id', 't_product.name', 't_product.price', 't_product.discount_price', 't_product.slug', 't_product.category_id', 't_product.status_published', DB::raw('SUM(t_ord_items.quantity) as total_quantity'))
-            ->join('t_ord_items', 't_product.id', '=', 't_ord_items.product_id')
-            ->join('t_orders', 't_ord_items.order_id', '=', 't_orders.id')
-            ->where('t_orders.status', 'completed')
-            ->groupBy('t_product.id', 't_product.name', 't_product.price', 't_product.discount_price', 't_product.slug', 't_product.category_id', 't_product.status_published')
-            ->orderByRaw('total_quantity DESC')
-            ->limit(6)
-            ->get();
-
         $banners = BannerHome::where('active', 1)->orderBy('order')->get();
 
         $approvedOrders = Order::where('user_id', Auth::id())
-            ->where('status', 'approved')
+            ->where('status', 'pending_payment')
             ->get();
 
+        $bigSales = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->first();
 
-        return view('customer.home.home', compact('categories', 'products', 'bestsellerProducts','banners','approvedOrders'));
+        $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
+
+        $products = Product::with('images')
+        ->where('status_published', 'published')
+        ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
+        ->orderBy('created_at', 'desc') // Urutkan berdasarkan produk terbaru
+        ->take(8) // Batas produk yang diambil sebanyak 8
+        ->get();
+
+
+        return view('customer.home.home', compact('categories', 'products','banners','approvedOrders','bigSales'));
     }
 
     public function filterByCategory(Request $request)
     {
+        // Ambil Big Sale yang aktif
+        $bigSaleActive = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->first();
+
+        $bigSales = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->first();
+
+        $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
+
         if ($request->slug === 'all') {
             // Fetch all published products with related images, reviews, and completed order count
             $products = Product::with(['images', 'reviews'])
@@ -70,6 +82,7 @@ class HomeController extends Controller
                                         $query->where('status', 'completed');
                                     });
                                 }])
+                                ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
                                 ->where('status_published', 'published')
                                 ->get();
         } else {
@@ -85,6 +98,12 @@ class HomeController extends Controller
                                     }])
                                     ->where('category_id', $category->id)
                                     ->where('status_published', 'published')
+                                    // Mengecualikan produk yang sudah terdaftar di Big Sale yang aktif
+                                    ->whereDoesntHave('bigSales', function($query) use ($bigSaleActive) {
+                                        if ($bigSaleActive) {
+                                            $query->where('bigsale_id', $bigSaleActive->id);
+                                        }
+                                    })
                                     ->get();
             } else {
                 $products = collect();
@@ -111,6 +130,7 @@ class HomeController extends Controller
 
         return response()->json($formattedProducts);
     }
+
 
 
     public function shop(Request $request)
@@ -169,9 +189,18 @@ class HomeController extends Controller
                 $products->orderBy('price', 'asc');
                 break;
         }
+
+        $bigSales = BigSale::where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->first();
+
+        $bigSaleProductIds = $bigSales ? $bigSales->products->pluck('id')->toArray() : [];
     
         // Eksekusi query untuk mendapatkan data produk
-        $products = $products->paginate(16);
+        $products = $products
+        ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
+        ->paginate(16);
     
         // Menyusun pesan filter hanya jika ada kategori, filter harga, atau keyword
         if ($selectedCategory || ($minPrice !== null && $maxPrice !== null) || $keyword) {
@@ -216,8 +245,49 @@ class HomeController extends Controller
                         ->orderBy('created_at', 'desc')
                         ->paginate(5); // Paginate the orders, limit to 10
 
-        return view('admin.dashboard.dashboard', compact('payments', 'orders'));
-    }
+                        $parameter = Parameter::first();
+
+                        // Check if bank details are missing
+                        $missingBankDetails = false;
+                        $missingDetailsMessage = '';
+                    
+                        if (!$parameter || !$parameter->bank_vendor || !$parameter->bank_nama || !$parameter->bank_rekening) {
+                            $missingBankDetails = true;
+                            $missingDetailsMessage = 'Harap lengkapi informasi bank (Vendor, Nama, dan Rekening) di pengaturan.';
+                        }
+
+                        $orderNotifications = [];
+                        foreach ($orders as $order) {
+                            $customerName = $order->user->name ?? 'Tidak diketahui';
+                            $invoiceNumber = $order->invoice_number ?? 'Tidak tersedia';
+                        
+                            switch ($order->status) {
+                                case Order::STATUS_WAITING_APPROVAL:
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Segera periksa permintaan pemesanan, jangan membuat customer menunggu lama.";
+                                    break;
+                                case Order::STATUS_APPROVED:
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Kamu sudah mengonfirmasi, silakan berikan akses untuk pembayarannya.";
+                                    break;
+                                case Order::STATUS_CONFIRMED:
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Segera lakukan proses packing.";
+                                    break;
+                                case Order::STATUS_PROCESSING:
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Segera selesaikan proses packing agar langsung dikirim, jangan membuat customer menunggu lama.";
+                                    break;
+                            }
+                        }
+                        
+                    
+                        // Collect notifications for payments
+                        $paymentNotifications = [];
+                        foreach ($payments as $payment) {
+                            if ($payment->status === Payment::STATUS_PENDING) {
+                                $paymentNotifications[] = "Pembayaran untuk pesanan #{$payment->order->id}: Customer sudah melakukan pembayaran, segera periksa bukti pembayarannya.";
+                            }
+                        }
+                    
+            return view('admin.dashboard.dashboard', compact('payments', 'orders', 'parameter', 'missingBankDetails', 'missingDetailsMessage', 'orderNotifications', 'paymentNotifications'));
+        }
 
     
     /**
@@ -230,6 +300,53 @@ class HomeController extends Controller
         $faqs = Faq::all();
         return view('customer.faq.index',compact('faqs'));
     }
+
+
+    public function bigsale($slug)
+    {
+        $bigSales = BigSale::where('slug', $slug)
+            ->where('status', true)
+            ->where('start_time', '<=', now())
+            ->where('end_time', '>=', now())
+            ->first();
+
+        if (!$bigSales) {
+            abort(404, 'Big Sale not found or inactive.');
+        }
+
+        $productsQuery = $bigSales->products()->with('images');
+
+        // Filter berdasarkan kategori
+        if (request()->has('category') && request()->category) {
+            $productsQuery->where('category_id', request()->category);
+        }
+
+        // Sorting
+        if (request()->has('sort')) {
+            switch (request()->get('sort')) {
+                case 'terbaru':
+                    $productsQuery->orderBy('created_at', 'desc');
+                    break;
+                case 'terlama':
+                    $productsQuery->orderBy('created_at', 'asc');
+                    break;
+                }
+            }
+
+        $products = $productsQuery->get();
+
+        // Filter message
+        $filterMessage = [];
+        if (request()->has('category') && request()->category) {
+            $filterMessage[] = 'Category: ' . Category::find(request()->category)->name;
+        }
+
+        $categories = Category::all();
+
+        return view('customer.bigsale.index', compact('bigSales', 'products', 'categories', 'filterMessage'));
+    }
+
+
 
 
     

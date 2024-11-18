@@ -4,6 +4,8 @@
     <!-- Content wrapper -->
     <div class="content-wrapper">
         <!-- Content -->
+        <div class="container-xxl flex-grow-1 container-p-y">
+
 
     @if(session('admin_login'))
     <div id="floating-notification-welcome-back" class="alert alert-info alert-dismissible fade show position-fixed d-flex align-items-center" role="alert" style="bottom: 20px; right: 20px; z-index: 1050; min-width: 320px; max-width: 420px; padding: 20px;">
@@ -13,7 +15,45 @@
     </div>
     @endif
 
-        <div class="container-xxl flex-grow-1 container-p-y">
+    @if ($missingBankDetails)
+    <div class="alert alert-warning mt-5" role="alert">
+        <strong>Perhatian!</strong> {{ $missingDetailsMessage }}
+        <a href="{{ route('masterdata.parameters.edit', $parameter->id ?? 0) }}" class="btn btn-primary btn-sm">Isi Sekarang</a>
+    </div>
+    @endif
+
+    {{-- Notifikasi untuk status order --}}
+@if (!empty($orderNotifications))
+<div class="alert alert-info mt-5">
+    <h5>Notifikasi Pesanan:</h5>
+    <ul>
+        @foreach ($orderNotifications as $orderId => $notification)
+            <li>
+                {{ $notification }}
+                <a href="{{ route('admin.orders.show', ['id' => $orderId]) }}" class="btn btn-sm btn-primary ml-3">Detail Pesanan</a>
+            </li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+{{-- Notifikasi untuk status payment --}}
+@if (!empty($paymentNotifications))
+<div class="alert alert-success mt-5">
+    <h5>Notifikasi Pembayaran:</h5>
+    <ul>
+        @foreach ($paymentNotifications as $paymentId => $notification)
+            <li>
+                {{ $notification }}
+                <a href="{{ route('admin.payments.show', ['id' => $paymentId]) }}" class="btn btn-sm btn-success ml-3">Detail Pembayaran</a>
+            </li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+
+
             <div class="row">
                 <div class="col-lg-12 mb-4">
                     <div class="row">

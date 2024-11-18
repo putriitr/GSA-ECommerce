@@ -93,6 +93,22 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Event</span>
+                    </li>
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-calendar"></i> 
+                            <div data-i18n="Event">Event</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="{{ route('admin.bigsales.index') }}" class="menu-link">
+                                    <div data-i18n="Daftar Event">Big Sale</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                     <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">Banner</span>
