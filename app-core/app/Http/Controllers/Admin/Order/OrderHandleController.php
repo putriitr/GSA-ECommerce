@@ -320,6 +320,21 @@ class OrderHandleController extends Controller
         return back()->with('success', 'Order marked as shipped.');
     }
 
+    public function MarkAsCompleted($orderId)
+    {
+        $order = Order::find($orderId);
+    
+        // Periksa apakah pesanan ditemukan
+        if (!$order) {
+            return back()->with('error', 'Order not found.');
+        }
+    
+        // Set status order menjadi completed dengan menggunakan setStatus
+        $order->setStatus(Order::STATUS_DELIVERED);
+    
+        return back()->with('success', 'Order marked as completed.');
+    }
+
     public function cancelOrder(Request $request, $orderId)
     {
         $order = Order::with('items.product')->findOrFail($orderId);

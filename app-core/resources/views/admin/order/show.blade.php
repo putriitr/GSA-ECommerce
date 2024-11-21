@@ -94,6 +94,16 @@
                 <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
             @endif
 
+            @if($order->status === 'shipped')
+                <div class="mt-4 text-end">
+                    <form action="{{ route('admin.complete.order', $order->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                            <button type="submit" class="btn btn-success">{{ __('Selesai?') }}</button>
+                        </form>
+                </div>
+            @endif
+
         </div>
     </div>
     

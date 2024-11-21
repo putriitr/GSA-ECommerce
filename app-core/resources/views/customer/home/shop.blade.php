@@ -204,6 +204,49 @@
                                 @endforeach
                             @endif
                         </div>
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
+                        </div>
+                        <style>
+                            
+    /* Custom Pagination Styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    color: #007bff;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover,
+.pagination .active span {
+    background-color: #007bff;
+    color: #ffffff;
+    border-color: #007bff;
+}
+
+.pagination .disabled span {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+                        </style>
                     </div>                    
                 </div>
             </div>

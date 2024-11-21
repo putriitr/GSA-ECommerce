@@ -174,8 +174,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('admin/payments/{id}', [OrderHandleController::class, 'showPayment'])->name('admin.payments.show');
     Route::put('/admin/orders/{order}/cancel', [OrderHandleController::class, 'cancelOrder'])->name('admin.orders.cancel');
     Route::put('admin/orders/{order}/payment', [OrderHandleController::class, 'allowPayment'])->name('customer.orders.payment');
-
-
+    Route::put('admin/orders/{order}/complete', [OrderHandleController::class, 'MarkAsCompleted'])->name('admin.complete.order');
 
 
     Route::get('admin/banner-home/banners', [BannerHomeController::class, 'index'])->name('admin.banner-home.banners.index');
