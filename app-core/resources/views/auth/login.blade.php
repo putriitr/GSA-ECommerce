@@ -1,6 +1,3 @@
-
-
-
 @extends('layouts.customer.master__auth')
 
 @section('content')
@@ -9,33 +6,33 @@
         <!-- Image on the left -->
         <div class="col-md-5 text-center d-none d-md-block">
             <img src="https://gsacommerce.com/assets/frontend/image/gsa-logo.svg" alt="Illustration" class="img-fluid mb-4">
-            <h4>Selamat Datang Kembali!</h4>
-            <p>Masuk dan nikmati pengalaman berbelanja di toko Anda</p>
+            <h4>{{ __('messages.auth.welcome_back') }}</h4>
+            <p>{{ __('messages.auth.welcome_message') }}</p>
         </div>
 
         <!-- Form on the right -->
         <div class="col-md-6">
             <div class="shadow-lg p-4 rounded">
                 <div class="text-center mb-4">
-                    <h4 class="fw-bold">{{ __('Masuk') }}</h4>
-                    <p>Belum punya akun? <a href="{{ route('register') }}">Daftar Sekarang</a></p>
+                    <h4 class="fw-bold">{{ __('messages.auth.login') }}</h4>
+                    <p>{{ __('messages.auth.no_account') }} <a href="{{ route('register') }}">{{ __('messages.auth.register_now') }}</a></p>
                 </div>
 
                 <div class="d-grid mb-3">
                     <a href="{{ url('auth/google/redirect') }}" class="btn btn-outline-secondary btn-block">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="me-2" style="width: 20px;">
-                        {{ __('Masuk dengan Google') }}
+                        {{ __('messages.auth.login_with_google') }}
                     </a>
                 </div>
 
-                <div class="text-center mb-3 separator">atau</div>
+                <div class="text-center mb-3 separator">{{ __('messages.auth.separator') }}</div>
 
                 <form action="{{ route('login.logic') }}" method="POST">
                     @csrf
 
                     <!-- Email Address -->
                     <div class="form-group mb-3">
-                        <label for="email">{{ __('Email Address') }}</label>
+                        <label for="email">{{ __('messages.auth.email_address') }}</label>
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -44,11 +41,9 @@
                         @enderror
                     </div>
 
-                        <!-- Password -->
-
                     <!-- Password -->
                     <div class="form-group mb-3">
-                        <label for="password">{{ __('Password') }}</label>
+                        <label for="password">{{ __('messages.auth.password') }}</label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
                         @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -61,14 +56,14 @@
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                         <label class="form-check-label" for="remember">
-                            {{ __('Ingat Saya') }}
+                            {{ __('messages.auth.remember_me') }}
                         </label>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="d-grid mb-3">
                         <button type="submit" class="btn btn-primary btn-block">
-                            {{ __('Masuk') }}
+                            {{ __('messages.auth.submit_login') }}
                         </button>
                     </div>
 

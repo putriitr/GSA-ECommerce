@@ -79,7 +79,7 @@ class HomeController extends Controller
             $products = Product::with(['images', 'reviews'])
                                 ->withCount(['orderItems as completed_order_count' => function($query) {
                                     $query->whereHas('order', function($query) {
-                                        $query->where('status', 'completed');
+                                        $query->where('status', 'delivered');
                                     });
                                 }])
                                 ->whereNotIn('id', $bigSaleProductIds) // Kecualikan produk yang ada dalam Big Sale
@@ -93,7 +93,7 @@ class HomeController extends Controller
                 $products = Product::with(['images', 'reviews'])
                                     ->withCount(['orderItems as completed_order_count' => function($query) {
                                         $query->whereHas('order', function($query) {
-                                            $query->where('status', 'completed');
+                                            $query->where('status', 'delivered');
                                         });
                                     }])
                                     ->where('category_id', $category->id)
@@ -110,8 +110,8 @@ class HomeController extends Controller
             }
         }
 
-        // Prepare the products data to send it as JSON response
-        $formattedProducts = $products->map(function($product) {
+            // Prepare the products data to send it as JSON response
+            $formattedProducts = $products->map(function($product) {
             // Calculate average rating
             $averageRating = $product->reviews->avg('rating') ?? 0;
 
@@ -258,21 +258,21 @@ class HomeController extends Controller
 
                         $orderNotifications = [];
                         foreach ($orders as $order) {
-                            $customerName = $order->user->name ?? 'Tidak diketahui';
+                            $customerName = $order->user->name ?? $user->fullname ?? 'Tidak diketahui';
                             $invoiceNumber = $order->invoice_number ?? 'Tidak tersedia';
                         
                             switch ($order->status) {
                                 case Order::STATUS_WAITING_APPROVAL:
-                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Segera periksa permintaan pemesanan, jangan membuat customer menunggu lama.";
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Pelanggan: {$customerName}): Pesanan ini sedang menunggu persetujuan Anda. Harap segera tinjau agar pelanggan tidak menunggu terlalu lama.";
                                     break;
                                 case Order::STATUS_APPROVED:
-                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Kamu sudah mengonfirmasi, silakan berikan akses untuk pembayarannya.";
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Pesanan telah disetujui. Segera berikan akses untuk pembayaran agar proses dapat dilanjutkan.";
                                     break;
                                 case Order::STATUS_CONFIRMED:
-                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Segera lakukan proses packing.";
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Pesanan telah dikonfirmasi. Silakan segera lakukan proses pengemasan.";
                                     break;
                                 case Order::STATUS_PROCESSING:
-                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Segera selesaikan proses packing agar langsung dikirim, jangan membuat customer menunggu lama.";
+                                    $orderNotifications[$order->id] = "Pesanan #{$order->id} (Invoice: {$invoiceNumber}, Pelanggan: {$customerName}): Pesanan sedang dalam proses pengemasan. Harap selesaikan pengemasan secepatnya agar dapat segera dikirimkan.";
                                     break;
                             }
                         }
@@ -282,7 +282,7 @@ class HomeController extends Controller
                         $paymentNotifications = [];
                         foreach ($payments as $payment) {
                             if ($payment->status === Payment::STATUS_PENDING) {
-                                $paymentNotifications[] = "Pembayaran untuk pesanan #{$payment->order->id}: Customer sudah melakukan pembayaran, segera periksa bukti pembayarannya.";
+                                $paymentNotifications[] = "Pembayaran untuk pesanan #{$payment->order->id}: Pelanggan telah melakukan pembayaran. Harap segera periksa bukti pembayaran untuk memastikan keabsahannya.";
                             }
                         }
                     

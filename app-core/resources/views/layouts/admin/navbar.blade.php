@@ -9,28 +9,28 @@
             </a>
         </div>
 
-        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-            <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- User -->
-                <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                        <img src="{{ asset($parameter->logo) }}" alt="Logo" class="w-px-40 h-px-40 rounded-circle border border-dark" style="object-fit: cover;" />
-                    </a>                    
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="bx bx-power-off me-2"></i>
-                                <span class="align-middle">Log Out</span>
-                            </a>
-                        </li>
-                        
-                    </ul>
-                </li>
-                <!--/ User -->
-            </ul>
-        </div>
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                <ul class="navbar-nav flex-row align-items-center ms-auto">
+                    <!-- User -->
+                    <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                            <img src="{{ asset($parameter->logo) }}" alt="Logo" class="w-px-40 h-px-40 rounded-circle border border-dark" style="object-fit: cover;" />
+                        </a>                    
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="bx bx-power-off me-2"></i>
+                                    <span class="align-middle">Log Out</span>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <!--/ User -->
+                </ul>
+            </div>
     </nav>
     <!-- / Navbar -->

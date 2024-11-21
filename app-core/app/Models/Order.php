@@ -85,6 +85,12 @@ class Order extends Model
         return $this->hasOne(Negotiation::class);
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
     public function shippingService()
     {
         return $this->belongsTo(ShippingService::class, 'shipping_service_id');

@@ -132,7 +132,7 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                                     $totalSold = DB::table('t_ord_items')
                                         ->join('t_orders', 't_ord_items.order_id', '=', 't_orders.id')
                                         ->where('t_ord_items.product_id', $product->id)
-                                        ->where('t_orders.status', 'completed')
+                                        ->where('t_orders.status', 'delivered')
                                         ->sum('t_ord_items.quantity');
 
                                     // Count of reviews

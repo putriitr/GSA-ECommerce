@@ -8,23 +8,23 @@
             <span class="custom-close">&times;</span>
         </div>
         <div class="custom-modal-body">
-            <h2 class="modal-title">Masuk</h2>
-            <a href="{{ route('register')  }}" class="register-link">Daftar</a>
+            <h2 class="modal-title">{{ __('messages.login_modal.email_modal.title') }}</h2>
+            <a href="{{ route('register') }}" class="register-link">{{ __('messages.login_modal.email_modal.register') }}</a>
 
             <!-- Form untuk memasukkan email atau nomor HP -->
             <form id="emailForm">
                 <div class="input-group">
                     <label for="emailOrPhone">Email</label>
-                    <input type="text" id="emailOrPhone" name="emailOrPhone" placeholder="Masukkan Email" required>
+                    <input type="text" id="emailOrPhone" name="emailOrPhone" placeholder="{{ __('messages.login_modal.email_modal.email_placeholder') }}" required>
                 </div>
 
-                <a href="#" class="help-link">Butuh bantuan?</a>
+                <a href="#" class="help-link">{{ __('messages.login_modal.email_modal.help_link') }}</a>
 
                 <!-- Tombol Selanjutnya -->
-                <button type="button" class="btn-submit" disabled>Selanjutnya</button>
+                <button type="button" class="btn-submit" disabled>{{ __('messages.login_modal.email_modal.next_button') }}</button>
 
-                <div class="separator">atau masuk dengan</div>
-                <button class="btn-other-methods">Metode Lain</button>
+                <div class="separator">{{ __('messages.login_modal.email_modal.other_methods') }}</div>
+                <button class="btn-other-methods">{{ __('messages.login_modal.email_modal.other_methods_button') }}</button>
             </form>
         </div>
     </div>
@@ -37,21 +37,21 @@
             <span class="custom-close">&times;</span>
         </div>
         <div class="custom-modal-body">
-            <h2 class="modal-title">Masukkan Password</h2>
+            <h2 class="modal-title">{{ __('messages.login_modal.password_modal.title') }}</h2>
             <button class="btn-back register-link">&larr;</button>
 
             
             <form id="passwordForm">
                 <div class="input-group">
-                    <label for="password">Password</label>
+                    <label for="password">{{ __('messages.login_modal.password_modal.password_label') }}</label>
                     <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
                 </div>
 
                 <!-- Pesan Error -->
-                <div id="error-message" class="error-message" style="display: none; color: red;">Email atau password salah!</div>
+                <div id="error-message" class="error-message" style="display: none; color: red;">{{ __('messages.login_modal.password_modal.error_message') }}</div>
 
                 <!-- Tombol Login -->
-                <button type="submit" class="btn-submit" style="    background-color: #007bff !important; color: white !important;">Login</button>
+                <button type="submit" class="btn-submit">{{ __('messages.login_modal.password_modal.login_button') }}</button>
             </form>
         </div>
     </div>
@@ -65,7 +65,7 @@
             <span class="custom-close">&times;</span>
         </div>
         <div class="custom-modal-body">
-            <h2 class="modal-title">Pilih Akun Untuk Masuk</h2>
+            <h2 class="modal-title">{{ __('messages.login_modal.other_methods_modal.title') }}</h2>
             <button class="btn-back register-link">&larr;</button>
 
             <!-- Google Login Button -->
@@ -85,7 +85,7 @@
 
 <!-- Notification Box -->
 <div id="notification" class="custom-notification-modal-login" style="display: none;">
-    <p>Fitur login dengan Facebook saat ini masih dalam proses pengembangan. Silakan menggunakan Google untuk login. Terima kasih atas pengertiannya.</p>
+    <p>{{ __('messages.login_modal.notification.message') }}</p>
 </div>
 
 <style>

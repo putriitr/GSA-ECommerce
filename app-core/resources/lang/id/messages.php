@@ -239,4 +239,278 @@ return [
 
     'cancelled_by_admin' => 'Dibatalkan oleh Admin',
     'cancelled_by_system' => 'Dibatalkan oleh Sistem',
+
+    'invoice_number' => 'Nomor Invoice',
+    'statuses' => [
+        'waiting_approval' => 'Menunggu Persetujuan',
+        'approved' => 'Disetujui',
+        'pending_payment' => 'Menunggu Pembayaran',
+        'confirmed' => 'Dikonfirmasi',
+        'processing' => 'Diproses',
+        'shipped' => 'Dikirim',
+        'delivered' => 'Tiba di Tujuan',
+        'cancelled' => 'Dibatalkan',
+        'cancelled_by_admin' => 'Dibatalkan oleh Admin',
+        'cancelled_by_system' => 'Dibatalkan oleh Sistem',
+        'default' => 'Status Tidak Diketahui',
+    ],
+
+    'history' => [
+        'title' => 'Riwayat Status',
+        'created' => 'Pesanan Dibuat',
+        'approved' => 'Disetujui',
+        'pending_payment' => 'Menunggu Pembayaran',
+        'processing' => 'Diproses',
+        'shipped' => 'Dikirim',
+        'delivered' => 'Selesai',
+        'cancelled' => 'Dibatalkan',
+        'cancelled_by_admin' => 'Dibatalkan oleh Admin',
+        'cancelled_by_system' => 'Dibatalkan oleh Sistem',
+    ],
+
+    'total_amount' => 'Jumlah Total',
+    'items' => [
+        'title' => 'Barang',
+        'product' => 'Produk',
+        'quantity' => 'Jumlah',
+        'price' => 'Harga',
+        'total' => 'Total',
+    ],
+        'title' => 'Beri Ulasan',
+        'already_reviewed' => 'Anda sudah memberikan ulasan untuk :product pada pesanan ini.',
+        'review_button' => 'Ulasan :product',
+
+        'actions' => [
+            'cancel_order' => 'Batalkan Pesanan',
+            'mark_completed' => 'Tandai Selesai',
+            'confirm_cancel' => 'Apakah Anda yakin ingin membatalkan pesanan ini?',
+        ],
+        'alerts' => [
+            'approved' => [
+                'title' => 'Mohon Bersabar!',
+                'message' => 'Menunggu Admin Memberikan Akses Pembayaran.',
+            ],
+        ],
+
+
+        'payment' => [
+        'upload_title' => 'Upload Bukti Pembayaran',
+        'warning' => [
+            'title' => 'Penting!',
+            'message' => 'Harap memastikan bukti pembayaran Anda benar. Kesalahan transfer, termasuk:',
+            'errors' => [
+                'insufficient_amount' => 'Jumlah pembayaran kurang',
+                'excessive_amount' => 'Jumlah pembayaran lebih',
+                'wrong_account' => 'Kesalahan nomor rekening tujuan',
+            ],
+            'consequence' => 'akan menyebabkan sistem secara otomatis membatalkan pesanan Anda. Kami tidak bertanggung jawab atas kekurangan atau kelebihan transfer.',
+        ],
+        'remaining_time' => 'Waktu tersisa untuk menyelesaikan pembayaran: :hours jam.',
+        'submit_payment' => 'Submit Pembayaran',
+        'failed' => [
+            'notification' => 'Bukti pembayaran Anda sebelumnya ditolak. Mohon upload ulang bukti pembayaran dengan benar. Ini adalah kesempatan terakhir Anda untuk menyelesaikan pembayaran.',
+            'limit_reached' => 'Anda telah melewati batas maksimum upload bukti pembayaran. Silakan hubungi admin untuk informasi lebih lanjut.',
+            'warning' => [
+                'title' => 'Hati-Hati!',
+                'message' => 'Silahkan lakukan pembayaran kembali, dan Anda hanya memiliki 1 kesempatan lagi sebelum pesanan Anda dibatalkan oleh sistem karena terdeteksi kejanggalan dalam pembayaran Anda.',
+            ],
+
+        ],
+        'success_processing' => 'Bukti pembayaran Anda telah diunggah dan sedang menunggu konfirmasi admin.',
+        'time_expired' => 'Waktu telah habis untuk pembayaran.',
+
+        'pending' => [
+            'title' => 'Mohon Bersabar!',
+            'message' => 'Kami sedang memproses bukti pembayaran Anda. Jika Anda merasa telah menunggu terlalu lama, silakan hubungi admin melalui <a href="https://wa.me/:number" target="_blank">:number</a>.',
+        ],
+            'cancelled' => [
+                'title' => 'Pesanan Dibatalkan!',
+                'message' => 'Pesanan Anda telah dibatalkan oleh sistem karena terdeteksi adanya aktivitas yang mencurigakan dan berpotensi merugikan. Mohon diperhatikan untuk transaksi berikutnya.',
+            ],
+        ],
+    'errors' => [
+        'title' => 'Terjadi Kesalahan',
+    ],
+
+    'payment_details' => [
+        'title' => 'Detail Pembayaran',
+        'proof' => 'Bukti Pembayaran',
+        'status' => 'Status',
+        'date' => 'Tanggal',
+        'view_proof' => 'Lihat Bukti',
+    ],
+    'shipping_information' => [
+        'title' => 'Informasi Pengiriman',
+        'service' => 'Layanan Pengiriman',
+        'not_specified' => 'Tidak ditentukan',
+        'tracking_number' => 'Nomor Resi',
+    ],
+
+        'title_order' => 'Detail Pesanan',
+        'invoice' => [
+            'download' => 'Unduh Faktur',
+        ],
+            'button' => 'Batalkan',
+            'modal' => [
+                'title' => 'Konfirmasi Pembatalan',
+                'message' => 'Apakah Anda yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.',
+                'yes' => 'Ya, Batalkan',
+                'no' => 'Tidak',
+            ],
+
+    'orders' => [
+        'no_orders' => 'Tidak ada pesanan untuk status ini.',
+        'shopping_date' => 'Belanja',
+        'total_shopping' => 'Total Belanja',
+        'invoice' => 'Faktur',
+        'status' => [
+            'waiting_approval' => 'Menunggu Konfirmasi',
+            'approved' => 'Menunggu Pembayaran',
+            'pending_payment' => 'Menunggu Pembayaran Anda',
+            'confirmed' => 'Pembayaran Diterima',
+            'processing' => 'Diproses',
+            'shipped' => 'Dikirim',
+            'delivered' => 'Tiba di Tujuan',
+            'cancelled' => 'Dibatalkan',
+        ],
+        'details' => 'Lihat Detail Transaksi',
+        'help' => 'Bantuan',
+        'cancel_order' => 'Batalkan Pesanan',
+        'pay_now' => 'Bayar Sekarang',
+        'received' => 'Diterima',
+    ],
+
+
+    'addresses' => [
+        'no_address' => 'Belum ada alamat. Tambahkan alamat baru untuk pengiriman.',
+        'active_address' => 'Aktif',
+        'set_active' => 'Jadikan Aktif',
+        'address_active' => 'Alamat Aktif',
+        'edit_address' => 'Ubah alamat',
+        'delete_address' => 'Hapus',
+        'delete_confirmation' => 'Apakah Anda yakin ingin menghapus alamat ini?',
+        'form' => [
+            'label_address' => 'Label Alamat (Rumah/Kantor)',
+            'label_address_options' => [
+                'home' => 'Rumah',
+                'office' => 'Kantor',
+            ],
+            'recipient_name' => 'Nama Penerima',
+            'phone_number' => 'Nomor Telepon',
+            'province' => 'Provinsi',
+            'city' => 'Kota/Kabupaten',
+            'district' => 'Kecamatan',
+            'postal_code' => 'Kodepos',
+            'address_details' => 'Detail Alamat',
+            'invalid_phone' => 'Masukkan nomor telepon yang valid (minimal 9 angka).',
+            'invalid_postal_code' => 'Masukkan kodepos yang valid (5 angka).',
+        ],
+        'modal' => [
+            'edit_title' => 'Ubah Alamat',
+            'save_changes' => 'Simpan Perubahan',
+            'cancel' => 'Batal',
+        ],
+    ],
+
+    'address_add' => [
+        'modal' => [
+            'title' => 'Tambah Alamat Baru',
+            'close' => 'Tutup',
+            'save' => 'Simpan Alamat',
+            'cancel' => 'Batal',
+        ],
+        'form' => [
+            'label_address' => 'Label Alamat (Rumah/Kantor)',
+            'label_address_placeholder' => 'Pilih Label Alamat',
+            'label_address_options' => [
+                'home' => 'Rumah',
+                'office' => 'Kantor',
+            ],
+            'recipient_name' => 'Nama Penerima',
+            'phone_number' => 'Nomor Telepon',
+            'phone_placeholder' => 'Masukkan nomor telepon',
+            'invalid_phone' => 'Masukkan nomor telepon yang valid (minimal 9 angka).',
+            'province' => 'Provinsi',
+            'city' => 'Kota/Kabupaten',
+            'district' => 'Kecamatan',
+            'postal_code' => 'Kodepos',
+            'postal_placeholder' => 'Masukkan kodepos',
+            'invalid_postal' => 'Masukkan kodepos yang valid (5 angka).',
+            'address_details' => 'Detail Alamat',
+            'address_details_placeholder' => 'Masukkan detail alamat, contoh: Nama Jalan, No Rumah, RT/RW',
+        ],
+    ],
+
+    'faq' => [
+        'title' => 'Pertanyaan yang Sering Diajukan',
+        'breadcrumb' => [
+            'home' => 'Beranda',
+            'faq' => 'FAQ',
+        ],
+        'section_title' => 'Informasi FAQ',
+        'no_information' => 'Tidak ada informasi FAQ tersedia.',
+    ],
+
+
+    'auth' => [
+        'welcome_back' => 'Selamat Datang Kembali!',
+        'welcome_message' => 'Masuk dan nikmati pengalaman berbelanja di toko Anda',
+        'login' => 'Masuk',
+        'no_account' => 'Belum punya akun?',
+        'register_now' => 'Daftar Sekarang',
+        'login_with_google' => 'Masuk dengan Google',
+        'separator' => 'atau',
+        'email_address' => 'Alamat Email',
+        'password' => 'Kata Sandi',
+        'remember_me' => 'Ingat Saya',
+        'submit_login' => 'Masuk',
+    ],
+
+    'register_new' => [
+        'welcome_title' => 'Jual Beli Mudah Hanya di Toko Anda',
+        'welcome_message' => 'Gabung dan rasakan kemudahan bertransaksi di toko Anda',
+        'form_title' => 'Daftar Sekarang',
+        'already_have_account' => 'Sudah punya akun?',
+        'login_now' => 'Masuk',
+        'register_with_google' => 'Daftar dengan Google',
+        'separator' => 'atau',
+        'username' => 'Username',
+        'email_address' => 'Alamat Email',
+        'phone_number' => 'Nomor HP',
+        'password' => 'Kata Sandi',
+        'confirm_password' => 'Konfirmasi Kata Sandi',
+        'submit_register' => 'Daftar',
+        'terms_and_privacy' => 'Dengan mendaftar, saya menyetujui',
+        'terms' => 'Syarat & Ketentuan',
+        'privacy_policy' => 'Kebijakan Privasi',
+    ],
+
+    'login_modal' => [
+        'email_modal' => [
+            'title' => 'Masuk',
+            'register' => 'Daftar',
+            'email_placeholder' => 'Masukkan Email',
+            'help_link' => 'Butuh bantuan?',
+            'next_button' => 'Selanjutnya',
+            'other_methods' => 'atau masuk dengan',
+            'other_methods_button' => 'Metode Lain',
+        ],
+        'password_modal' => [
+            'title' => 'Masukkan Password',
+            'back_button' => 'Kembali',
+            'password_label' => 'Password',
+            'password_placeholder' => 'Masukkan Password',
+            'login_button' => 'Login',
+            'error_message' => 'Email atau password salah!',
+        ],
+        'other_methods_modal' => [
+            'title' => 'Pilih Akun Untuk Masuk',
+            'back_button' => 'Kembali',
+            'google_login' => 'Google',
+            'facebook_login' => 'Facebook',
+        ],
+        'notification' => [
+            'message' => 'Fitur login dengan Facebook saat ini masih dalam proses pengembangan. Silakan menggunakan Google untuk login. Terima kasih atas pengertiannya.',
+        ],
+    ],
 ];

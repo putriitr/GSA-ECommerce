@@ -305,13 +305,19 @@
                                         <span class="text-muted small" style="display: flex; align-items: center;">
                                             @php
                                                 $averageRating = $product->reviews->avg('rating') ?? 0;
+
+                                                $totalSold = DB::table('t_ord_items')
+                                                    ->join('t_orders', 't_ord_items.order_id', '=', 't_orders.id')
+                                                    ->where('t_ord_items.product_id', $product->id)
+                                                    ->where('t_orders.status', 'delivered')
+                                                    ->sum('t_ord_items.quantity');
                                             @endphp
                                                 <i class="fa fa-star" style="color: {{ $averageRating ? '#ffc107' : '#ccc' }};"></i>
                                             <span class="ms-1">{{ number_format($averageRating, 1) }}</span>
                                         </span>
                                         
                                         <span class="mx-2">|</span>
-                                        <span class="text-muted small">{{ __('shop.sold', ['count' => $product->completed_order_count]) }}</span>
+                                        <span class="text-muted small">{{ __('shop.sold', ['count' => $totalSold]) }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -431,8 +437,6 @@
                                                         <i class="fa fa-star text-warning me-1"></i>
                                         ${product.average_rating} <!-- Display average rating -->
                                                     </span>
-                                                    <span class="mx-2">|</span>
-                                                    <span class="text-muted small">${product.sales_count ? product.sales_count + '+ terjual' : '0 terjual'}</span>
                                                     <span class="mx-2">|</span>
                                                     <span class="text-muted small">${product.completed_order_count} terjual</span> 
                                                 </div>

@@ -69,19 +69,26 @@
                                     <h4>{{ __('shop.categories') }}</h4>
                                     <ul class="list-unstyled fruite-categorie">
                                         @foreach($categories as $category)
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="{{ route('shop', ['category_id' => $category->id, 'sort' => request()->get('sort')]) }}" 
-                                                   class="{{ request()->get('category_id') == $category->id ? 'text-primary' : '' }}">
-                                                   <i class="fas fa-tools me-2"></i>{{ $category->name }}
-                                                </a>
-                                                <span>({{ $category->products->count() }})</span>
-                                            </div>
-                                        </li>
+                                            @php
+                                                $productCount = $bigSales->products->where('category_id', $category->id)->count();
+                                            @endphp
+                                            @if($productCount > 0)
+                                                <li>
+                                                    <div class="d-flex justify-content-between fruite-name">
+                                                        <a href="{{ route('customer.bigsale.index', ['slug' => $bigSales->slug, 'category' => $category->id, 'sort' => request()->get('sort')]) }}" 
+                                                           class="{{ request()->get('category') == $category->id ? 'text-primary' : '' }}">
+                                                           <i class="fas fa-tools me-2"></i>{{ $category->name }}
+                                                        </a>
+                                                        <span>({{ $productCount }})</span>
+                                                    </div>
+                                                </li>
+                                            @endif
                                         @endforeach
                                     </ul>                                                                     
-                                </div>                                
+                                </div>
+                                                        
                             </div>
+                            
                             <div class="col-lg-12 mt-5">
                                 <div class="position-relative">
                                     @php
@@ -174,7 +181,7 @@
                             @else
                                 @foreach($bigSales->products as $product)
                                     <div class="col-md-6 col-lg-4 col-xl-3">
-                                        <a href="{{ $product->stock > 0 ? route('customer.product.show', $product->slug) : 'javascript:void(0);' }}" 
+                                        <a href="{{ $product->stock > 0 ? route('customer.product.show', $product->slug). '?promo=big-sale&location=bekasi' : 'javascript:void(0);' }}" 
                                            class="text-decoration-none" 
                                            style="color: inherit; pointer-events: {{ $product->stock > 0 ? 'auto' : 'none' }};">
                                             <div class="rounded position-relative fruite-item shadow-sm {{ $product->stock > 0 ? '' : 'out-of-stock' }}" 

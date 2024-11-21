@@ -136,9 +136,11 @@ class CartController extends Controller
 
 public function updateCartQuantity(Request $request, $id)
 {
-    // Find the cart item by ID
+    $user = auth()->user();
     $cartItem = Cart::findOrFail($id);
     $newQuantity = $request->input('quantity');
+    $cartItems = Cart::where('user_id', $user->id)->get();
+
 
     // Get product data
     $product = $cartItem->product;
@@ -146,6 +148,12 @@ public function updateCartQuantity(Request $request, $id)
     // Check if the product has enough stock
     if ($product->stock < $newQuantity) {
         return response()->json(['error' => 'Not enough stock available.'], 400);
+    }
+
+    foreach ($cartItems as $item) {
+        if ($item->quantity > $item->product->stock) {
+            return redirect()->back()->with('error', "Product {$item->product->name} is out of stock.");
+        }
     }
 
     // Get active Big Sale for the product

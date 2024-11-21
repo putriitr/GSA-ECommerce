@@ -23,34 +23,47 @@
     @endif
 
     {{-- Notifikasi untuk status order --}}
-@if (!empty($orderNotifications))
-<div class="alert alert-info mt-5">
-    <h5>Notifikasi Pesanan:</h5>
-    <ul>
-        @foreach ($orderNotifications as $orderId => $notification)
-            <li>
-                {{ $notification }}
-                <a href="{{ route('admin.orders.show', ['id' => $orderId]) }}" class="btn btn-sm btn-primary ml-3">Detail Pesanan</a>
-            </li>
-        @endforeach
-    </ul>
-</div>
-@endif
+    @if (!empty($orderNotifications))
+        <div class="card mt-5 mb-5 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-bell"></i> Notifikasi Pesanan</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach ($orderNotifications as $orderId => $notification)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-truck"></i> {{ $notification }}</span>
+                            <a href="{{ route('admin.orders.show', ['id' => $orderId]) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-info-circle"></i> Detail Pesanan
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
 
-{{-- Notifikasi untuk status payment --}}
-@if (!empty($paymentNotifications))
-<div class="alert alert-success mt-5">
-    <h5>Notifikasi Pembayaran:</h5>
-    <ul>
-        @foreach ($paymentNotifications as $paymentId => $notification)
-            <li>
-                {{ $notification }}
-                <a href="{{ route('admin.payments.show', ['id' => $paymentId]) }}" class="btn btn-sm btn-success ml-3">Detail Pembayaran</a>
-            </li>
-        @endforeach
-    </ul>
-</div>
-@endif
+    {{-- Notifikasi untuk status payment --}}
+    @if (!empty($paymentNotifications))
+        <div class="card mt-5 mb-5 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-credit-card"></i> Notifikasi Pembayaran</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    @foreach ($paymentNotifications as $paymentId => $notification)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-money-check-alt"></i> {{ $notification }}</span>
+                            <a href="{{ route('admin.payments.index') }}" class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-info-circle"></i> Detail Pembayaran
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
 
 
 
@@ -229,12 +242,15 @@
                                                     <p class="mb-0">Customer: {{ $order->user->name ?? 'N/A' }}</p>
                                                 </div>
                                                 <div class="user-progress d-flex align-items-center gap-1">
-                                                    @if(in_array($order->status, [Order::STATUS_CANCELLED, Order::STATUS_CANCELLED_BY_SYSTEM]))
+                                                    @if(in_array($order->status, [Order::STATUS_CANCELLED, Order::STATUS_CANCELLED_BY_SYSTEM, Order::STATUS_CANCELLED_BY_ADMIN]))
                                                         <h6 class="mb-0 text-muted">Dibatalkan</h6>
-                                                    @else
+                                                    @else 
+                                                    @if(in_array($order->status, [ Order::STATUS_DELIVERED]))
                                                         <h6 class="mb-0 text-success">+{{ 'Rp' . number_format($order->total, 0, ',', '.') }}</h6>
+                                                    @else
+                                                        <h6 class="mb-0 text-info">Proses</h6>
                                                     @endif
-                                                    <span class="text-muted">Rp</span>
+                                                    @endif
                                                 </div>                                            
                                             </div>
                                         </a>

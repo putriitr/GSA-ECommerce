@@ -265,15 +265,19 @@ class OrderHandleController extends Controller
                 'cancelled_by_system_at' => now(),
             ]);
 
+            foreach ($order->items as $item) { // Asumsi ada relasi 'items' pada model Order
+                $product = $item->product; // Asumsi ada relasi 'product' pada model OrderItem
+                if ($product) {
+                    $product->increment('stock', $item->quantity);
+                }
+            }
+
+
             return back()->with('error', 'Payment rejected and order cancelled due to multiple failed attempts.');
         }
 
         return back()->with('warning', 'Payment rejected. You may resubmit your payment proof one more time.');
     }
-
-
-    
-
 
 
     // Admin marks order as packing
@@ -318,17 +322,26 @@ class OrderHandleController extends Controller
 
     public function cancelOrder(Request $request, $orderId)
     {
-        $order = Order::findOrFail($orderId);
-    
+        $order = Order::with('items.product')->findOrFail($orderId);
+
         if ($order->status !== Order::STATUS_CANCELLED && $order->status !== Order::STATUS_CANCELLED_BY_ADMIN) {
-            // Set the status to 'cancelled_by_admin'
+            // Kembalikan jumlah quantity setiap produk ke stok
+            foreach ($order->items as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->stock += $item->quantity; // Kembalikan jumlah ke stok produk
+                    $product->save();
+                }
+            }
+
+            // Set status pesanan ke 'cancelled_by_admin'
             $order->status = Order::STATUS_CANCELLED_BY_ADMIN;
-            $order->cancelled_by_admin_at = now(); // Set the cancelled_by_admin timestamp
+            $order->cancelled_by_admin_at = now(); // Set timestamp cancelled_by_admin
             $order->save();
-    
-            return redirect()->back()->with('success', 'Order has been cancelled by the admin.');
+
+            return redirect()->back()->with('success', 'Order has been cancelled by the admin, and stock has been updated.');
         }
-    
+
         return redirect()->back()->with('error', 'Order has already been cancelled.');
     }
     

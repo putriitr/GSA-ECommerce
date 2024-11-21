@@ -28,133 +28,138 @@ class OrderController extends Controller
     {
         $user = auth()->user();
 
-        // Get the status filter from the request
-        $status = $request->input('status');
-    
-        // Fetch orders based on the status filter
-        $orders = Order::where('user_id', auth()->id()) // Fetch only user's orders
-                        ->when($status && $status !== 'semua', function ($query) use ($status) {
+        // Get the status filter from the request or default to 'semua'
+        $status = $request->input('status', 'semua');
+
+        // Fetch orders based on the status filter with pagination
+        $orders = Order::where('user_id', $user->id)
+                        ->when($status !== 'semua', function ($query) use ($status) {
                             $query->where('status', $status);
                         })
                         ->orderBy('created_at', 'desc')
-                        ->get();
-    
-            // Count orders with the 'approved' status (Menunggu Pembayaran)
-        $waitingForPaymentCount = Order::where('user_id', auth()->id())
-        ->where('status', 'pending_payment')
-        ->count();
-        
-        return view('customer.settings.order.index', compact('orders', 'status','user', 'waitingForPaymentCount'));
+                        ->paginate(5); // Paginate 10 orders per page
+
+        // Count orders with the 'pending_payment' status
+        $waitingForPaymentCount = Order::where('user_id', $user->id)
+                                    ->where('status', 'pending_payment')
+                                    ->count();
+
+        return view('customer.settings.order.index', compact('orders', 'status', 'user', 'waitingForPaymentCount'));
     }
+
     
 
 
     // Checkout - Create an order
     public function checkout(Request $request)
-    {
-        $user = auth()->user();
-        $cartItems = Cart::where('user_id', $user->id)->get();
+{
+    $user = auth()->user();
+    $cartItems = Cart::where('user_id', $user->id)->get();
 
-        if ($cartItems->isEmpty()) {
-            return redirect()->back()->with('error', 'Your cart is empty.');
-        }
+    if ($cartItems->isEmpty()) {
+        return redirect()->back()->with('error', 'Your cart is empty.');
+    }
 
-        // Validasi stok produk
-        foreach ($cartItems as $item) {
-            if ($item->quantity > $item->product->stock) {
-                return redirect()->back()->with('error', "Product {$item->product->name} is out of stock.");
-            }
-        }
+    // Validasi stok produk
+    foreach ($cartItems as $item) {
+        $product = $item->product;
 
-        // Mulai transaksi database
-        DB::beginTransaction();
-        try {
-            // Hitung total
-            $total = 0;
-            foreach ($cartItems as $item) {
-                $product = $item->product;
-
-                // Get active Big Sale for the product
-                $activeBigSale = BigSale::where('status', true)
-                    ->where('start_time', '<=', now())
-                    ->where('end_time', '>=', now())
-                    ->whereHas('products', function ($query) use ($product) {
-                        $query->where('t_product.id', $product->id);
-                    })
-                    ->first();
-
-                // If the product is in an active Big Sale, apply Big Sale price
-                if ($activeBigSale) {
-                    if ($activeBigSale->discount_amount) {
-                        $productPrice = $product->price - $activeBigSale->discount_amount; // Apply flat discount
-                    } elseif ($activeBigSale->discount_percentage) {
-                        $productPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price; // Apply percentage discount
-                    }
-                } else {
-                    // If not in Big Sale, use the discount_price or regular price
-                    $productPrice = $product->discount_price ?? $product->price;
-                }
-
-                // Add to total
-                $total += $item->quantity * $productPrice;
-            }
-
-            // Buat pesanan
-            $order = Order::create([
-                'user_id' => $user->id,
-                'total' => $total,
-                'status' => Order::STATUS_WAITING_APPROVAL, // gunakan konstanta untuk status
-                'waiting_approval_at' => now(),
-            ]);
-
-            // Tambahkan item ke pesanan
-            foreach ($cartItems as $item) {
-                $product = $item->product;
-                $productPrice = $product->discount_price ?? $product->price;
-
-                // Check if the product is in an active Big Sale
-                $activeBigSale = BigSale::where('status', true)
-                    ->where('start_time', '<=', now())
-                    ->where('end_time', '>=', now())
-                    ->whereHas('products', function ($query) use ($product) {
-                        $query->where('t_product.id', $product->id);
-                    })
-                    ->first();
-
-                if ($activeBigSale) {
-                    // Apply Big Sale price
-                    if ($activeBigSale->discount_amount) {
-                        $productPrice = $product->price - $activeBigSale->discount_amount;
-                    } elseif ($activeBigSale->discount_percentage) {
-                        $productPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
-                    }
-                }
-
-                // Add product item to the order
-                $order->items()->create([
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                    'price' => $productPrice,
-                    'total' => $item->quantity * $productPrice,
-                ]);
-
-                // Kurangi stok produk
-                $product->decrement('stock', $item->quantity);
-            }
-
-            // Kosongkan keranjang setelah checkout
-            Cart::where('user_id', $user->id)->delete();
-
-            // Commit transaksi database
-            DB::commit();
-
-            return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
+        if ($item->quantity > $product->stock) {
+            return redirect()->back()->with('error', "Product '{$product->name}' is out of stock or insufficient for your quantity. Current stock is {$product->stock} and your quantity is {$item->quantity}. Please reduce your quantity or contact admin.");
         }
     }
+
+    // Mulai transaksi database
+    DB::beginTransaction();
+    try {
+        // Hitung total
+        $total = 0;
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+
+            // Get active Big Sale for the product
+            $activeBigSale = BigSale::where('status', true)
+                ->where('start_time', '<=', now())
+                ->where('end_time', '>=', now())
+                ->whereHas('products', function ($query) use ($product) {
+                    $query->where('t_product.id', $product->id);
+                })
+                ->first();
+
+            // If the product is in an active Big Sale, apply Big Sale price
+            if ($activeBigSale) {
+                if ($activeBigSale->discount_amount) {
+                    $productPrice = $product->price - $activeBigSale->discount_amount; // Apply flat discount
+                } elseif ($activeBigSale->discount_percentage) {
+                    $productPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price; // Apply percentage discount
+                }
+            } else {
+                // If not in Big Sale, use the discount_price or regular price
+                $productPrice = $product->discount_price ?? $product->price;
+            }
+
+            // Add to total
+            $total += $item->quantity * $productPrice;
+        }
+
+        // Buat pesanan
+        $order = Order::create([
+            'user_id' => $user->id,
+            'total' => $total,
+            'status' => Order::STATUS_WAITING_APPROVAL, // gunakan konstanta untuk status
+            'waiting_approval_at' => now(),
+        ]);
+
+        // Tambahkan item ke pesanan
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+            $productPrice = $product->discount_price ?? $product->price;
+
+            // Check if the product is in an active Big Sale
+            $activeBigSale = BigSale::where('status', true)
+                ->where('start_time', '<=', now())
+                ->where('end_time', '>=', now())
+                ->whereHas('products', function ($query) use ($product) {
+                    $query->where('t_product.id', $product->id);
+                })
+                ->first();
+
+            if ($activeBigSale) {
+                // Apply Big Sale price
+                if ($activeBigSale->discount_amount) {
+                    $productPrice = $product->price - $activeBigSale->discount_amount;
+                } elseif ($activeBigSale->discount_percentage) {
+                    $productPrice = $product->price - ($activeBigSale->discount_percentage / 100) * $product->price;
+                }
+            }
+
+            // Add product item to the order
+            $order->items()->create([
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $productPrice,
+                'total' => $item->quantity * $productPrice,
+            ]);
+
+            // Kurangi stok produk
+            $product->decrement('stock', $item->quantity);
+        }
+
+        // Kosongkan keranjang setelah checkout
+        Cart::where('user_id', $user->id)->delete();
+
+        // Commit transaksi database
+        DB::commit();
+
+        return redirect()->route('customer.order.show', $order->id)->with('success', 'Checkout completed.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'An error occurred during checkout: ' . $e->getMessage());
+    }
+}
+
+
 
 
 
@@ -231,15 +236,36 @@ class OrderController extends Controller
     public function cancelOrder($orderId)
     {
         $order = Order::find($orderId);
-
-        if ($order->status !== 'pending') {
-            return redirect()->back()->with('error', 'You cannot cancel this order.');
+    
+        if (!$order) {
+            return redirect()->back()->with('error', 'Order not found.');
         }
-
+    
+        // Status yang diperbolehkan untuk pembatalan
+        $allowedStatuses = ['waiting_approval', 'approved', 'pending_payment', 'confirmed', 'processing'];
+    
+        if (!in_array($order->status, $allowedStatuses)) {
+            return redirect()->back()->with('error', 'You cannot cancel this order in its current status.');
+        }
+    
+        // Loop through order items to restore stock
+        foreach ($order->orderItems as $item) {
+            $product = $item->product;
+    
+            if ($product) {
+                $product->update([
+                    'stock' => $product->stock + $item->quantity
+                ]);
+            }
+        }
+    
+        // Update order status to 'cancelled'
         $order->update(['status' => 'cancelled']);
-
-        return redirect()->back()->with('success', 'Order has been cancelled successfully.');
+    
+        return redirect()->back()->with('success', 'Order has been cancelled and stock has been restored successfully.');
     }
+    
+    
 
     public static function generateInvoiceNumber()
     {
