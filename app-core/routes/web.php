@@ -176,7 +176,7 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('admin/orders/{order}/payment', [OrderHandleController::class, 'allowPayment'])->name('customer.orders.payment');
     Route::put('admin/orders/{order}/complete', [OrderHandleController::class, 'MarkAsCompleted'])->name('admin.complete.order');
 
-
+    
     Route::get('admin/banner-home/banners', [BannerHomeController::class, 'index'])->name('admin.banner-home.banners.index');
     Route::get('admin/banner-home/banners/create', [BannerHomeController::class, 'create'])->name('admin.banner-home.banners.create');
     Route::post('admin/banner-home/banners', [BannerHomeController::class, 'store'])->name('admin.banner-home.banners.store');

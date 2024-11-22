@@ -18,67 +18,78 @@ class OrderHandleController extends Controller
 
     public function orders(Request $request)
     {
-        $query = Order::with('user')->orderBy('created_at', 'desc');
-
-        // Search by customer name or invoice number
+        // Query untuk List Orders
+        $listQuery = Order::with('user')->orderBy('created_at', 'desc');
+    
+        // Filter untuk Daftar Pesanan (List)
         if ($request->input('search')) {
             $search = $request->input('search');
-            $query->whereHas('user', function ($q) use ($search) {
+            $listQuery->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                ->orWhere('full_name', 'like', "%{$search}%");
+                    ->orWhere('full_name', 'like', "%{$search}%");
             })->orWhere('invoice_number', 'like', "%{$search}%");
         }
-
-        // Filter by invoice number
+    
         if ($request->input('invoice')) {
             $invoiceInput = $request->input('invoice');
-            
-            // Check if the input is numeric and 4 digits long (for last 4 digits filtering)
             if (is_numeric($invoiceInput) && strlen($invoiceInput) === 4) {
-                // Filter by the last 4 digits of the invoice number
-                $query->whereRaw('RIGHT(invoice_number, 4) = ?', [$invoiceInput]);
-            } 
-            // Check if the input is year and month (e.g., 202410)
-            elseif (is_numeric($invoiceInput) && strlen($invoiceInput) === 6) {
-                // Filter by the year and month in the invoice number
-                $query->where('invoice_number', 'like', $invoiceInput . '%');
-            } 
-            // Fallback to filtering by the entire invoice number
-            else {
-                $query->where('invoice_number', $invoiceInput);
+                $listQuery->whereRaw('RIGHT(invoice_number, 4) = ?', [$invoiceInput]);
+            } elseif (is_numeric($invoiceInput) && strlen($invoiceInput) === 6) {
+                $listQuery->where('invoice_number', 'like', $invoiceInput . '%');
+            } else {
+                $listQuery->where('invoice_number', $invoiceInput);
             }
         }
-
-        // Filter by total range
+    
         if ($request->input('total_range')) {
             switch ($request->input('total_range')) {
                 case 'less_1m':
-                    $query->where('total', '<', 1000000);
+                    $listQuery->where('total', '<', 1000000);
                     break;
                 case '1m_5m':
-                    $query->whereBetween('total', [1000000, 5000000]);
+                    $listQuery->whereBetween('total', [1000000, 5000000]);
                     break;
                 case '5m_10m':
-                    $query->whereBetween('total', [5000000, 10000000]);
+                    $listQuery->whereBetween('total', [5000000, 10000000]);
                     break;
                 case '10m_up':
-                    $query->where('total', '>', 10000000);
+                    $listQuery->where('total', '>', 10000000);
                     break;
             }
         }
-
-        // Filter by status
+    
         if ($request->input('status') && $request->input('status') != 'all') {
-            $query->where('status', $request->input('status'));
+            $listQuery->where('status', $request->input('status'));
         }
-
-        // Paginate the result
-        $orders = $query->paginate(10);
-        
+    
+        // Paginate hasil untuk List Orders
+        $orders = $listQuery->paginate(10);
+    
+        // Query untuk Chart Orders
+        $chartQuery = Order::orderBy('created_at', 'desc');
+    
+        // Filter untuk Grafik Pesanan (Chart)
+        $chartStatus = $request->input('chart_status', 'all'); // Default: all
+        if ($chartStatus !== 'all') {
+            $chartQuery->where('status', $chartStatus);
+        }
+    
+        // Filter rentang tanggal (from_date dan to_date)
+        if ($request->input('from_date') && $request->input('to_date')) {
+            $fromDate = $request->input('from_date');
+            $toDate = $request->input('to_date');
+            $chartQuery->whereBetween('created_at', [$fromDate, $toDate]);
+        }
+    
+        // Ambil hasil untuk Chart
+        $chartOrders = Order::with('user')->get();
+    
         $shipping = ShippingService::all();
-        
-        return view('admin.order.index', compact('orders', 'shipping'));
+    
+        return view('admin.order.index', compact('orders', 'chartOrders', 'shipping', 'chartStatus'));
     }
+    
+
 
 
 
@@ -366,5 +377,7 @@ class OrderHandleController extends Controller
 
         return redirect()->back()->with('error', 'Order has already been cancelled.');
     }
+
+
     
 }

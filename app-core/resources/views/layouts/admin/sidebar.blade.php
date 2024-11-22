@@ -66,7 +66,11 @@
                         <ul class="menu-sub">
                             <li class="menu-item">
                                 <a href="{{ route('admin.orders.index') }}" class="menu-link">
-                                    <div data-i18n="Pemesanan">Pemesanan</div>
+                                    <div data-i18n="Pemesanan">Pemesanan
+                                        @if ($unviewedOrdersCount > 0)
+                                        <span class="badge bg-danger">{{ $unviewedOrdersCount }}</span>
+                                        @endif
+                                    </div>
                                 </a>
                             </li>
                         </ul>

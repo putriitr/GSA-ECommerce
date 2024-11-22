@@ -18,8 +18,13 @@
                     <input type="text" id="emailOrPhone" name="emailOrPhone" placeholder="{{ __('messages.login_modal.email_modal.email_placeholder') }}" required>
                 </div>
 
-                <a href="#" class="help-link">{{ __('messages.login_modal.email_modal.help_link') }}</a>
+                <a href="#" class="help-link" onclick="showHelpNotification(event)">{{ __('messages.login_modal.email_modal.help_link') }}</a>
 
+                <div id="notification" style="display: none; position: fixed; top: 20px; right: 20px; background: #007bff; color: #fff; padding: 15px 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000;">
+                    <span id="notification-message"></span>
+                </div>
+                
+                
                 <!-- Tombol Selanjutnya -->
                 <button type="button" class="btn-submit" disabled>{{ __('messages.login_modal.email_modal.next_button') }}</button>
 
@@ -73,12 +78,21 @@
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="google-icon">
                 Google
             </button>
-
-            <!-- Facebook Login Button -->
-            <button class="btn-facebook-login mt-2">
+            
+{{--             <button class="btn-facebook-login mt-2">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" class="facebook-icon">
                 Facebook
             </button>
+ --}}
+                        <!-- Facebook Login Button -->
+                        <button class="btn-facebook-login mt-2" onclick="showDevelopmentMessage()">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" class="facebook-icon">
+                            Facebook
+                        </button>
+
+            <div id="developmentMessage" style="display: none; margin-top: 20px; padding: 10px; background: #ffcccb; color: #a94442; border: 1px solid #a94442; border-radius: 5px;">
+                Fitur Facebook Login masih dalam pengembangan.
+            </div>
         </div>
     </div>
 </div>
@@ -101,6 +115,18 @@
         z-index: 1000;
     }
 </style>
+
+
+<script>
+    function showDevelopmentMessage() {
+        const messageElement = document.getElementById('developmentMessage');
+        messageElement.style.display = 'block'; // Tampilkan pesan
+        setTimeout(() => {
+            messageElement.style.display = 'none'; // Sembunyikan pesan setelah 5 detik
+        }, 5000); // Waktu dalam milidetik
+    }
+</script>
+
 
 <script>
     // JavaScript to handle redirection for Google login
@@ -127,6 +153,57 @@
 
 
 
+
+<script>
+    function showHelpNotification(event) {
+        event.preventDefault(); // Mencegah link berpindah halaman
+        const adminWaNumber = "{{ $parameter->nomor_wa ?? 'nomor WhatsApp belum disediakan' }}"; // Ambil nomor WA dari backend
+        const message = adminWaNumber
+            ? `Silahkan hubungi admin melalui no WhatsApp: ${adminWaNumber}`
+            : "Nomor WhatsApp admin belum tersedia.";
+
+        const notification = document.getElementById('notification');
+        const messageElement = document.getElementById('notification-message');
+        
+        // Tampilkan pesan
+        messageElement.textContent = message;
+        notification.style.display = 'block';
+
+        // Sembunyikan setelah 5 detik
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 5000);
+    }
+</script>
+
+
+<style>
+    #notification {
+        animation: fadeIn 0.5s, fadeOut 0.5s 4.5s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+</style>
 
 
 

@@ -186,10 +186,129 @@
 <!-- Copyright End -->
 
 
+<!-- WhatsApp Button with Hover Label -->
+<div class="whatsapp-container">
+    <span class="whatsapp-label">
+        <span>Butuh bantuan? Klik di sini untuk hubungi kami via WhatsApp</span>
+        <button class="close-label">&times;</button>
+    </span>
+    <a href="https://wa.me/{{ str_replace(['+', '-', ' '], '', $parameter->nomor_wa) }}" target="_blank" class="btn btn-success border-3 border-success whatsapp-button">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</div>
+
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top">
     <i class="fa fa-arrow-up text-white"></i>
 </a>
+
+<!-- CSS -->
+<style>
+    .back-to-top {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        border-radius: 50%;
+        color: white;
+    }
+
+    .whatsapp-container {
+        position: fixed;
+        right: 20px;
+        bottom: 80px; /* Positioned above Back to Top */
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; /* Align items to the right */
+        z-index: 1000;
+    }
+
+    .whatsapp-button {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .whatsapp-label {
+        font-size: 14px;
+        color: #25d366;
+        font-weight: bold;
+        background-color: #e6f7ed;
+        padding: 8px 12px;
+        border-radius: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-right: 10px;
+        opacity: 0; /* Hidden by default */
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+        white-space: nowrap; /* Prevent label from breaking lines */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Close button style */
+    .close-label {
+        background: transparent;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        color: #25d366;
+        cursor: pointer;
+    }
+
+    .whatsapp-label.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Show label on hover */
+    .whatsapp-container:hover .whatsapp-label {
+        opacity: 1;
+        visibility: visible;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const whatsappLabel = document.querySelector(".whatsapp-label");
+        const closeButton = document.querySelector(".close-label");
+
+        // Function to show the label
+        const showLabel = () => {
+            whatsappLabel.classList.add("show");
+        };
+
+        // Close label when the close button is clicked
+        closeButton.addEventListener("click", () => {
+            whatsappLabel.classList.remove("show");
+        });
+
+        // Show the label every 30 seconds
+        setInterval(() => {
+            showLabel();
+        }, 30000); // 30 seconds
+    });
+</script>
+
+
+
+
+
+
+
 
 <!-- JavaScript Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
