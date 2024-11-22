@@ -1,11 +1,14 @@
 
 <?php
-                                use App\Models\Order;
+    use App\Models\Order;
                                 
-                                $waitingForPaymentCount = Order::where('user_id', auth()->id())
+    $waitingForPaymentCount = Order::where('user_id', auth()->id())
                                     ->where('status', 'pending_payment')
                                     ->count();
-                                ?>
+
+    $cartCount = Auth::check() ? \App\Models\Cart::where('user_id', Auth::id())->count() : 0;
+    $wishlistCount = Auth::check() ? \App\Models\Wishlist::where('user_id', Auth::id())->count() : 0;
+?>
 
 <div class="container-fluid fixed-top">
     <div class="container-fluid topbar bg-primary d-none d-lg-block px-5">
@@ -13,7 +16,12 @@
             <div class="top-info ps-2">
                 <small class="me-3">
                     <i class="fas fa-phone-alt me-2 text-secondary"></i> <!-- Ikon telepon -->
-                    <a href="tel:+6281390069009" class="text-white">{{ $parameter->nomor_wa }}</a>
+                    @if(!empty($parameter->nomor_wa))
+                    <a href="https://wa.me/{{ str_replace(['+', '-', ' '], '', $parameter->nomor_wa) }}" target="_blank" class="text-white">
+                        {{ $parameter->nomor_wa }}
+                    </a>
+                @endif
+                
                 </small>
                 <small class="me-3">
                     <i class="fas fa-envelope me-2 text-secondary"></i> <!-- Ikon email -->
@@ -95,10 +103,6 @@
                         <!-- Jika user sudah login, tampilkan ikon Cart dan Wishlist -->
                         <a href="{{ route('cart.show') }}" class="position-relative me-4 my-auto mx-2">
                             <i class="fa fa-shopping-bag fa-2x"></i>
-                            @php
-                                // Get the count of items in the cart for the logged-in user
-                                $cartCount = Auth::check() ? \App\Models\Cart::where('user_id', Auth::id())->count() : 0;
-                            @endphp
                             @if ($cartCount > 0)
                                 <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
                                     {{ $cartCount }}
@@ -109,10 +113,6 @@
                         <!-- Wishlist Icon -->
                         <a href="{{ route('wishlist.index') }}" class="position-relative me-4 my-auto mx-2">
                             <i class="fas fa-heart fa-2x text-primary"></i>
-                            @php
-                                // Get the count of items in the wishlist for the logged-in user
-                                $wishlistCount = Auth::check() ? \App\Models\Wishlist::where('user_id', Auth::id())->count() : 0;
-                            @endphp
                             @if ($wishlistCount > 0)
                                 <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
                                     {{ $wishlistCount }}

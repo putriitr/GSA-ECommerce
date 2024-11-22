@@ -20,7 +20,7 @@ class ProductController extends Controller
                     ->when($search, function ($query, $search) {
                         return $query->where('name', 'like', "%{$search}%");
                     })
-                    ->paginate(5);
+                    ->paginate(10);
     
         return view('admin.product.index', compact('products'));
     }

@@ -34,14 +34,14 @@
 
     <!-- Notification for Error Messages -->
     @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert">
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert">
             <ul class="mb-0">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -127,7 +127,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Informasi Pesanan</h5>
             
-            @if($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system' && $order->status !== 'delivered')
+            @if($order->status !== 'cancelled' && $order->status !== 'cancelled_by_system' && $order->status !== 'cancelled_by_admin')
             <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST" class="mb-0">
                 @csrf
                 @method('PUT')

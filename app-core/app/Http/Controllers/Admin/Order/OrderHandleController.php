@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer\Order\OrderController;
 use App\Models\Complaint;
 use App\Models\Negotiation;
 use App\Models\Order;
+use App\Models\Parameter;
 use App\Models\Payment;
 use App\Models\ShippingService;
 use Illuminate\Http\Request;
@@ -151,6 +152,7 @@ class OrderHandleController extends Controller
     {
         // Temukan pesanan berdasarkan ID
         $order = Order::find($orderId);
+        $parameter = Parameter::first();
 
         // Periksa apakah pesanan ditemukan
         if (!$order) {
@@ -161,6 +163,11 @@ class OrderHandleController extends Controller
         if ($order->status === Order::STATUS_APPROVED) {
             return back()->with('error', 'This order has already been approved.');
         }
+
+        if (!$parameter || !$parameter->bank_vendor || !$parameter->bank_nama || !$parameter->bank_rekening) {
+            return back()->with('error', 'Maaf, pesanan tidak dapat disetujui karena informasi bank belum lengkap. Silakan lengkapi data bank pada menu Master Data -> Parameter.');
+        }
+        
 
         DB::beginTransaction();
         try {

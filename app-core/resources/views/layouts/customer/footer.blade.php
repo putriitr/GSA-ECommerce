@@ -7,7 +7,12 @@
                     <h4 class="text-light mb-3">{{ __('footer.contact_information') }}</h4>
                     <p class="text-light mb-2"><i class="fas fa-map-marker-alt me-2"></i>{{ $parameter->alamat }}</p>
                     <p class="text-light mb-2"><i class="fas fa-envelope me-2"></i>{{ $parameter->email }}</p>
-                    <p class="text-light mb-4"><i class="fas fa-phone me-2"></i>{{ $parameter->nomor_wa }}</p>
+                    <p class="text-light mb-4">
+                        <i class="fas fa-phone me-2"></i>
+                        <a href="https://wa.me/{{ str_replace(['+', '-', ' '], '', $parameter->nomor_wa) }}" target="_blank" class="text-light">
+                            {{ $parameter->nomor_wa }}
+                        </a>
+                    </p>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6">

@@ -407,7 +407,6 @@ style="position: relative; overflow: hidden; background: url('{{ asset('storage/
                         
                     </div>
                     
-                    x
                     <div class="col-lg-12">
                         <div class="position-relative">
                             @php
